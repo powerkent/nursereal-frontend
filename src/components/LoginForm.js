@@ -14,7 +14,7 @@ const LoginForm = () => {
     try {
       const response = await axios.post('/login/agent', { email, password });
       localStorage.setItem('token', response.data.token);
-      navigate('/dashboard');
+      navigate('/');
     } catch (error) {
       setError('Invalid email or password');
     }
