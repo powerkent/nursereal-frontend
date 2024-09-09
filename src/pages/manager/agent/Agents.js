@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Paper, IconButton } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
-import axios from "../../api/axios";
+import axios from "../../../api/axios";
 import { useNavigate } from "react-router-dom";
 
 const Agents = () => {
