@@ -1,45 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs"; // Import dayjs
-import axios from "../../api/axios";
-import { useNavigate, useParams } from "react-router-dom";
+import axios from "../../../api/axios";
+import { useNavigate } from "react-router-dom";
 
-const EditNursery = () => {
-  const { uuid } = useParams();
+const AddNursery = () => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
-  const [startAt, setStartAt] = useState(dayjs());
+  const [startAt, setStartAt] = useState(dayjs()); // Use dayjs() instead of new Date()
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchNursery = async () => {
-      try {
-        const response = await axios.get(`/nursery_structures/${uuid}`);
-        setName(response.data.name);
-        setAddress(response.data.address);
-        setStartAt(dayjs(response.data.startAt));
-      } catch (err) {
-        setError("Failed to load nursery details.");
-      }
-    };
-    fetchNursery();
-  }, [uuid]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`/nursery_structures/${uuid}`, {
+      await axios.post("/nursery_structures", {
         name,
         address,
         startAt: startAt.toISOString(),
-      });
-      navigate(`/nurseries/${uuid}`);
+      }); // Send as ISO string
+      navigate("/nurseries"); // Redirect to nursery list after adding
     } catch (err) {
-      setError("Failed to update the nursery. Please try again.");
+      setError("Failed to add the nursery. Please try again.");
     }
   };
 
@@ -48,7 +33,7 @@ const EditNursery = () => {
       sx={{ width: "400px", margin: "auto", padding: 4, textAlign: "center" }}
     >
       <Typography variant="h4" gutterBottom>
-        Modifier une Crèche
+        Ajouter une Crèche
       </Typography>
 
       {error && <Typography color="error">{error}</Typography>}
@@ -87,11 +72,11 @@ const EditNursery = () => {
           fullWidth
           sx={{ marginTop: 2 }}
         >
-          Modifier
+          Ajouter
         </Button>
       </form>
     </Box>
   );
 };
 
-export default EditNursery;
+export default AddNursery;

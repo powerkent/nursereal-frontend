@@ -7,7 +7,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
-import axios from "../../api/axios";
+import axios from "../../../api/axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Agent = () => {

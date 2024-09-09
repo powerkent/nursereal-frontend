@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, Paper, IconButton } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowBack } from "@mui/icons-material";
-import axios from "../../api/axios";
+import axios from "../../../api/axios";
 import dayjs from "dayjs";
 
 const Nursery = () => {
