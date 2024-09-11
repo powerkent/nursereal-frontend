@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Corrige l'import de jwtDecode
 import AppBarComponent from "./AppBarComponent";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
@@ -21,6 +21,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Layout = ({ children }) => {
   const [isManager, setIsManager] = useState(false);
+  const [isAgentMode, setIsAgentMode] = useState(false); // État pour gérer le mode agent
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,6 +34,7 @@ const Layout = ({ children }) => {
       const decodedToken = jwtDecode(token);
       const roles = decodedToken.roles || [];
       setIsManager(roles.includes("ROLE_MANAGER"));
+      setIsAgentMode(!roles.includes("ROLE_MANAGER")); // Par défaut, mode agent si pas manager
     }
   }, [navigate]);
 
@@ -43,6 +45,11 @@ const Layout = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
+  };
+
+  // Fonction pour basculer entre manager et agent
+  const handleToggleRole = () => {
+    setIsAgentMode(!isAgentMode); // Inverse l'état de isAgentMode
   };
 
   const sections = [
@@ -103,7 +110,7 @@ const Layout = ({ children }) => {
     if (currentSection && currentSection.parent !== "/") {
       return currentSection.parent;
     }
-    return null;
+    return "/";
   };
 
   const previousPage = getPreviousPage();
@@ -114,11 +121,13 @@ const Layout = ({ children }) => {
         isManager={isManager}
         toggleDrawer={toggleDrawer}
         handleLogout={handleLogout}
+        isAgentMode={isAgentMode} // Passe l'état à la barre d'app
+        handleToggleRole={handleToggleRole} // Fonction pour changer le rôle
       />
 
       {location.pathname !== "/" && previousPage && (
         <IconButton
-          onClick={() => navigate(previousPage)}
+          onClick={() => navigate("/")}
           sx={{ position: "absolute", top: 100, left: 50 }}
         >
           <ArrowBackIcon />
