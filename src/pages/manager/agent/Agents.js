@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Paper, IconButton } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
+import { Box, Typography, Paper, IconButton, Button } from "@mui/material";
+import { ArrowBack, Visibility, Edit, Delete } from "@mui/icons-material"; // Import des icônes
 import axios from "../../../api/axios";
 import { useNavigate } from "react-router-dom";
+import Layout from "../../../components/Layout";
 
 const Agents = () => {
   const [agents, setAgents] = useState([]);
@@ -42,80 +43,72 @@ const Agents = () => {
   };
 
   return (
-    <Box sx={{ padding: 4, position: "relative" }}>
-      <IconButton
-        sx={{ position: "absolute", top: 10, left: 10 }}
-        onClick={() => navigate("/")}
-      >
-        <ArrowBack />
-      </IconButton>
+    <Layout>
+      <Box sx={{ padding: 4, position: "relative" }}>
+        <Typography variant="h4" gutterBottom align="center">
+          Liste des Agents
+        </Typography>
 
-      <Typography variant="h4" gutterBottom align="center">
-        Liste des Agents
-      </Typography>
+        <Box
+          sx={{
+            maxWidth: "800px",
+            margin: "auto",
+          }}
+        >
+          {agents.map((agent) => (
+            <Paper
+              key={agent.uuid}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: 2,
+                marginBottom: 2,
+                backgroundColor: "#f5f5f5",
+                boxShadow: 3,
+              }}
+            >
+              {/* Informations sur l'agent à gauche */}
+              <Box>
+                <Typography variant="h6">
+                  {agent.firstname} {agent.lastname}
+                </Typography>
+                <Typography>Email: {agent.email}</Typography>
+                <Typography>Rôle: {agent.roles.join(", ")}</Typography>
+              </Box>
 
-      <Box
-        sx={{
-          maxWidth: "800px",
-          margin: "auto",
-        }}
-      >
-        {agents.map((agent) => (
-          <Paper
-            key={agent.uuid}
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: 2,
-              marginBottom: 2,
-              backgroundColor: "#f5f5f5",
-              boxShadow: 3,
-            }}
-          >
-            {/* Informations sur l'agent à gauche */}
-            <Box>
-              <Typography variant="h6">
-                {agent.firstname} {agent.lastname}
-              </Typography>
-              <Typography>Email: {agent.email}</Typography>
-              <Typography>Rôle: {agent.roles.join(", ")}</Typography>
-            </Box>
+              {/* Icônes à droite */}
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <IconButton
+                  color="primary"
+                  onClick={() => handleSelect(agent.uuid)}
+                >
+                  <Visibility />
+                </IconButton>
+                <IconButton
+                  sx={{ color: "orange" }}
+                  onClick={() => handleEdit(agent.uuid)}
+                >
+                  <Edit />
+                </IconButton>
+                <IconButton
+                  color="error"
+                  onClick={() => handleDelete(agent.uuid)}
+                >
+                  <Delete />
+                </IconButton>
+              </Box>
+            </Paper>
+          ))}
+        </Box>
 
-            {/* Boutons à droite */}
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleSelect(agent.uuid)}
-              >
-                Sélectionner
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: "orange" }}
-                onClick={() => handleEdit(agent.uuid)}
-              >
-                Modifier
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => handleDelete(agent.uuid)}
-              >
-                Supprimer
-              </Button>
-            </Box>
-          </Paper>
-        ))}
+        <Box sx={{ marginTop: 4, textAlign: "center" }}>
+          <Button variant="contained" color="success" onClick={handleAddAgent}>
+            Ajouter un Agent
+          </Button>
+        </Box>
       </Box>
-
-      <Box sx={{ marginTop: 4, textAlign: "center" }}>
-        <Button variant="contained" color="success" onClick={handleAddAgent}>
-          Ajouter un Agent
-        </Button>
-      </Box>
-    </Box>
+    </Layout>
   );
 };
 

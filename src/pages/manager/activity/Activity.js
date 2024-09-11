@@ -37,13 +37,6 @@ const Activity = () => {
 
   return (
     <Box sx={{ padding: 4 }}>
-      <IconButton
-        sx={{ position: "absolute", top: 10, left: 10 }}
-        onClick={() => navigate("/activities")}
-      >
-        <ArrowBack />
-      </IconButton>
-
       <Paper
         sx={{
           padding: 3,

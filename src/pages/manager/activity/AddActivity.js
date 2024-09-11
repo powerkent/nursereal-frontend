@@ -31,13 +31,6 @@ const AddActivity = () => {
     <Box
       sx={{ width: "400px", margin: "auto", padding: 4, textAlign: "center" }}
     >
-      <IconButton
-        sx={{ position: "absolute", top: 10, left: 10 }}
-        onClick={() => navigate("/activities")}
-      >
-        <ArrowBack />
-      </IconButton>
-
       <Typography variant="h4" gutterBottom>
         Ajouter une Activité
       </Typography>
