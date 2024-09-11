@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Paper, IconButton } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
+import { Box, Typography, Paper, IconButton, Button } from "@mui/material";
+import { ArrowBack, Edit, Delete, Visibility } from "@mui/icons-material"; // Import des icônes
 import axios from "../../../api/axios";
 import { useNavigate } from "react-router-dom";
+import Layout from "../../../components/Layout";
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
@@ -42,77 +43,82 @@ const Customers = () => {
   };
 
   return (
-    <Box sx={{ padding: 4, position: "relative" }}>
-      <IconButton
-        sx={{ position: "absolute", top: 10, left: 10 }}
-        onClick={() => navigate("/")}
-      >
-        <ArrowBack />
-      </IconButton>
+    <Layout>
+      <Box sx={{ padding: 4, position: "relative" }}>
+        <Typography variant="h4" gutterBottom align="center">
+          Liste des Parents
+        </Typography>
 
-      <Typography variant="h4" gutterBottom align="center">
-        Liste des Parents
-      </Typography>
+        <Box
+          sx={{
+            maxWidth: "800px",
+            margin: "auto",
+          }}
+        >
+          {customers.map((customer) => (
+            <Paper
+              key={customer.uuid}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: 2,
+                marginBottom: 2,
+                backgroundColor: "#f5f5f5",
+                boxShadow: 3,
+              }}
+            >
+              <Box>
+                <Typography variant="h6">
+                  {customer.firstname} {customer.lastname}
+                </Typography>
+                <Typography>Email: {customer.email}</Typography>
+                <Typography>Téléphone: {customer.phoneNumber}</Typography>
+                <Typography>
+                  Enfants:{" "}
+                  {customer.children.length > 0
+                    ? customer.children
+                        .map((child) => `${child.firstname} ${child.lastname}`)
+                        .join(", ")
+                    : "Aucun enfant"}
+                </Typography>
+              </Box>
 
-      <Box
-        sx={{
-          maxWidth: "800px",
-          margin: "auto",
-        }}
-      >
-        {customers.map((customer) => (
-          <Paper
-            key={customer.uuid}
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: 2,
-              marginBottom: 2,
-              backgroundColor: "#f5f5f5",
-              boxShadow: 3,
-            }}
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <IconButton
+                  color="primary"
+                  onClick={() => handleSelect(customer.uuid)}
+                >
+                  <Visibility />
+                </IconButton>
+                <IconButton
+                  sx={{ color: "orange" }}
+                  onClick={() => handleEdit(customer.uuid)}
+                >
+                  <Edit />
+                </IconButton>
+                <IconButton
+                  color="error"
+                  onClick={() => handleDelete(customer.uuid)}
+                >
+                  <Delete />
+                </IconButton>
+              </Box>
+            </Paper>
+          ))}
+        </Box>
+
+        <Box sx={{ marginTop: 4, textAlign: "center" }}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleAddCustomer}
           >
-            <Box>
-              <Typography variant="h6">
-                {customer.firstname} {customer.lastname}
-              </Typography>
-              <Typography>Email: {customer.email}</Typography>
-            </Box>
-
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleSelect(customer.uuid)}
-              >
-                Sélectionner
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: "orange" }}
-                onClick={() => handleEdit(customer.uuid)}
-              >
-                Modifier
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => handleDelete(customer.uuid)}
-              >
-                Supprimer
-              </Button>
-            </Box>
-          </Paper>
-        ))}
+            Ajouter un Parent
+          </Button>
+        </Box>
       </Box>
-
-      <Box sx={{ marginTop: 4, textAlign: "center" }}>
-        <Button variant="contained" color="success" onClick={handleAddCustomer}>
-          Ajouter un Parent
-        </Button>
-      </Box>
-    </Box>
+    </Layout>
   );
 };
 

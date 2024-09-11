@@ -1,0 +1,12 @@
+.rbc-day-bg {
+    cursor: pointer !important;
+    transition: background-color 0.3s ease !important;
+}
+  
+.rbc-day-bg:hover {
+    background-color: #f8b0b0 !important;
+}
+
+.rbc-time-slot:hover {
+    background-color: #f8b0b0 !important;
+}

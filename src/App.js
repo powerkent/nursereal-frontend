@@ -34,6 +34,9 @@ import Activity from "./pages/manager/activity/Activity";
 import EditActivity from "./pages/manager/activity/EditActivity";
 import AddActivity from "./pages/manager/activity/AddActivity";
 
+import Contracts from "./pages/manager/contract/Contracts";
+import AddContract from "./pages/manager/contract/AddContract";
+
 import "./App.css";
 
 function App() {
@@ -238,6 +241,22 @@ function App() {
           element={
             <PrivateRoute>
               <Activity />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/contracts"
+          element={
+            <PrivateRoute>
+              <Contracts />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/contracts/add"
+          element={
+            <PrivateRoute>
+              <AddContract />
             </PrivateRoute>
           }
         />

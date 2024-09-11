@@ -10,6 +10,7 @@ import {
 import { ArrowBack } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../../../api/axios";
+import Layout from "../../../components/Layout";
 
 const EditTreatment = () => {
   const { uuid } = useParams();
@@ -42,50 +43,45 @@ const EditTreatment = () => {
   };
 
   return (
-    <Box
-      sx={{ width: "400px", margin: "auto", padding: 4, textAlign: "center" }}
-    >
-      <IconButton
-        sx={{ position: "absolute", top: 10, left: 10 }}
-        onClick={() => navigate("/treatments")}
+    <Layout>
+      <Box
+        sx={{ width: "400px", margin: "auto", padding: 4, textAlign: "center" }}
       >
-        <ArrowBack />
-      </IconButton>
+        <Typography variant="h4" gutterBottom>
+          Modifier un Traitement
+        </Typography>
 
-      <Typography variant="h4" gutterBottom>
-        Modifier un Traitement
-      </Typography>
+        {error && <Typography color="error">{error}</Typography>}
 
-      {error && <Typography color="error">{error}</Typography>}
-
-      <form onSubmit={handleSubmit}>
-        <TextField
-          fullWidth
-          label="Nom du Traitement"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          margin="normal"
-          required
-        />
-        <TextField
-          fullWidth
-          label="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          margin="normal"
-          required
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          sx={{ marginTop: 2 }}
-        >
-          Enregistrer les modifications
-        </Button>
-      </form>
-    </Box>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            label="Nom du Traitement"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            margin="normal"
+            required
+          />
+          <TextField
+            fullWidth
+            label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            margin="normal"
+            required
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ marginTop: 2 }}
+          >
+            Enregistrer les modifications
+          </Button>
+        </form>
+      </Box>
+    </Layout>
   );
 };
 

@@ -26,13 +26,6 @@ const Activities = () => {
 
   return (
     <Box sx={{ padding: 4, position: "relative" }}>
-      <IconButton
-        sx={{ position: "absolute", top: 10, left: 10 }}
-        onClick={() => navigate("/")}
-      >
-        <ArrowBack />
-      </IconButton>
-
       <Typography variant="h4" gutterBottom align="center">
         Liste des Activités
       </Typography>

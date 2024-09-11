@@ -18,6 +18,7 @@ import axios from "../../../api/axios";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import Layout from "../../../components/Layout";
 
 const AddTreatment = () => {
   const [name, setName] = useState("");
@@ -74,123 +75,133 @@ const AddTreatment = () => {
   };
 
   return (
-    <Box
-      sx={{
-        width: "500px",
-        margin: "auto",
-        padding: 4,
-        textAlign: "center",
-        backgroundColor: "#f5f5f5",
-        borderRadius: "10px",
-        boxShadow: 3,
-        marginTop: 6,
-      }}
-    >
-      <Typography variant="h4" gutterBottom>
-        Ajouter un Traitement
-      </Typography>
+    <Layout>
+      <Box
+        sx={{
+          width: "500px",
+          margin: "auto",
+          padding: 4,
+          textAlign: "center",
+          backgroundColor: "#f5f5f5",
+          borderRadius: "10px",
+          boxShadow: 3,
+          marginTop: 6,
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Ajouter un Traitement
+        </Typography>
 
-      {error && <Typography color="error">{error}</Typography>}
+        {error && <Typography color="error">{error}</Typography>}
 
-      <form onSubmit={handleSubmit}>
-        <TextField
-          fullWidth
-          label="Nom"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          margin="normal"
-          required
-        />
-        <TextField
-          fullWidth
-          label="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          margin="normal"
-          required
-        />
-        <FormControl fullWidth margin="normal">
-          <InputLabel>Enfant</InputLabel>
-          <Select
-            value={childUuid}
-            onChange={(e) => setChildUuid(e.target.value)}
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            label="Nom"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            margin="normal"
             required
-          >
-            {children.map((child) => (
-              <MenuItem key={child.uuid} value={child.uuid}>
-                {child.firstname} {child.lastname}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <DatePicker
-              label="Date de début"
-              value={startAt}
-              onChange={(newValue) => setStartAt(newValue)}
-              renderInput={(params) => (
-                <TextField fullWidth margin="normal" {...params} />
-              )}
-            />
-            <DatePicker
-              label="Date de fin"
-              value={endAt}
-              onChange={(newValue) => setEndAt(newValue)}
-              renderInput={(params) => (
-                <TextField fullWidth margin="normal" {...params} />
-              )}
-            />
-          </Box>
-        </LocalizationProvider>
-
-        {dosage.map((dosageField, index) => (
-          <Box
-            key={index}
-            sx={{ marginTop: 2, display: "flex", gap: 2, alignItems: "center" }}
-          >
-            <TextField
-              fullWidth
-              label="Dose"
-              value={dosageField.dose}
-              onChange={(e) =>
-                handleDosageChange(index, "dose", e.target.value)
-              }
-              margin="normal"
+          />
+          <TextField
+            fullWidth
+            label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            margin="normal"
+            required
+          />
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Enfant</InputLabel>
+            <Select
+              value={childUuid}
+              onChange={(e) => setChildUuid(e.target.value)}
               required
-            />
-            <TextField
-              fullWidth
-              label="Heure de dosage"
-              type="time"
-              value={dosageField.dosingTime}
-              onChange={(e) =>
-                handleDosageChange(index, "dosingTime", e.target.value)
-              }
-              margin="normal"
-              required
-            />
-            <IconButton color="error" onClick={() => removeDosageField(index)}>
-              <DeleteIcon />
-            </IconButton>
-          </Box>
-        ))}
-        <IconButton onClick={addDosageField} sx={{ marginTop: 2 }}>
-          <AddIcon /> Une dose
-        </IconButton>
+            >
+              {children.map((child) => (
+                <MenuItem key={child.uuid} value={child.uuid}>
+                  {child.firstname} {child.lastname}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          sx={{ marginTop: 2 }}
-        >
-          Ajouter
-        </Button>
-      </form>
-    </Box>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <DatePicker
+                label="Date de début"
+                value={startAt}
+                onChange={(newValue) => setStartAt(newValue)}
+                renderInput={(params) => (
+                  <TextField fullWidth margin="normal" {...params} />
+                )}
+              />
+              <DatePicker
+                label="Date de fin"
+                value={endAt}
+                onChange={(newValue) => setEndAt(newValue)}
+                renderInput={(params) => (
+                  <TextField fullWidth margin="normal" {...params} />
+                )}
+              />
+            </Box>
+          </LocalizationProvider>
+
+          {dosage.map((dosageField, index) => (
+            <Box
+              key={index}
+              sx={{
+                marginTop: 2,
+                display: "flex",
+                gap: 2,
+                alignItems: "center",
+              }}
+            >
+              <TextField
+                fullWidth
+                label="Dose"
+                value={dosageField.dose}
+                onChange={(e) =>
+                  handleDosageChange(index, "dose", e.target.value)
+                }
+                margin="normal"
+                required
+              />
+              <TextField
+                fullWidth
+                label="Heure de dosage"
+                type="time"
+                value={dosageField.dosingTime}
+                onChange={(e) =>
+                  handleDosageChange(index, "dosingTime", e.target.value)
+                }
+                margin="normal"
+                required
+              />
+              <IconButton
+                color="error"
+                onClick={() => removeDosageField(index)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          ))}
+          <IconButton onClick={addDosageField} sx={{ marginTop: 2 }}>
+            <AddIcon /> Une dose
+          </IconButton>
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ marginTop: 2 }}
+          >
+            Ajouter
+          </Button>
+        </form>
+      </Box>
+    </Layout>
   );
 };
 
