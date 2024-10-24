@@ -42,6 +42,7 @@ import Channels from "./pages/chat/Channels";
 import Channel from "./pages/chat/Channel";
 
 import Presence from "./pages/agent/presence/Presence";
+import Diaper from "./pages/agent/diaper/Diaper";
 
 import "./App.css";
 
@@ -105,7 +106,10 @@ function App() {
           <Route path="channels/:channelId" element={<Channel />} />
 
           {/* Présence */}
-          <Route path="presences" element={<Presence />} />
+          <Route path="actions/presences" element={<Presence />} />
+
+          {/* Diaper */}
+          <Route path="actions/diapers" element={<Diaper />} />
         </Route>
       </Routes>
     </Router>
