@@ -43,6 +43,7 @@ import Channel from "./pages/chat/Channel";
 
 import Presence from "./pages/agent/presence/Presence";
 import Diaper from "./pages/agent/diaper/Diaper";
+import Care from "./pages/agent/care/Care";
 
 import "./App.css";
 
@@ -110,6 +111,9 @@ function App() {
 
           {/* Diaper */}
           <Route path="actions/diapers" element={<Diaper />} />
+
+          {/* Care */}
+          <Route path="actions/cares" element={<Care />} />
         </Route>
       </Routes>
     </Router>
