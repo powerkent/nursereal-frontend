@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Paper, Button, IconButton } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
+import { Box, Typography, Paper, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../api/axios";
 

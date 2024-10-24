@@ -14,7 +14,6 @@ import { format, parse, startOfWeek, getDay } from "date-fns";
 import fr from "date-fns/locale/fr";
 import axios from "../../../api/axios";
 import { useNavigate } from "react-router-dom";
-import Layout from "../../../components/Layout";
 
 const locales = { fr: fr };
 
@@ -109,67 +108,61 @@ const Contracts = () => {
   };
 
   return (
-    <Layout>
-      <Box
-        sx={{ padding: 4, width: "80%", margin: "auto", textAlign: "center" }}
-      >
-        <Typography variant="h4" gutterBottom align="center">
-          Visualiser les Contrats par Crèche
-        </Typography>
+    <Box sx={{ padding: 4, width: "80%", margin: "auto", textAlign: "center" }}>
+      <Typography variant="h4" gutterBottom align="center">
+        Visualiser les Contrats par Crèche
+      </Typography>
 
-        <Box
-          sx={{ display: "flex", justifyContent: "center", marginBottom: 3 }}
-        >
-          <FormControl sx={{ width: "20%" }}>
-            <InputLabel id="test-select-creche">Crèche</InputLabel>
-            <Select
-              value={selectedNursery}
-              onChange={(e) => setSelectedNursery(e.target.value)}
-              labelId="test-select-creche"
-              label="Crèche"
-            >
-              {nurseries.map((nursery) => (
-                <MenuItem key={nursery.id} value={nursery.id}>
-                  {nursery.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Calendar
-            localizer={localizer}
-            culture="fr"
-            events={events}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 400, width: "50%" }}
-            selectable={false}
-            dayPropGetter={dayPropGetter}
-            messages={{
-              today: "Aujourd'hui",
-              previous: "Précédent",
-              next: "Suivant",
-              month: "Mois",
-              week: "Semaine",
-              day: "Jour",
-              agenda: "Agenda",
-            }}
-          />
-        </Box>
-
-        <Box sx={{ marginTop: 3, textAlign: "center" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddRegistration}
+      <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 3 }}>
+        <FormControl sx={{ width: "20%" }}>
+          <InputLabel id="test-select-creche">Crèche</InputLabel>
+          <Select
+            value={selectedNursery}
+            onChange={(e) => setSelectedNursery(e.target.value)}
+            labelId="test-select-creche"
+            label="Crèche"
           >
-            Ajouter ou modifier une ou des inscriptions
-          </Button>
-        </Box>
+            {nurseries.map((nursery) => (
+              <MenuItem key={nursery.id} value={nursery.id}>
+                {nursery.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
-    </Layout>
+
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Calendar
+          localizer={localizer}
+          culture="fr"
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: 400, width: "50%" }}
+          selectable={false}
+          dayPropGetter={dayPropGetter}
+          messages={{
+            today: "Aujourd'hui",
+            previous: "Précédent",
+            next: "Suivant",
+            month: "Mois",
+            week: "Semaine",
+            day: "Jour",
+            agenda: "Agenda",
+          }}
+        />
+      </Box>
+
+      <Box sx={{ marginTop: 3, textAlign: "center" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddRegistration}
+        >
+          Ajouter ou modifier une ou des inscriptions
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import LoginForm from "./components/LoginForm";
+import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 
 import Nurseries from "./pages/manager/nursery/Nurseries";
@@ -37,229 +38,75 @@ import AddActivity from "./pages/manager/activity/AddActivity";
 import Contracts from "./pages/manager/contract/Contracts";
 import AddContract from "./pages/manager/contract/AddContract";
 
+import Channels from "./pages/chat/Channels";
+import Channel from "./pages/chat/Channel";
+
+import Presence from "./pages/agent/presence/Presence";
+
 import "./App.css";
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/login" element={<LoginForm />} />
         <Route
           path="/"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <Layout />
             </PrivateRoute>
           }
-        />
-        <Route path="/login" element={<LoginForm />} />
-        <Route
-          path="/nurseries"
-          element={
-            <PrivateRoute>
-              <Nurseries />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/nurseries/:uuid"
-          element={
-            <PrivateRoute>
-              <Nursery />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/nurseries/add"
-          element={
-            <PrivateRoute>
-              <AddNursery />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/nurseries/edit/:uuid"
-          element={
-            <PrivateRoute>
-              <EditNursery />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/agents"
-          element={
-            <PrivateRoute>
-              <Agents />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/agents/add"
-          element={
-            <PrivateRoute>
-              <AddAgent />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/agents/edit/:uuid"
-          element={
-            <PrivateRoute>
-              <EditAgent />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/agents/:uuid"
-          element={
-            <PrivateRoute>
-              <Agent />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/children"
-          element={
-            <PrivateRoute>
-              <Children />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/children/add"
-          element={
-            <PrivateRoute>
-              <AddChild />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/children/edit/:uuid"
-          element={
-            <PrivateRoute>
-              <EditChild />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/children/:uuid"
-          element={
-            <PrivateRoute>
-              <Child />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/customers"
-          element={
-            <PrivateRoute>
-              <Customers />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/customers/add"
-          element={
-            <PrivateRoute>
-              <AddCustomer />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/customers/edit/:uuid"
-          element={
-            <PrivateRoute>
-              <EditCustomer />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/customers/:uuid"
-          element={
-            <PrivateRoute>
-              <Customer />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/treatments"
-          element={
-            <PrivateRoute>
-              <Treatments />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/treatments/add"
-          element={
-            <PrivateRoute>
-              <AddTreatment />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/treatments/edit/:uuid"
-          element={
-            <PrivateRoute>
-              <EditTreatment />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/treatments/:uuid"
-          element={
-            <PrivateRoute>
-              <Treatment />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/activities"
-          element={
-            <PrivateRoute>
-              <Activities />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/activities/add"
-          element={
-            <PrivateRoute>
-              <AddActivity />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/activities/edit/:uuid"
-          element={
-            <PrivateRoute>
-              <EditActivity />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/activities/:uuid"
-          element={
-            <PrivateRoute>
-              <Activity />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/contracts"
-          element={
-            <PrivateRoute>
-              <Contracts />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/contracts/add"
-          element={
-            <PrivateRoute>
-              <AddContract />
-            </PrivateRoute>
-          }
-        />
+        >
+          <Route index element={<Dashboard />} />
+
+          {/* Crèches */}
+          <Route path="nurseries" element={<Nurseries />} />
+          <Route path="nurseries/add" element={<AddNursery />} />
+          <Route path="nurseries/edit/:uuid" element={<EditNursery />} />
+          <Route path="nurseries/:uuid" element={<Nursery />} />
+
+          {/* Agents */}
+          <Route path="agents" element={<Agents />} />
+          <Route path="agents/add" element={<AddAgent />} />
+          <Route path="agents/edit/:uuid" element={<EditAgent />} />
+          <Route path="agents/:uuid" element={<Agent />} />
+
+          {/* Enfants */}
+          <Route path="children" element={<Children />} />
+          <Route path="children/add" element={<AddChild />} />
+          <Route path="children/edit/:uuid" element={<EditChild />} />
+          <Route path="children/:uuid" element={<Child />} />
+
+          {/* Parents */}
+          <Route path="customers" element={<Customers />} />
+          <Route path="customers/add" element={<AddCustomer />} />
+          <Route path="customers/edit/:uuid" element={<EditCustomer />} />
+          <Route path="customers/:uuid" element={<Customer />} />
+
+          {/* Traitements */}
+          <Route path="treatments" element={<Treatments />} />
+          <Route path="treatments/add" element={<AddTreatment />} />
+          <Route path="treatments/edit/:uuid" element={<EditTreatment />} />
+          <Route path="treatments/:uuid" element={<Treatment />} />
+
+          {/* Activités */}
+          <Route path="activities" element={<Activities />} />
+          <Route path="activities/add" element={<AddActivity />} />
+          <Route path="activities/edit/:uuid" element={<EditActivity />} />
+          <Route path="activities/:uuid" element={<Activity />} />
+
+          {/* Contrats */}
+          <Route path="contracts" element={<Contracts />} />
+          <Route path="contracts/add" element={<AddContract />} />
+
+          {/* Chats */}
+          <Route path="channels" element={<Channels />} />
+          <Route path="channels/:channelId" element={<Channel />} />
+
+          {/* Présence */}
+          <Route path="presences" element={<Presence />} />
+        </Route>
       </Routes>
     </Router>
   );

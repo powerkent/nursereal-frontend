@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Paper, IconButton } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
+import { Box, Button, Typography, Paper } from "@mui/material";
 import axios from "../../../api/axios";
 import { useNavigate, useParams } from "react-router-dom";
-import Layout from "../../../components/Layout";
 
 const Agent = () => {
   const [agent, setAgent] = useState(null);
@@ -31,54 +29,44 @@ const Agent = () => {
   }
 
   return (
-    <Layout>
-      <Box sx={{ padding: 4, position: "relative" }}>
-        <Typography variant="h4" gutterBottom align="center">
-          Détails de l'Agent
+    <Box sx={{ padding: 4, position: "relative" }}>
+      <Typography variant="h4" gutterBottom align="center">
+        Détails de l'Agent
+      </Typography>
+
+      <Paper
+        sx={{
+          maxWidth: "600px",
+          margin: "auto",
+          padding: 4,
+          backgroundColor: "#f5f5f5",
+          boxShadow: 3,
+        }}
+      >
+        <Typography variant="h6">
+          {agent.firstname} {agent.lastname}
         </Typography>
+        <Typography>Email: {agent.email}</Typography>
+        <Typography>Rôle(s): {agent.roles.join(", ")}</Typography>
+      </Paper>
 
-        <Paper
-          sx={{
-            maxWidth: "600px",
-            margin: "auto",
-            padding: 4,
-            backgroundColor: "#f5f5f5",
-            boxShadow: 3,
-          }}
+      <Box
+        sx={{
+          marginTop: 4,
+          display: "flex",
+          justifyContent: "center",
+          gap: 2,
+        }}
+      >
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: "orange" }}
+          onClick={() => navigate(`/agents/edit/${agent.uuid}`)}
         >
-          <Typography variant="h6">
-            {agent.firstname} {agent.lastname}
-          </Typography>
-          <Typography>Email: {agent.email}</Typography>
-          <Typography>Rôle(s): {agent.roles.join(", ")}</Typography>
-          {/* Ajoutez d'autres détails si nécessaire */}
-        </Paper>
-
-        <Box
-          sx={{
-            marginTop: 4,
-            display: "flex",
-            justifyContent: "center",
-            gap: 2,
-          }}
-        >
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "orange" }}
-            onClick={() => navigate(`/agents/edit/${agent.uuid}`)}
-          >
-            Modifier
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate("/agents")}
-          >
-            Retour à la liste
-          </Button>
-        </Box>
+          Modifier
+        </Button>
       </Box>
-    </Layout>
+    </Box>
   );
 };
 

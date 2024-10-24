@@ -1,0 +1,81 @@
+.presence-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.presence-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.no-data-text {
+  text-align: center;
+}
+
+.presence-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.presence-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.presence-item:hover {
+  transform: scale(1.05);
+}
+
+.presence-avatar {
+  width: 80px;
+  height: 80px;
+}
+
+.presence-name {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.presence-item.selected .presence-avatar {
+  border: 3px solid green;
+}
+
+.loading-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 4rem;
+}
+
+.presence-content {
+  display: flex;
+  margin-top: 2rem;
+}
+
+.present-children,
+.absent-children {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.present-children:last-child,
+.absent-children:last-child {
+  margin-right: 0;
+}
+
+.children-selection {
+  margin-bottom: 2rem;
+}

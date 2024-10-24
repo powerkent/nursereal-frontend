@@ -19,7 +19,6 @@ import axios from "../../../api/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Layout from "../../../components/Layout";
 
 const EditNursery = () => {
   const { uuid } = useParams();
@@ -106,107 +105,102 @@ const EditNursery = () => {
   };
 
   return (
-    <Layout>
-      <Paper
-        elevation={3}
-        sx={{
-          width: "32%",
-          margin: "auto",
-          padding: 6,
-          textAlign: "center",
-          backgroundColor: "#fafafa",
-          borderRadius: "12px",
-          marginTop: 8,
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          Modifier une Crèche
-        </Typography>
+    <Paper
+      elevation={3}
+      sx={{
+        width: "32%",
+        margin: "auto",
+        padding: 6,
+        textAlign: "center",
+        backgroundColor: "#fafafa",
+        borderRadius: "12px",
+        marginTop: 8,
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Modifier une Crèche
+      </Typography>
 
-        {error && <Typography color="error">{error}</Typography>}
+      {error && <Typography color="error">{error}</Typography>}
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            label="Nom de la Crèche"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Adresse"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            margin="normal"
-            required
-          />
+      <form onSubmit={handleSubmit}>
+        <TextField
+          fullWidth
+          label="Nom de la Crèche"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          margin="normal"
+          required
+        />
+        <TextField
+          fullWidth
+          label="Adresse"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          margin="normal"
+          required
+        />
 
-          {openings.map((opening, index) => (
-            <Box key={index} sx={{ display: "flex", gap: 2, marginTop: 4 }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <TimePicker
-                  label="Heure d'ouverture"
-                  value={opening.openingHour}
-                  onChange={(newValue) =>
-                    handleOpeningsChange(index, "openingHour", newValue)
-                  }
-                  ampm={false}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-                <TimePicker
-                  label="Heure de fermeture"
-                  value={opening.closingHour}
-                  onChange={(newValue) =>
-                    handleOpeningsChange(index, "closingHour", newValue)
-                  }
-                  ampm={false}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-              </LocalizationProvider>
+        {openings.map((opening, index) => (
+          <Box key={index} sx={{ display: "flex", gap: 2, marginTop: 4 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <TimePicker
+                label="Heure d'ouverture"
+                value={opening.openingHour}
+                onChange={(newValue) =>
+                  handleOpeningsChange(index, "openingHour", newValue)
+                }
+                ampm={false}
+                renderInput={(params) => <TextField {...params} />}
+              />
+              <TimePicker
+                label="Heure de fermeture"
+                value={opening.closingHour}
+                onChange={(newValue) =>
+                  handleOpeningsChange(index, "closingHour", newValue)
+                }
+                ampm={false}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
 
-              <FormControl fullWidth>
-                <InputLabel>Jour</InputLabel>
-                <Select
-                  value={opening.openingDay}
-                  onChange={(e) =>
-                    handleOpeningsChange(index, "openingDay", e.target.value)
-                  }
-                  required
-                >
-                  {daysOfWeek.map((day) => (
-                    <MenuItem key={day.english} value={day.english}>
-                      {day.french}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <IconButton
-                color="error"
-                onClick={() => removeOpeningField(index)}
+            <FormControl fullWidth>
+              <InputLabel>Jour</InputLabel>
+              <Select
+                value={opening.openingDay}
+                onChange={(e) =>
+                  handleOpeningsChange(index, "openingDay", e.target.value)
+                }
+                required
               >
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          ))}
+                {daysOfWeek.map((day) => (
+                  <MenuItem key={day.english} value={day.english}>
+                    {day.french}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <IconButton color="error" onClick={() => removeOpeningField(index)}>
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        ))}
 
-          <IconButton onClick={addOpeningField} sx={{ marginTop: 4 }}>
-            <AddIcon /> Ajouter un créneau
-          </IconButton>
+        <IconButton onClick={addOpeningField} sx={{ marginTop: 4 }}>
+          <AddIcon /> Ajouter un créneau
+        </IconButton>
 
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ marginTop: 4 }}
-          >
-            Modifier
-          </Button>
-        </form>
-      </Paper>
-    </Layout>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ marginTop: 4 }}
+        >
+          Modifier
+        </Button>
+      </form>
+    </Paper>
   );
 };
 

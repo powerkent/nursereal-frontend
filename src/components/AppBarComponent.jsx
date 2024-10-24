@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import {
   AppBar,
   Toolbar,
@@ -7,10 +7,15 @@ import {
   Switch,
   Box,
   FormControlLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
 import ChildFriendlyIcon from "@mui/icons-material/ChildFriendly";
 import { useNavigate } from "react-router-dom";
+import axios from "../api/axios";
+import { SelectedNurseryContext } from "../contexts/SelectedNurseryContext";
 
 const AppBarComponent = ({
   isManager,
@@ -18,8 +23,59 @@ const AppBarComponent = ({
   handleLogout,
   isAgentMode,
   handleToggleRole,
+  userUuid,
 }) => {
   const navigate = useNavigate();
+  const [nurseries, setNurseries] = useState([]);
+  const [selectedNursery, setSelectedNursery] = useState("");
+  const { setSelectedNurseryUuid } = useContext(SelectedNurseryContext);
+
+  const fetchNurseries = useCallback(async () => {
+    if (!userUuid && !isManager) {
+      console.error("UUID manquant pour l'agent, annulation de l'appel.");
+      return;
+    }
+
+    try {
+      let response;
+      let nurseriesList = [];
+
+      if (isManager && isAgentMode) {
+        response = await axios.get("/nursery_structures");
+        nurseriesList = response.data?.["hydra:member"] || [];
+      } else if (!isManager) {
+        response = await axios.get(`/agents/${userUuid}`);
+        nurseriesList = response.data?.nurseryStructures || [];
+      }
+
+      setNurseries(nurseriesList);
+
+      if (nurseriesList.length > 0) {
+        setSelectedNursery(nurseriesList[0].name);
+        setSelectedNurseryUuid(nurseriesList[0].uuid);
+      }
+    } catch (error) {
+      console.error("Error fetching nurseries:", error);
+      setNurseries([]);
+    }
+  }, [userUuid, isManager, isAgentMode, setSelectedNurseryUuid]);
+
+  useEffect(() => {
+    if (isAgentMode) {
+      fetchNurseries();
+    }
+  }, [isAgentMode, fetchNurseries]);
+
+  const handleNurseryChange = (event) => {
+    const selectedName = event.target.value;
+    const selectedNursery = nurseries.find(
+      (nursery) => nursery.name === selectedName
+    );
+    console.log(selectedNursery);
+    setSelectedNursery(selectedName);
+    setSelectedNurseryUuid(selectedNursery.uuid);
+  };
+
   return (
     <AppBar
       position="static"
@@ -44,9 +100,27 @@ const AppBarComponent = ({
                 color="default"
               />
             }
-            label={isAgentMode ? "Manager" : "Agent"}
+            label={`Passer en mode ${isAgentMode ? "Manager" : "Agent"}`}
             sx={{ marginLeft: 2 }}
           />
+        )}
+
+        {isAgentMode && (
+          <Select
+            value={selectedNursery}
+            onChange={handleNurseryChange}
+            displayEmpty
+            sx={{ color: "white", marginLeft: 2 }}
+          >
+            <MenuItem value="" disabled>
+              Sélectionner une crèche
+            </MenuItem>
+            {nurseries.map((nursery) => (
+              <MenuItem key={nursery.uuid} value={nursery.name}>
+                {nursery.name}
+              </MenuItem>
+            ))}
+          </Select>
         )}
 
         <Box
@@ -66,7 +140,7 @@ const AppBarComponent = ({
         </Box>
 
         <IconButton color="inherit" onClick={handleLogout}>
-          Déconnexion
+          <LogoutIcon />
         </IconButton>
       </Toolbar>
     </AppBar>

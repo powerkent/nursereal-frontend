@@ -19,7 +19,6 @@ import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
-import Layout from "../../../components/Layout";
 
 const AddNursery = () => {
   const [name, setName] = useState("");
@@ -85,123 +84,118 @@ const AddNursery = () => {
   };
 
   return (
-    <Layout>
-      <Paper
-        elevation={3}
-        sx={{
-          width: "40%",
-          margin: "auto",
-          padding: 6,
-          textAlign: "center",
-          backgroundColor: "#fafafa",
-          borderRadius: "12px",
-          marginTop: 8,
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          Ajouter une Crèche
-        </Typography>
+    <Paper
+      elevation={3}
+      sx={{
+        width: "40%",
+        margin: "auto",
+        padding: 6,
+        textAlign: "center",
+        backgroundColor: "#fafafa",
+        borderRadius: "12px",
+        marginTop: 8,
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Ajouter une Crèche
+      </Typography>
 
-        {error && <Typography color="error">{error}</Typography>}
+      {error && <Typography color="error">{error}</Typography>}
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            label="Nom de la Crèche"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Adresse"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            margin="normal"
-            required
-          />
+      <form onSubmit={handleSubmit}>
+        <TextField
+          fullWidth
+          label="Nom de la Crèche"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          margin="normal"
+          required
+        />
+        <TextField
+          fullWidth
+          label="Adresse"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          margin="normal"
+          required
+        />
 
-          {openings.map((opening, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: "flex",
-                gap: 2,
-                marginTop: 4,
-                alignItems: "center",
-              }}
-            >
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <TimePicker
-                  label="Heure d'ouverture"
-                  value={opening.openingHour}
-                  onChange={(newValue) =>
-                    handleOpeningsChange(index, "openingHour", newValue)
-                  }
-                  ampm={false}
-                  renderInput={(params) => (
-                    <TextField fullWidth margin="normal" {...params} />
-                  )}
-                />
-              </LocalizationProvider>
-
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <TimePicker
-                  label="Heure de fermeture"
-                  value={opening.closingHour}
-                  onChange={(newValue) =>
-                    handleOpeningsChange(index, "closingHour", newValue)
-                  }
-                  ampm={false}
-                  renderInput={(params) => (
-                    <TextField fullWidth margin="normal" {...params} />
-                  )}
-                />
-              </LocalizationProvider>
-
-              <FormControl fullWidth sx={{ flex: 2 }}>
-                <InputLabel>Jour</InputLabel>
-                <Select
-                  value={opening.openingDay}
-                  onChange={(e) =>
-                    handleOpeningsChange(index, "openingDay", e.target.value)
-                  }
-                  required
-                >
-                  {daysOfWeek.map((day) => (
-                    <MenuItem key={day.english} value={day.english}>
-                      {day.french}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
-              <IconButton
-                color="error"
-                onClick={() => removeOpeningField(index)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          ))}
-
-          <IconButton onClick={addOpeningField} sx={{ marginTop: 4 }}>
-            <AddIcon /> Ajouter un créneau
-          </IconButton>
-
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ marginTop: 4 }}
+        {openings.map((opening, index) => (
+          <Box
+            key={index}
+            sx={{
+              display: "flex",
+              gap: 2,
+              marginTop: 4,
+              alignItems: "center",
+            }}
           >
-            Ajouter
-          </Button>
-        </form>
-      </Paper>
-    </Layout>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <TimePicker
+                label="Heure d'ouverture"
+                value={opening.openingHour}
+                onChange={(newValue) =>
+                  handleOpeningsChange(index, "openingHour", newValue)
+                }
+                ampm={false}
+                renderInput={(params) => (
+                  <TextField fullWidth margin="normal" {...params} />
+                )}
+              />
+            </LocalizationProvider>
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <TimePicker
+                label="Heure de fermeture"
+                value={opening.closingHour}
+                onChange={(newValue) =>
+                  handleOpeningsChange(index, "closingHour", newValue)
+                }
+                ampm={false}
+                renderInput={(params) => (
+                  <TextField fullWidth margin="normal" {...params} />
+                )}
+              />
+            </LocalizationProvider>
+
+            <FormControl fullWidth sx={{ flex: 2 }}>
+              <InputLabel>Jour</InputLabel>
+              <Select
+                value={opening.openingDay}
+                onChange={(e) =>
+                  handleOpeningsChange(index, "openingDay", e.target.value)
+                }
+                required
+              >
+                {daysOfWeek.map((day) => (
+                  <MenuItem key={day.english} value={day.english}>
+                    {day.french}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <IconButton color="error" onClick={() => removeOpeningField(index)}>
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        ))}
+
+        <IconButton onClick={addOpeningField} sx={{ marginTop: 4 }}>
+          <AddIcon /> Ajouter un créneau
+        </IconButton>
+
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ marginTop: 4 }}
+        >
+          Ajouter
+        </Button>
+      </form>
+    </Paper>
   );
 };
 

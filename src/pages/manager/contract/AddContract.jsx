@@ -23,7 +23,6 @@ import fr from "date-fns/locale/fr";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "../../../api/axios";
-import Layout from "../../../components/Layout";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -69,7 +68,6 @@ const AddContract = () => {
   const [error, setError] = useState("");
   const [openings, setOpenings] = useState([]);
 
-  // Use navigate for redirection
   const navigate = useNavigate();
 
   const fetchChildren = async () => {
@@ -222,144 +220,136 @@ const AddContract = () => {
   };
 
   return (
-    <Layout>
-      <Paper
-        elevation={3}
-        sx={{
-          width: "60%",
-          margin: "auto",
-          padding: 6,
-          textAlign: "center",
-          backgroundColor: "#fafafa",
-          borderRadius: "12px",
-          marginTop: 8,
-        }}
+    <Paper
+      elevation={3}
+      sx={{
+        width: "60%",
+        margin: "auto",
+        padding: 6,
+        textAlign: "center",
+        backgroundColor: "#fafafa",
+        borderRadius: "12px",
+        marginTop: 8,
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Ajouter un contrat
+      </Typography>
+
+      {error && <Typography color="error">{error}</Typography>}
+
+      <FormControl
+        sx={{ width: "50%", marginBottom: 10 }}
+        disabled={events.length > 0}
       >
-        <Typography variant="h4" gutterBottom>
-          Ajouter un contrat
-        </Typography>
-
-        {error && <Typography color="error">{error}</Typography>}
-
-        <FormControl
-          sx={{ width: "50%", marginBottom: 10 }}
-          disabled={events.length > 0}
+        <InputLabel>Choisissez un enfant</InputLabel>
+        <Select
+          value={selectedChild?.uuid || ""}
+          onChange={(e) => {
+            const selected = children.find(
+              (child) => child.uuid === e.target.value
+            );
+            handleSelectChild(selected);
+          }}
+          required
         >
-          <InputLabel>Choisissez un enfant</InputLabel>
-          <Select
-            value={selectedChild?.uuid || ""}
-            onChange={(e) => {
-              const selected = children.find(
-                (child) => child.uuid === e.target.value
-              );
-              handleSelectChild(selected);
-            }}
-            required
-          >
-            {children.length > 0 ? (
-              children.map((child) => (
-                <MenuItem key={child.uuid} value={child.uuid}>
-                  {child.firstname} {child.lastname}
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem disabled>Pas d'enfants disponibles</MenuItem>
-            )}
-          </Select>
-        </FormControl>
+          {children.length > 0 ? (
+            children.map((child) => (
+              <MenuItem key={child.uuid} value={child.uuid}>
+                {child.firstname} {child.lastname}
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem disabled>Pas d'enfants disponibles</MenuItem>
+          )}
+        </Select>
+      </FormControl>
 
-        <Calendar
-          localizer={localizer}
-          culture="fr"
-          messages={messages}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 500, cursor: "pointer" }}
-          selectable
-          onSelectSlot={handleSelectSlot}
-          dayPropGetter={dayPropGetter}
-          className="custom-calendar"
-        />
+      <Calendar
+        localizer={localizer}
+        culture="fr"
+        messages={messages}
+        events={events}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: 500, cursor: "pointer" }}
+        selectable
+        onSelectSlot={handleSelectSlot}
+        dayPropGetter={dayPropGetter}
+        className="custom-calendar"
+      />
 
-        <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
-          Contrats ajoutés :
-        </Typography>
+      <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
+        Contrats ajoutés :
+      </Typography>
 
-        {events.map((event, index) => (
-          <Box
-            key={index}
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 1,
-            }}
-          >
-            <Typography>
-              {format(event.start, "dd/MM/yyyy")} de{" "}
-              {format(event.start, "HH:mm")} à {format(event.end, "HH:mm")} pour{" "}
-              {event.title}
-            </Typography>
-            <Box>
-              <IconButton
-                onClick={() => handleEditEvent(index)}
-                color="primary"
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                onClick={() => handleDeleteEvent(index)}
-                color="error"
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          </Box>
-        ))}
-
-        <Dialog open={openPopup} onClose={() => setOpenPopup(false)}>
-          <Box sx={{ padding: 3 }}>
-            <Typography variant="h6">Ajouter un horaire</Typography>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <TimePicker
-                label="Heure de début"
-                value={startHour}
-                onChange={(newValue) => setStartHour(newValue)}
-                renderInput={(params) => <TextField {...params} fullWidth />}
-                ampm={false}
-              />
-              <TimePicker
-                label="Heure de fin"
-                value={endHour}
-                onChange={(newValue) => setEndHour(newValue)}
-                renderInput={(params) => <TextField {...params} fullWidth />}
-                ampm={false}
-              />
-            </LocalizationProvider>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={currentEvent !== null ? handleSaveEdit : handleSaveEvent}
-              sx={{ marginTop: 2 }}
-              fullWidth
-            >
-              {currentEvent !== null ? "Modifier" : "Ajouter"}
-            </Button>
-          </Box>
-        </Dialog>
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmitContracts}
-          sx={{ marginTop: 4 }}
-          disabled={!selectedChild || events.length === 0}
+      {events.map((event, index) => (
+        <Box
+          key={index}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 1,
+          }}
         >
-          Soumettre les contrats
-        </Button>
-      </Paper>
-    </Layout>
+          <Typography>
+            {format(event.start, "dd/MM/yyyy")} de{" "}
+            {format(event.start, "HH:mm")} à {format(event.end, "HH:mm")} pour{" "}
+            {event.title}
+          </Typography>
+          <Box>
+            <IconButton onClick={() => handleEditEvent(index)} color="primary">
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={() => handleDeleteEvent(index)} color="error">
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        </Box>
+      ))}
+
+      <Dialog open={openPopup} onClose={() => setOpenPopup(false)}>
+        <Box sx={{ padding: 3 }}>
+          <Typography variant="h6">Ajouter un horaire</Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <TimePicker
+              label="Heure de début"
+              value={startHour}
+              onChange={(newValue) => setStartHour(newValue)}
+              renderInput={(params) => <TextField {...params} fullWidth />}
+              ampm={false}
+            />
+            <TimePicker
+              label="Heure de fin"
+              value={endHour}
+              onChange={(newValue) => setEndHour(newValue)}
+              renderInput={(params) => <TextField {...params} fullWidth />}
+              ampm={false}
+            />
+          </LocalizationProvider>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={currentEvent !== null ? handleSaveEdit : handleSaveEvent}
+            sx={{ marginTop: 2 }}
+            fullWidth
+          >
+            {currentEvent !== null ? "Modifier" : "Ajouter"}
+          </Button>
+        </Box>
+      </Dialog>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSubmitContracts}
+        sx={{ marginTop: 4 }}
+        disabled={!selectedChild || events.length === 0}
+      >
+        Soumettre les contrats
+      </Button>
+    </Paper>
   );
 };
 

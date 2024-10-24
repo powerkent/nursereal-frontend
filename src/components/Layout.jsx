@@ -8,21 +8,27 @@ import {
   ListItemIcon,
   IconButton,
 } from "@mui/material";
-import { useNavigate, useLocation } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // Corrige l'import de jwtDecode
+import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import AppBarComponent from "./AppBarComponent";
-import HomeIcon from "@mui/icons-material/Home";
-import PeopleIcon from "@mui/icons-material/People";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import ChildCareIcon from "@mui/icons-material/ChildCare";
-import BusinessIcon from "@mui/icons-material/Business";
-import FaceIcon from "@mui/icons-material/Face";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import BusinessIcon from "@mui/icons-material/Business";
+import PeopleIcon from "@mui/icons-material/People";
+import ChildCareIcon from "@mui/icons-material/ChildCare";
+import FaceIcon from "@mui/icons-material/Face";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import ForumIcon from "@mui/icons-material/Forum";
+import LocalActivity from "@mui/icons-material/LocalActivity";
+import BabyChangingStationIcon from "@mui/icons-material/BabyChangingStation";
+import AirlineSeatIndividualSuiteIcon from "@mui/icons-material/AirlineSeatIndividualSuite";
+import SelectedNurseryProvider from "../contexts/SelectedNurseryContext";
 
-const Layout = ({ children }) => {
+const Layout = () => {
   const [isManager, setIsManager] = useState(false);
-  const [isAgentMode, setIsAgentMode] = useState(false); // État pour gérer le mode agent
+  const [isAgentMode, setIsAgentMode] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [previousPage, setPreviousPage] = useState("/");
+  const [userUuid, setUserUuid] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,10 +37,10 @@ const Layout = ({ children }) => {
     if (!token) {
       navigate("/login");
     } else {
-      const decodedToken = jwtDecode(token);
-      const roles = decodedToken.roles || [];
+      const roles = localStorage.getItem("roles") || [];
       setIsManager(roles.includes("ROLE_MANAGER"));
-      setIsAgentMode(!roles.includes("ROLE_MANAGER")); // Par défaut, mode agent si pas manager
+      setIsAgentMode(!roles.includes("ROLE_MANAGER"));
+      setUserUuid(localStorage.getItem("uuid"));
     }
   }, [navigate]);
 
@@ -47,12 +53,11 @@ const Layout = ({ children }) => {
     navigate("/login");
   };
 
-  // Fonction pour basculer entre manager et agent
   const handleToggleRole = () => {
-    setIsAgentMode(!isAgentMode); // Inverse l'état de isAgentMode
+    setIsAgentMode(!isAgentMode);
   };
 
-  const sections = [
+  const managerSections = [
     {
       title: "Crèches",
       path: "/nurseries",
@@ -61,12 +66,18 @@ const Layout = ({ children }) => {
     },
     { title: "Ajouter Crèche", path: "/nurseries/add", parent: "/nurseries" },
     {
+      title: "Visualiser Crèche",
+      path: "/nurseries/:uuid",
+      parent: "/nurseries",
+    },
+    {
       title: "Modifier Crèche",
       path: "/nurseries/edit/:uuid",
       parent: "/nurseries",
     },
 
     { title: "Agents", path: "/agents", icon: <PeopleIcon />, parent: "/" },
+    { title: "Visualiser Agents", path: "/agents/:uuid", parent: "/agents" },
     { title: "Ajouter Agent", path: "/agents/add", parent: "/agents" },
     { title: "Modifier Agent", path: "/agents/edit/:uuid", parent: "/agents" },
 
@@ -78,6 +89,11 @@ const Layout = ({ children }) => {
     },
     { title: "Ajouter Enfant", path: "/children/add", parent: "/children" },
     {
+      title: "Visualiser Enfant",
+      path: "/children/:uuid",
+      parent: "/children",
+    },
+    {
       title: "Modifier Enfant",
       path: "/children/edit/:uuid",
       parent: "/children",
@@ -86,26 +102,97 @@ const Layout = ({ children }) => {
     { title: "Parents", path: "/customers", icon: <FaceIcon />, parent: "/" },
     { title: "Ajouter Parent", path: "/customers/add", parent: "/customers" },
     {
+      title: "Visualiser Parent",
+      path: "/customers/:uuid",
+      parent: "/customers",
+    },
+    {
       title: "Modifier Parent",
       path: "/customers/edit/:uuid",
       parent: "/customers",
     },
-
+    {
+      title: "Activités",
+      path: "/activities",
+      icon: <LocalActivity />,
+      parent: "/",
+    },
+    { title: "Ajouter une activité", path: "/activities/add", parent: "/activities" },
+    {
+      title: "Visualiser une activité",
+      path: "/activities/:uuid",
+      parent: "/activities",
+    },
+    {
+      title: "Modifier une activité",
+      path: "/activities/edit/:uuid",
+      parent: "/activities",
+    },
     {
       title: "Traitements",
       path: "/treatments",
       icon: <AssignmentIcon />,
       parent: "/",
     },
-
-    { title: "Contrats", path: "/contracts", icon: <HomeIcon />, parent: "/" },
+    {
+      title: "Contrats",
+      path: "/contracts",
+      icon: <AssignmentTurnedInIcon />,
+      parent: "/",
+    },
     { title: "Ajouter Contrat", path: "/contracts/add", parent: "/contracts" },
+    { title: "Chats", path: "/channels", icon: <ForumIcon />, parent: "/" },
   ];
 
+  const agentSections = [
+    {
+      title: "Présence",
+      path: "/presences",
+      icon: <PeopleIcon />,
+      parent: "/",
+    },
+    {
+      title: "Activités",
+      path: "/actions/activities",
+      icon: <LocalActivity />,
+      parent: "/",
+    },
+    {
+      title: "Soins",
+      path: "/actions/care",
+      icon: <ChildCareIcon />,
+      parent: "/",
+    },
+    {
+      title: "Change",
+      path: "/actions/diapper",
+      icon: <BabyChangingStationIcon />,
+      parent: "/",
+    },
+    {
+      title: "Sommeil",
+      path: "/actions/sleep",
+      icon: <AirlineSeatIndividualSuiteIcon />,
+      parent: "/",
+    },
+    {
+      title: "Traitement",
+      path: "/actions/treatment",
+      icon: <AssignmentIcon />,
+      parent: "/",
+    },
+    { title: "Chats", path: "/channels", icon: <ForumIcon />, parent: "/" },
+  ];
+
+  const sections = isAgentMode ? agentSections : managerSections;
+
   const getPreviousPage = () => {
-    const currentSection = sections.find((section) =>
-      location.pathname.startsWith(section.path)
-    );
+    const currentSection = sections.find((section) => {
+      const pathRegex = new RegExp(
+        `^${section.path.replace(/:\w+/g, "[a-zA-Z0-9-]+")}$`
+      );
+      return pathRegex.test(location.pathname);
+    });
 
     if (currentSection && currentSection.parent !== "/") {
       return currentSection.parent;
@@ -113,56 +200,74 @@ const Layout = ({ children }) => {
     return "/";
   };
 
-  const previousPage = getPreviousPage();
+  useEffect(() => {
+    const prevPage = getPreviousPage();
+    setPreviousPage(prevPage);
+  }, [location.pathname]);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBarComponent
-        isManager={isManager}
-        toggleDrawer={toggleDrawer}
-        handleLogout={handleLogout}
-        isAgentMode={isAgentMode} // Passe l'état à la barre d'app
-        handleToggleRole={handleToggleRole} // Fonction pour changer le rôle
-      />
+    <SelectedNurseryProvider>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBarComponent
+          isManager={isManager}
+          toggleDrawer={toggleDrawer}
+          handleLogout={handleLogout}
+          isAgentMode={isAgentMode}
+          handleToggleRole={handleToggleRole}
+          userUuid={userUuid}
+        />
 
-      {location.pathname !== "/" && previousPage && (
-        <IconButton
-          onClick={() => navigate("/")}
-          sx={{ position: "absolute", top: 100, left: 50 }}
+        {location.pathname !== "/" && previousPage && (
+          <IconButton
+            onClick={() => navigate(previousPage)}
+            sx={{
+              position: "fixed",
+              top: 100,
+              left: 50,
+              zIndex: 1000,
+              backgroundColor: "white",
+              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+              "&:hover": {
+                backgroundColor: "lightgray",
+              },
+            }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+        )}
+
+        <Drawer
+          anchor="left"
+          open={drawerOpen}
+          onClose={() => toggleDrawer(false)}
         >
-          <ArrowBackIcon />
-        </IconButton>
-      )}
+          <Box sx={{ width: 250 }}>
+            <List>
+              {sections
+                .filter((section) => section.icon)
+                .map((section) => (
+                  <ListItem
+                    button
+                    key={section.title}
+                    onClick={() => {
+                      navigate(section.path);
+                      toggleDrawer(false);
+                    }}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <ListItemIcon>{section.icon}</ListItemIcon>
+                    <ListItemText primary={section.title} />
+                  </ListItem>
+                ))}
+            </List>
+          </Box>
+        </Drawer>
 
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={() => toggleDrawer(false)}
-      >
-        <Box sx={{ width: 250 }}>
-          <List>
-            {sections
-              .filter((section) => section.icon)
-              .map((section) => (
-                <ListItem
-                  button
-                  key={section.title}
-                  onClick={() => {
-                    navigate(section.path);
-                    toggleDrawer(false);
-                  }}
-                  sx={{ cursor: "pointer" }}
-                >
-                  <ListItemIcon>{section.icon}</ListItemIcon>
-                  <ListItemText primary={section.title} />
-                </ListItem>
-              ))}
-          </List>
+        <Box sx={{ padding: 4 }}>
+          <Outlet />
         </Box>
-      </Drawer>
-
-      <Box sx={{ padding: 4 }}>{children}</Box>
-    </Box>
+      </Box>
+    </SelectedNurseryProvider>
   );
 };
 

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Paper, IconButton, Button } from "@mui/material";
-import { ArrowBack, Edit, Delete, Visibility } from "@mui/icons-material";
+import { Edit, Delete, Visibility } from "@mui/icons-material";
 import axios from "../../../api/axios";
 import { useNavigate } from "react-router-dom";
-import Layout from "../../../components/Layout";
 
 const Nurseries = () => {
   const [nurseries, setNurseries] = useState([]);
@@ -43,73 +42,67 @@ const Nurseries = () => {
   };
 
   return (
-    <Layout>
-      <Box sx={{ padding: 4, position: "relative" }}>
-        <Typography variant="h4" gutterBottom align="center">
-          Liste des Crèches
-        </Typography>
+    <Box sx={{ padding: 4, position: "relative" }}>
+      <Typography variant="h4" gutterBottom align="center">
+        Liste des Crèches
+      </Typography>
 
-        <Box
-          sx={{
-            maxWidth: "800px", // Limite la largeur maximale
-            margin: "auto", // Centre le contenu
-          }}
-        >
-          {nurseries.map((nursery) => (
-            <Paper
-              key={nursery.uuid}
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: 2,
-                marginBottom: 2,
-                backgroundColor: "#f5f5f5",
-                boxShadow: 3, // Ajoute une ombre légère
-              }}
-            >
-              {/* Informations sur la crèche à gauche */}
-              <Box>
-                <Typography variant="h6">{nursery.name}</Typography>
-                <Typography>{nursery.address}</Typography>
-              </Box>
-
-              {/* Icônes à droite */}
-              <Box sx={{ display: "flex", gap: 1 }}>
-                <IconButton
-                  color="primary"
-                  onClick={() => handleSelect(nursery.uuid)}
-                >
-                  <Visibility />
-                </IconButton>
-                <IconButton
-                  color="warning"
-                  onClick={() => handleEdit(nursery.uuid)}
-                >
-                  <Edit />
-                </IconButton>
-                <IconButton
-                  color="error"
-                  onClick={() => handleDelete(nursery.uuid)}
-                >
-                  <Delete />
-                </IconButton>
-              </Box>
-            </Paper>
-          ))}
-        </Box>
-
-        <Box sx={{ marginTop: 4, textAlign: "center" }}>
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleAddNursery}
+      <Box
+        sx={{
+          maxWidth: "800px", // Limite la largeur maximale
+          margin: "auto", // Centre le contenu
+        }}
+      >
+        {nurseries.map((nursery) => (
+          <Paper
+            key={nursery.uuid}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: 2,
+              marginBottom: 2,
+              backgroundColor: "#f5f5f5",
+              boxShadow: 3, // Ajoute une ombre légère
+            }}
           >
-            Ajouter une Crèche
-          </Button>
-        </Box>
+            {/* Informations sur la crèche à gauche */}
+            <Box>
+              <Typography variant="h6">{nursery.name}</Typography>
+              <Typography>{nursery.address}</Typography>
+            </Box>
+
+            {/* Icônes à droite */}
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <IconButton
+                color="primary"
+                onClick={() => handleSelect(nursery.uuid)}
+              >
+                <Visibility />
+              </IconButton>
+              <IconButton
+                color="warning"
+                onClick={() => handleEdit(nursery.uuid)}
+              >
+                <Edit />
+              </IconButton>
+              <IconButton
+                color="error"
+                onClick={() => handleDelete(nursery.uuid)}
+              >
+                <Delete />
+              </IconButton>
+            </Box>
+          </Paper>
+        ))}
       </Box>
-    </Layout>
+
+      <Box sx={{ marginTop: 4, textAlign: "center" }}>
+        <Button variant="contained" color="success" onClick={handleAddNursery}>
+          Ajouter une Crèche
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

@@ -13,7 +13,6 @@ import PhoneInput from "react-phone-input-2";
 import axios from "../../../api/axios";
 import { useNavigate } from "react-router-dom";
 import "react-phone-input-2/lib/style.css";
-import Layout from "../../../components/Layout";
 
 const AddCustomer = () => {
   const [firstname, setFirstname] = useState("");
@@ -62,91 +61,89 @@ const AddCustomer = () => {
   };
 
   return (
-    <Layout>
-      <Box
-        sx={{ width: "400px", margin: "auto", padding: 4, textAlign: "center" }}
-      >
-        <Typography variant="h4" gutterBottom>
-          Ajouter un Parent
-        </Typography>
+    <Box
+      sx={{ width: "400px", margin: "auto", padding: 4, textAlign: "center" }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Ajouter un Parent
+      </Typography>
 
-        {error && <Typography color="error">{error}</Typography>}
+      {error && <Typography color="error">{error}</Typography>}
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            label="Prénom"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Nom"
-            value={lastname}
-            onChange={(e) => setLastname(e.target.value)}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Mot de passe"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            margin="normal"
-            required
-          />
-          <PhoneInput
-            country={"fr"}
-            value={phoneNumber}
-            onChange={setPhoneNumber}
-            inputStyle={{ width: "100%", marginBottom: "16px" }}
-            required
-          />
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Enfants</InputLabel>
-            <Select
-              multiple
-              value={selectedChildren}
-              onChange={(e) => setSelectedChildren(e.target.value)}
-              renderValue={(selected) =>
-                selected
-                  .map((uuid) => {
-                    const child = children.find((child) => child.uuid === uuid);
-                    return child ? `${child.firstname} ${child.lastname}` : "";
-                  })
-                  .join(", ")
-              }
-            >
-              {children.map((child) => (
-                <MenuItem key={child.uuid} value={child.uuid}>
-                  {child.firstname} {child.lastname}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ marginTop: 2 }}
+      <form onSubmit={handleSubmit}>
+        <TextField
+          fullWidth
+          label="Prénom"
+          value={firstname}
+          onChange={(e) => setFirstname(e.target.value)}
+          margin="normal"
+          required
+        />
+        <TextField
+          fullWidth
+          label="Nom"
+          value={lastname}
+          onChange={(e) => setLastname(e.target.value)}
+          margin="normal"
+          required
+        />
+        <TextField
+          fullWidth
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          margin="normal"
+          required
+        />
+        <TextField
+          fullWidth
+          label="Mot de passe"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          margin="normal"
+          required
+        />
+        <PhoneInput
+          country={"fr"}
+          value={phoneNumber}
+          onChange={setPhoneNumber}
+          inputStyle={{ width: "100%", marginBottom: "16px" }}
+          required
+        />
+        <FormControl fullWidth margin="normal">
+          <InputLabel>Enfants</InputLabel>
+          <Select
+            multiple
+            value={selectedChildren}
+            onChange={(e) => setSelectedChildren(e.target.value)}
+            renderValue={(selected) =>
+              selected
+                .map((uuid) => {
+                  const child = children.find((child) => child.uuid === uuid);
+                  return child ? `${child.firstname} ${child.lastname}` : "";
+                })
+                .join(", ")
+            }
           >
-            Ajouter
-          </Button>
-        </form>
-      </Box>
-    </Layout>
+            {children.map((child) => (
+              <MenuItem key={child.uuid} value={child.uuid}>
+                {child.firstname} {child.lastname}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ marginTop: 2 }}
+        >
+          Ajouter
+        </Button>
+      </form>
+    </Box>
   );
 };
 
