@@ -1,0 +1,71 @@
+.activity-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.children-selection {
+  margin-bottom: 2rem;
+}
+
+.children-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.child-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.child-item.selected .child-avatar {
+  border: 3px solid green;
+}
+
+.child-avatar {
+  width: 80px;
+  height: 80px;
+}
+
+.child-name {
+  margin-top: 0.5rem;
+}
+
+.activity-selection {
+  margin-bottom: 2rem;
+}
+
+.comment-field {
+  margin-bottom: 2rem;
+}
+
+.submit-button {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.in-progress-activities {
+  margin-top: 2rem;
+}
+
+.end-activity-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.loading-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}

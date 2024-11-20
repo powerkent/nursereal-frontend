@@ -44,6 +44,7 @@ import Channel from "./pages/chat/Channel";
 import Presence from "./pages/agent/presence/Presence";
 import Diaper from "./pages/agent/diaper/Diaper";
 import Care from "./pages/agent/care/Care";
+import ActivityAction from "./pages/agent/activity/Activity";
 
 import "./App.css";
 
@@ -114,6 +115,9 @@ function App() {
 
           {/* Care */}
           <Route path="actions/cares" element={<Care />} />
+
+          {/* Activity */}
+          <Route path="actions/activities" element={<ActivityAction />} />
         </Route>
       </Routes>
     </Router>
