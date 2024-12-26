@@ -24,6 +24,13 @@ const Care = () => {
   const [loading, setLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [agents, setAgents] = useState([]);
+  const [selectedAgentUuid, setSelectedAgentUuid] = useState(null);
+
+  const agentLoginWithPhone =
+    JSON.parse(localStorage.getItem("AGENT_LOGIN_WITH_PHONE")) ?? false;
+
+  const currentAgentUuid = localStorage.getItem("uuid");
 
   useEffect(() => {
     const fetchPresentChildren = async () => {
@@ -56,6 +63,25 @@ const Care = () => {
     fetchPresentChildren();
   }, [selectedNurseryUuid]);
 
+  useEffect(() => {
+    const getAgents = async () => {
+      if (agentLoginWithPhone || !selectedNurseryUuid) return;
+
+      try {
+        const response = await axios.get(
+          `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
+        );
+        if (response.data["hydra:member"]) {
+          setAgents(response.data["hydra:member"]);
+        }
+      } catch (error) {
+        console.error("Error fetching agents:", error);
+      }
+    };
+
+    getAgents();
+  }, [agentLoginWithPhone, selectedNurseryUuid]);
+
   const handleChildClick = (childUuid) => {
     setSelectedChildren((prevSelected) => {
       if (prevSelected.includes(childUuid)) {
@@ -81,6 +107,12 @@ const Care = () => {
       );
       return;
     }
+
+    if (!agentLoginWithPhone && !selectedAgentUuid) {
+      alert("Veuillez sélectionner un agent.");
+      return;
+    }
+
     setLoading(true);
     try {
       const promises = selectedChildren.map((childUuid) => {
@@ -92,12 +124,21 @@ const Care = () => {
             careTypes: selectedCareTypes,
           },
         };
+
+        if (!agentLoginWithPhone && selectedAgentUuid) {
+          careData.agentUuid = selectedAgentUuid;
+        }
+
         return axios.post("/actions", careData);
       });
+
       await Promise.all(promises);
+
       setSelectedChildren([]);
       setSelectedCareTypes([]);
       setComment("");
+      setSelectedAgentUuid(null);
+
       setShowSuccessMessage(true);
       setTimeout(() => {
         setShowSuccessMessage(false);
@@ -120,6 +161,15 @@ const Care = () => {
     { key: "ear_care", label: "Oreilles", icon: <Hearing fontSize="large" /> },
   ];
 
+  if (loading) {
+    return (
+      <Box className="loading-box">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+
   return (
     <Box className="care-container">
       <Snackbar
@@ -137,7 +187,6 @@ const Care = () => {
         </Alert>
       </Snackbar>
 
-      {/* Notification d'erreur */}
       {errorMessage && (
         <Snackbar
           open={!!errorMessage}
@@ -159,7 +208,6 @@ const Care = () => {
         Suivi des soins
       </Typography>
 
-      {/* Sélection des enfants présents */}
       <Box className="children-selection">
         <Typography variant="h6">Enfants présents</Typography>
         <Box className="children-list">
@@ -188,7 +236,6 @@ const Care = () => {
         </Box>
       </Box>
 
-      {/* Sélection des types de soin */}
       <Box className="care-type-selection">
         <Typography variant="h6">Types de soin</Typography>
         <Box className="care-type-buttons">
@@ -210,7 +257,6 @@ const Care = () => {
         </Box>
       </Box>
 
-      {/* Champ de commentaire */}
       <Box className="comment-field">
         <TextField
           label="Commentaire"
@@ -222,8 +268,38 @@ const Care = () => {
         />
       </Box>
 
-      {/* Bouton Soumettre */}
-      <Box className="submit-button">
+      {!agentLoginWithPhone && (
+        <Box className="agent-selection" sx={{ marginTop: 2 }}>
+          <Typography variant="h6">Sélectionner un agent</Typography>
+          <Box className="agent-list">
+            {agents
+              .filter((agent) => agent.uuid !== currentAgentUuid)
+              .map((agent) => {
+                const isSelected = agent.uuid === selectedAgentUuid;
+                return (
+                  <Box
+                    key={agent.uuid}
+                    className={`agent-box ${
+                      isSelected ? "agent-selected" : ""
+                    }`}
+                    onClick={() => setSelectedAgentUuid(agent.uuid)}
+                  >
+                    <Avatar
+                      src={agent.avatar}
+                      alt={`${agent.firstname} ${agent.lastname}`}
+                      className="child-avatar"
+                    />
+                    <Typography variant="body1" className="child-name">
+                      {agent.firstname} {agent.lastname}
+                    </Typography>
+                  </Box>
+                );
+              })}
+          </Box>
+        </Box>
+      )}
+
+      <Box className="submit-button" sx={{ marginTop: 3 }}>
         <Button
           variant="contained"
           color="primary"

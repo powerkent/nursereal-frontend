@@ -79,3 +79,23 @@
 .children-selection {
   margin-bottom: 2rem;
 }
+
+.agent-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ccc;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.agent-box:hover {
+  background-color: #f8f8f8;
+}
+
+.agent-selected {
+  background-color: #def;
+  border-left: 4px solid #00f;
+}

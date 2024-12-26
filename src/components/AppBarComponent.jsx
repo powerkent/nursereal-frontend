@@ -13,6 +13,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChildFriendlyIcon from "@mui/icons-material/ChildFriendly";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { SelectedNurseryContext } from "../contexts/SelectedNurseryContext";
@@ -138,6 +139,12 @@ const AppBarComponent = ({
             NURSEREAL
           </Typography>
         </Box>
+
+        {isManager && (
+          <IconButton color="inherit" onClick={() => navigate("/settings")}>
+            <SettingsIcon />
+          </IconButton>
+        )}
 
         <IconButton color="inherit" onClick={handleLogout}>
           <LogoutIcon />
