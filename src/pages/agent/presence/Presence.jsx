@@ -33,6 +33,7 @@ const formatTime = (dateTime) => {
 
 const Presence = () => {
   const { selectedNurseryUuid } = useContext(SelectedNurseryContext);
+
   const [contractDates, setContractDates] = useState([]);
   const [selectedChildren, setSelectedChildren] = useState([]);
   const [presentChildren, setPresentChildren] = useState([]);
@@ -45,6 +46,11 @@ const Presence = () => {
   const [isAbsentDialog, setIsAbsentDialog] = useState(false);
   const [editingChild, setEditingChild] = useState(null);
   const [dialogType, setDialogType] = useState(null);
+  const [agents, setAgents] = useState([]);
+  const [selectedAgentUuid, setSelectedAgentUuid] = useState(null);
+  const currentAgentUuid = localStorage.getItem("uuid");
+  const agentLoginWithPhone =
+    JSON.parse(localStorage.getItem("AGENT_LOGIN_WITH_PHONE")) ?? false;
 
   useEffect(() => {
     const fetchContractDates = async () => {
@@ -79,6 +85,7 @@ const Presence = () => {
           const actions = response.data["hydra:member"];
           const presentChildrenData = [];
           const absentChildrenData = [];
+
           actions.forEach((action) => {
             const childData = {
               childUuid: action.child.uuid,
@@ -104,6 +111,21 @@ const Presence = () => {
     };
 
     fetchPresentAndAbsentChildren();
+  }, [selectedNurseryUuid]);
+
+  useEffect(() => {
+    const getAgents = async () => {
+      if (agentLoginWithPhone || !selectedNurseryUuid) return;
+
+      const response = await axios.get(
+        `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
+      );
+      if (response.data["hydra:member"]) {
+        setAgents(response.data["hydra:member"]);
+      }
+    };
+
+    getAgents();
   }, [selectedNurseryUuid]);
 
   const handleAvatarClick = (childUuid) => {
@@ -147,6 +169,7 @@ const Presence = () => {
         }
 
         const presenceData = {
+          agentUuid: selectedAgentUuid,
           childUuid: uuid,
           actionType: "presence",
           presence: {
@@ -226,10 +249,10 @@ const Presence = () => {
       });
 
       setPresentChildren((prevPresent) =>
-        prevPresent.map((child) =>
-          child.childUuid === editingChild.childUuid
-            ? { ...child, endDateTime: presenceData.endDateTime }
-            : child
+        prevPresent.map((c) =>
+          c.childUuid === editingChild.childUuid
+            ? { ...c, endDateTime: presenceData.endDateTime }
+            : c
         )
       );
       handleCloseDialog();
@@ -283,7 +306,7 @@ const Presence = () => {
       });
 
       setAbsentChildren((prevAbsent) =>
-        prevAbsent.filter((child) => child.childUuid !== editingChild.childUuid)
+        prevAbsent.filter((c) => c.childUuid !== editingChild.childUuid)
       );
       setPresentChildren((prevPresent) => [
         ...prevPresent,
@@ -332,15 +355,13 @@ const Presence = () => {
         <Box className="children-selection">
           <Box className="presence-list">
             {remainingChildren.map((contractDate) => {
-              const nameInitial = contractDate.lastname;
+              const isSelected = selectedChildren.includes(
+                contractDate.childUuid
+              );
               return (
                 <Box
                   key={contractDate.childUuid}
-                  className={`presence-item ${
-                    selectedChildren.includes(contractDate.childUuid)
-                      ? "selected"
-                      : ""
-                  }`}
+                  className={`presence-item ${isSelected ? "selected" : ""}`}
                   onClick={() => handleAvatarClick(contractDate.childUuid)}
                 >
                   <Avatar
@@ -400,39 +421,36 @@ const Presence = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {presentChildren.map((child) => {
-                    return (
-                      <TableRow key={child.childUuid}>
-                        <TableCell>
-                          <Avatar
-                            src={`${child.avatar}`}
-                            alt={`${child.firstname} ${child.lastname}`}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          {child.firstname} {child.lastname}
-                        </TableCell>
-                        <TableCell>{formatTime(child.startDateTime)}</TableCell>
-                        <TableCell>
-                          {child.endDateTime
-                            ? formatTime(child.endDateTime)
-                            : ""}
-                        </TableCell>
-                        <TableCell>
-                          <IconButton
-                            onClick={() => handleEditPresentChild(child)}
-                          >
-                            <Edit />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                  {presentChildren.map((child) => (
+                    <TableRow key={child.childUuid}>
+                      <TableCell>
+                        <Avatar
+                          src={`${child.avatar}`}
+                          alt={`${child.firstname} ${child.lastname}`}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        {child.firstname} {child.lastname}
+                      </TableCell>
+                      <TableCell>{formatTime(child.startDateTime)}</TableCell>
+                      <TableCell>
+                        {child.endDateTime ? formatTime(child.endDateTime) : ""}
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={() => handleEditPresentChild(child)}
+                        >
+                          <Edit />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>
           )}
         </Box>
+
         <Box className="absent-children">
           <Typography variant="h6">Enfants absents</Typography>
           {absentChildren.length === 0 ? (
@@ -448,28 +466,26 @@ const Presence = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {absentChildren.map((child) => {
-                    return (
-                      <TableRow key={child.childUuid}>
-                        <TableCell>
-                          <Avatar
-                            src={`${child.avatar}`}
-                            alt={`${child.firstname} ${child.lastname}`}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          {child.firstname} {child.lastname}
-                        </TableCell>
-                        <TableCell>
-                          <IconButton
-                            onClick={() => handleEditAbsentChild(child)}
-                          >
-                            <Edit />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                  {absentChildren.map((child) => (
+                    <TableRow key={child.childUuid}>
+                      <TableCell>
+                        <Avatar
+                          src={`${child.avatar}`}
+                          alt={`${child.firstname} ${child.lastname}`}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        {child.firstname} {child.lastname}
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={() => handleEditAbsentChild(child)}
+                        >
+                          <Edit />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -490,9 +506,7 @@ const Presence = () => {
                     label="Heure d'arrivée"
                     value={startTime}
                     onChange={(newValue) => {
-                      if (newValue) {
-                        setStartTime(newValue);
-                      }
+                      if (newValue) setStartTime(newValue);
                     }}
                     renderInput={(params) => (
                       <TextField {...params} fullWidth />
@@ -501,6 +515,32 @@ const Presence = () => {
                   />
                 </LocalizationProvider>
               )}
+
+              {!agentLoginWithPhone &&
+                agents.map((agent) => {
+                  if (agent.uuid === currentAgentUuid) return null;
+
+                  const isSelected = agent.uuid === selectedAgentUuid;
+
+                  return (
+                    <Box
+                      key={agent.uuid}
+                      className={`agent-box ${
+                        isSelected ? "agent-selected" : ""
+                      }`}
+                      onClick={() => setSelectedAgentUuid(agent.uuid)}
+                    >
+                      <Avatar
+                        src={`${agent.avatar}`}
+                        alt={`${agent.firstname} ${agent.lastname}`}
+                        className="presence-avatar"
+                      />
+                      <Typography variant="h6" className="presence-name">
+                        {agent.firstname} {agent.lastname}
+                      </Typography>
+                    </Box>
+                  );
+                })}
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseDialog} color="secondary">
@@ -516,6 +556,7 @@ const Presence = () => {
             </DialogActions>
           </>
         )}
+
         {dialogType === "editPresent" && (
           <>
             <DialogTitle>Modifier la présence</DialogTitle>
@@ -525,9 +566,7 @@ const Presence = () => {
                   label="Heure d'arrivée"
                   value={startTime}
                   onChange={(newValue) => {
-                    if (newValue) {
-                      setStartTime(newValue);
-                    }
+                    if (newValue) setStartTime(newValue);
                   }}
                   renderInput={(params) => <TextField {...params} fullWidth />}
                   ampm={false}
@@ -536,9 +575,7 @@ const Presence = () => {
                   label="Heure de fin"
                   value={endTime}
                   onChange={(newValue) => {
-                    if (newValue) {
-                      setEndTime(newValue);
-                    }
+                    if (newValue) setEndTime(newValue);
                   }}
                   renderInput={(params) => (
                     <TextField
@@ -580,6 +617,7 @@ const Presence = () => {
             </DialogActions>
           </>
         )}
+
         {dialogType === "editAbsent" && (
           <>
             <DialogTitle>Marquer présent</DialogTitle>
@@ -589,9 +627,7 @@ const Presence = () => {
                   label="Heure d'arrivée"
                   value={startTime}
                   onChange={(newValue) => {
-                    if (newValue) {
-                      setStartTime(newValue);
-                    }
+                    if (newValue) setStartTime(newValue);
                   }}
                   renderInput={(params) => <TextField {...params} fullWidth />}
                   ampm={false}
@@ -603,7 +639,7 @@ const Presence = () => {
                 Annuler
               </Button>
               <Button
-                onClick={() => handleMarkPresentFromAbsent()}
+                onClick={handleMarkPresentFromAbsent}
                 color="primary"
                 disabled={dialogLoading}
               >

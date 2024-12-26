@@ -7,6 +7,13 @@
 .diaper-title {
   text-align: center;
   margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.loading-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 4rem;
 }
 
 .children-selection {
@@ -25,19 +32,27 @@
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  transition: transform 0.2s ease-in-out;
 }
 
-.child-item.selected .child-avatar {
-  border: 3px solid green;
+.child-item:hover {
+  transform: scale(1.05);
 }
 
 .child-avatar {
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
 }
 
 .child-name {
   margin-top: 0.5rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.child-item.selected .child-avatar {
+  border: 3px solid green;
 }
 
 .diaper-quality-selection {
@@ -46,19 +61,56 @@
 
 .diaper-quality-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-top: 1rem;
 }
 
 .diaper-quality-button {
-  flex: 1;
+  padding: 1rem;
+}
+
+.diaper-quality-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .comment-field {
-  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+
+.agent-selection {
+  margin-top: 1.5rem;
+}
+
+.agent-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.agent-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.agent-box:hover {
+  transform: scale(1.05);
+}
+
+.agent-selected {
+  border: 3px solid blue;
+  border-radius: 8px;
 }
 
 .submit-button {
+  margin-top: 2rem;
   display: flex;
   justify-content: center;
 }

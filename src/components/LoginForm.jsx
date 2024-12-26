@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
+  const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -13,7 +13,23 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/login/agent", { email, password });
+      const { data } = await axios.get("/configs");
+      const configs = data["hydra:member"] || [];
+      const agentConfig = configs.find(
+        (configItem) => configItem.name === "AGENT_LOGIN_WITH_PHONE"
+      );
+
+      if (agentConfig) {
+        localStorage.setItem(
+          "AGENT_LOGIN_WITH_PHONE",
+          JSON.stringify(agentConfig.value)
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération de la config :", error);
+    }
+    try {
+      const response = await axios.post("/login/agent", { user, password });
       localStorage.setItem("token", response.data.token);
       const decodedToken = jwtDecode(response.data.token);
       localStorage.setItem("roles", decodedToken["roles"]);
@@ -21,7 +37,7 @@ const LoginForm = () => {
       localStorage.setItem("uuid", decodedToken["uuid"]);
       navigate("/");
     } catch (error) {
-      setError("Invalid email or password");
+      setError("Invalid user or password");
     }
   };
 
@@ -33,12 +49,12 @@ const LoginForm = () => {
       {error && <Typography color="error">{error}</Typography>}
       <form onSubmit={handleSubmit}>
         <TextField
-          label="Email"
+          label="User"
           variant="outlined"
           fullWidth
           margin="normal"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={user}
+          onChange={(e) => setUser(e.target.value)}
         />
         <TextField
           label="Password"

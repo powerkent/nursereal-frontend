@@ -21,6 +21,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 
 const AddNursery = () => {
+  const agentLoginWithPhone =
+    JSON.parse(localStorage.getItem("AGENT_LOGIN_WITH_PHONE")) ?? false;
+  const [user, setUser] = useState("");
+  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [openings, setOpenings] = useState([
@@ -67,16 +71,24 @@ const AddNursery = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const payload = {
+      name,
+      address,
+      openings: openings.map((opening) => ({
+        openingHour: opening.openingHour.format("HH:mm"),
+        closingHour: opening.closingHour.format("HH:mm"),
+        openingDay: opening.openingDay,
+      })),
+    };
+
+    if (!agentLoginWithPhone) {
+      payload.user = user;
+      payload.password = password;
+    }
+
     try {
-      await axios.post("/nursery_structures", {
-        name,
-        address,
-        openings: openings.map((opening) => ({
-          openingHour: opening.openingHour.format("HH:mm"),
-          closingHour: opening.closingHour.format("HH:mm"),
-          openingDay: opening.openingDay,
-        })),
-      });
+      await axios.post("/nursery_structures", payload);
       navigate("/nurseries");
     } catch (err) {
       setError("Failed to add the nursery. Please try again.");
@@ -119,6 +131,30 @@ const AddNursery = () => {
           margin="normal"
           required
         />
+
+        {!agentLoginWithPhone && (
+          <>
+            <TextField
+              label="User"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+              required
+            />
+            <TextField
+              label="Password"
+              type="password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </>
+        )}
 
         {openings.map((opening, index) => (
           <Box

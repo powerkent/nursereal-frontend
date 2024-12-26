@@ -1,10 +1,10 @@
-.care-container {
+.activity-container {
   padding: 2rem;
   display: flex;
   flex-direction: column;
 }
 
-.care-title {
+.activity-title {
   text-align: center;
   margin-bottom: 1rem;
   font-size: 1.5rem;
@@ -20,7 +20,7 @@
   margin-bottom: 2rem;
 }
 
-.children-list {
+.children-selection .children-list {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -42,7 +42,6 @@
 .child-avatar {
   width: 64px;
   height: 64px;
-  border-radius: 50%;
 }
 
 .child-name {
@@ -53,36 +52,29 @@
 
 .child-item.selected .child-avatar {
   border: 3px solid green;
+  border-radius: 8px;
 }
 
-.care-type-selection {
-  margin-bottom: 2rem;
-}
-
-.care-type-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+.activity-selection {
   margin-top: 1rem;
-}
-
-.care-type-button {
-  padding: 1rem;
-}
-
-.care-type-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 .comment-field {
   margin-top: 1rem;
 }
 
+.submit-button {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.in-progress-activities {
+  margin-top: 2rem;
+}
+
 .agent-selection {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .agent-list {
@@ -109,8 +101,18 @@
   border-radius: 8px;
 }
 
-.submit-button {
+.end-activity-button {
+  margin-top: 2rem;
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+}
+
+.MuiTableCell-root {
+  vertical-align: middle;
+}
+
+.MuiDialogTitle-root,
+.MuiDialogContent-root,
+.MuiDialogActions-root {
+  padding: 1rem;
 }

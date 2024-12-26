@@ -1,33 +1,33 @@
-.care-container {
+.treatment-container {
   padding: 2rem;
   display: flex;
   flex-direction: column;
 }
 
-.care-title {
-  text-align: center;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-}
-
-.loading-box {
+.treatment-loading {
   display: flex;
   justify-content: center;
   margin-top: 4rem;
+}
+
+.treatment-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
 }
 
 .children-selection {
   margin-bottom: 2rem;
 }
 
-.children-list {
+.treatment-children-list {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   margin-top: 1rem;
 }
 
-.child-item {
+.treatment-child-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,54 +35,60 @@
   transition: transform 0.2s ease-in-out;
 }
 
-.child-item:hover {
+.treatment-child-item:hover {
   transform: scale(1.05);
 }
 
-.child-avatar {
+.treatment-child-avatar {
   width: 64px;
   height: 64px;
   border-radius: 50%;
 }
 
-.child-name {
+.treatment-child-name {
   margin-top: 0.5rem;
   font-weight: 500;
   text-align: center;
 }
 
-.child-item.selected .child-avatar {
+.treatment-child-item.selected .treatment-child-avatar {
   border: 3px solid green;
+  border-radius: 8px;
 }
 
-.care-type-selection {
-  margin-bottom: 2rem;
+.child-treatments {
+  margin-top: 2rem;
 }
 
-.care-type-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+.treatments-list {
   margin-top: 1rem;
-}
-
-.care-type-button {
-  padding: 1rem;
-}
-
-.care-type-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
-.comment-field {
-  margin-top: 1rem;
+.treatment-item {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.treatment-item:hover {
+  background-color: #f8f8f8;
+}
+
+.treatment-name {
+  font-weight: 600;
+}
+
+.treatment-description {
+  margin-top: 0.3rem;
+  color: #666;
 }
 
 .agent-selection {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 }
 
 .agent-list {
@@ -109,8 +115,8 @@
   border-radius: 8px;
 }
 
-.submit-button {
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
+.MuiDialogTitle-root,
+.MuiDialogContent-root,
+.MuiDialogActions-root {
+  padding: 1rem;
 }

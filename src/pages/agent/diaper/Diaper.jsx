@@ -22,8 +22,14 @@ const Diaper = () => {
   const [diaperQuality, setDiaperQuality] = useState("");
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false); // État pour la notification
-  const [errorMessage, setErrorMessage] = useState(""); // État pour les erreurs
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [agents, setAgents] = useState([]);
+  const [selectedAgentUuid, setSelectedAgentUuid] = useState(null);
+
+  const agentLoginWithPhone =
+    JSON.parse(localStorage.getItem("AGENT_LOGIN_WITH_PHONE")) ?? false;
+  const currentAgentUuid = localStorage.getItem("uuid");
 
   useEffect(() => {
     const fetchPresentChildren = async () => {
@@ -56,6 +62,24 @@ const Diaper = () => {
     fetchPresentChildren();
   }, [selectedNurseryUuid]);
 
+  useEffect(() => {
+    const getAgents = async () => {
+      if (agentLoginWithPhone || !selectedNurseryUuid) return;
+      try {
+        const response = await axios.get(
+          `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
+        );
+        if (response.data["hydra:member"]) {
+          setAgents(response.data["hydra:member"]);
+        }
+      } catch (error) {
+        console.error("Error fetching agents:", error);
+      }
+    };
+
+    getAgents();
+  }, [agentLoginWithPhone, selectedNurseryUuid]);
+
   const handleChildClick = (childUuid) => {
     setSelectedChildren((prevSelected) => {
       if (prevSelected.includes(childUuid)) {
@@ -76,6 +100,12 @@ const Diaper = () => {
       );
       return;
     }
+
+    if (!agentLoginWithPhone && !selectedAgentUuid) {
+      alert("Veuillez sélectionner un agent.");
+      return;
+    }
+
     setLoading(true);
     try {
       const promises = selectedChildren.map((childUuid) => {
@@ -87,23 +117,27 @@ const Diaper = () => {
             diaperQuality: diaperQuality,
           },
         };
+
+        if (!agentLoginWithPhone && selectedAgentUuid) {
+          diaperData.agentUuid = selectedAgentUuid;
+        }
+
         return axios.post("/actions", diaperData);
       });
       await Promise.all(promises);
-      // Réinitialiser les sélections
+
       setSelectedChildren([]);
       setDiaperQuality("");
       setComment("");
-      // Afficher le message de succès
+      setSelectedAgentUuid(null);
+
       setShowSuccessMessage(true);
-      // Masquer le message après 6 secondes
       setTimeout(() => {
         setShowSuccessMessage(false);
       }, 6000);
     } catch (error) {
       console.error("Erreur lors de l'envoi des données :", error);
       setErrorMessage("Une erreur s'est produite lors de l'envoi des données.");
-      // Masquer le message d'erreur après 6 secondes
       setTimeout(() => {
         setErrorMessage("");
       }, 6000);
@@ -112,15 +146,6 @@ const Diaper = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <Box className="loading-box">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  // Liste des qualités de couche avec icônes
   const diaperQualities = [
     { key: "liquid", label: "Liquide", icon: <Opacity fontSize="large" /> },
     { key: "soft", label: "Mou", icon: <Waves fontSize="large" /> },
@@ -132,9 +157,16 @@ const Diaper = () => {
     { key: "hard", label: "Dur", icon: <AcUnit fontSize="large" /> },
   ];
 
+  if (loading) {
+    return (
+      <Box className="loading-box">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box className="diaper-container">
-      {/* Notification de succès */}
       <Snackbar
         open={showSuccessMessage}
         autoHideDuration={6000}
@@ -150,7 +182,6 @@ const Diaper = () => {
         </Alert>
       </Snackbar>
 
-      {/* Notification d'erreur */}
       {errorMessage && (
         <Snackbar
           open={!!errorMessage}
@@ -172,7 +203,6 @@ const Diaper = () => {
         Suivi des changes
       </Typography>
 
-      {/* Sélection des enfants présents */}
       <Box className="children-selection">
         <Typography variant="h6">Enfants présents</Typography>
         <Box className="children-list">
@@ -201,7 +231,6 @@ const Diaper = () => {
         </Box>
       </Box>
 
-      {/* Sélection de la qualité de la couche */}
       <Box className="diaper-quality-selection">
         <Typography variant="h6">État de la couche</Typography>
         <Box className="diaper-quality-buttons">
@@ -221,7 +250,6 @@ const Diaper = () => {
         </Box>
       </Box>
 
-      {/* Champ de commentaire */}
       <Box className="comment-field">
         <TextField
           label="Commentaire"
@@ -233,7 +261,37 @@ const Diaper = () => {
         />
       </Box>
 
-      {/* Bouton Soumettre */}
+      {!agentLoginWithPhone && (
+        <Box className="agent-selection" sx={{ marginTop: 2 }}>
+          <Typography variant="h6">Sélectionner un agent</Typography>
+          <Box className="agent-list">
+            {agents
+              .filter((agent) => agent.uuid !== currentAgentUuid)
+              .map((agent) => {
+                const isSelected = agent.uuid === selectedAgentUuid;
+                return (
+                  <Box
+                    key={agent.uuid}
+                    className={`agent-box ${
+                      isSelected ? "agent-selected" : ""
+                    }`}
+                    onClick={() => setSelectedAgentUuid(agent.uuid)}
+                  >
+                    <Avatar
+                      src={agent.avatar}
+                      alt={`${agent.firstname} ${agent.lastname}`}
+                      className="child-avatar"
+                    />
+                    <Typography variant="body1" className="child-name">
+                      {agent.firstname} {agent.lastname}
+                    </Typography>
+                  </Box>
+                );
+              })}
+          </Box>
+        </Box>
+      )}
+
       <Box className="submit-button">
         <Button
           variant="contained"

@@ -1,10 +1,10 @@
-.care-container {
+.rest-container {
   padding: 2rem;
   display: flex;
   flex-direction: column;
 }
 
-.care-title {
+.rest-title {
   text-align: center;
   margin-bottom: 1rem;
   font-size: 1.5rem;
@@ -20,14 +20,14 @@
   margin-bottom: 2rem;
 }
 
-.children-list {
+.rest-children-list {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   margin-top: 1rem;
 }
 
-.child-item {
+.rest-child-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,54 +35,39 @@
   transition: transform 0.2s ease-in-out;
 }
 
-.child-item:hover {
+.rest-child-item:hover {
   transform: scale(1.05);
 }
 
-.child-avatar {
+.rest-child-avatar {
   width: 64px;
   height: 64px;
   border-radius: 50%;
 }
 
-.child-name {
+.rest-child-name {
   margin-top: 0.5rem;
   font-weight: 500;
   text-align: center;
 }
 
-.child-item.selected .child-avatar {
+.rest-child-item.selected .rest-child-avatar {
   border: 3px solid green;
+  border-radius: 8px;
 }
 
-.care-type-selection {
-  margin-bottom: 2rem;
-}
-
-.care-type-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+.rest-button {
   margin-top: 1rem;
-}
-
-.care-type-button {
-  padding: 1rem;
-}
-
-.care-type-content {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
 }
 
-.comment-field {
-  margin-top: 1rem;
+.resting-list {
+  margin-top: 2rem;
 }
 
 .agent-selection {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .agent-list {
@@ -109,8 +94,14 @@
   border-radius: 8px;
 }
 
-.submit-button {
+.wake-button {
+  margin-top: 1rem;
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+}
+
+.MuiDialogTitle-root,
+.MuiDialogContent-root,
+.MuiDialogActions-root {
+  padding: 1rem;
 }

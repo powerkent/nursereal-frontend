@@ -117,7 +117,11 @@ const Layout = () => {
       icon: <LocalActivity />,
       parent: "/",
     },
-    { title: "Ajouter une activité", path: "/activities/add", parent: "/activities" },
+    {
+      title: "Ajouter une activité",
+      path: "/activities/add",
+      parent: "/activities",
+    },
     {
       title: "Visualiser une activité",
       path: "/activities/:uuid",
@@ -171,7 +175,7 @@ const Layout = () => {
     },
     {
       title: "Sommeil",
-      path: "/actions/sleeps",
+      path: "/actions/rests",
       icon: <AirlineSeatIndividualSuiteIcon />,
       parent: "/",
     },

@@ -4,6 +4,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import LoginForm from "./components/LoginForm";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
+import Settings from "./components/settings";
 
 import Nurseries from "./pages/manager/nursery/Nurseries";
 import AddNursery from "./pages/manager/nursery/AddNursery";
@@ -44,6 +45,12 @@ import Channel from "./pages/chat/Channel";
 import Presence from "./pages/agent/presence/Presence";
 import Diaper from "./pages/agent/diaper/Diaper";
 import Care from "./pages/agent/care/Care";
+<<<<<<< Updated upstream
+=======
+import ActivityAction from "./pages/agent/activity/Activity";
+import Rest from "./pages/agent/rest/Rest";
+import TreatmentAction from "./pages/agent/treatment/Treatment";
+>>>>>>> Stashed changes
 
 import "./App.css";
 
@@ -61,6 +68,8 @@ function App() {
           }
         >
           <Route index element={<Dashboard />} />
+
+          <Route path="settings" element={<Settings />} />
 
           {/* Crèches */}
           <Route path="nurseries" element={<Nurseries />} />
@@ -114,6 +123,18 @@ function App() {
 
           {/* Care */}
           <Route path="actions/cares" element={<Care />} />
+<<<<<<< Updated upstream
+=======
+
+          {/* Activity */}
+          <Route path="actions/activities" element={<ActivityAction />} />
+
+          {/* Sleeping */}
+          <Route path="actions/rests" element={<Rest />} />
+
+          {/* Treatment */}
+          <Route path="actions/treatments" element={<TreatmentAction />} />
+>>>>>>> Stashed changes
         </Route>
       </Routes>
     </Router>
