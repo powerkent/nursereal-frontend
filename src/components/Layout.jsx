@@ -22,6 +22,7 @@ import LocalActivity from "@mui/icons-material/LocalActivity";
 import BabyChangingStationIcon from "@mui/icons-material/BabyChangingStation";
 import AirlineSeatIndividualSuiteIcon from "@mui/icons-material/AirlineSeatIndividualSuite";
 import SelectedNurseryProvider from "../contexts/SelectedNurseryContext";
+import HistoryIcon from "@mui/icons-material/History";
 
 const Layout = () => {
   const [isManager, setIsManager] = useState(false);
@@ -185,6 +186,12 @@ const Layout = () => {
       icon: <AssignmentIcon />,
       parent: "/",
     },
+    {
+      title: "Historique",
+      path: "/actions/historics",
+      icon: <HistoryIcon />,
+      parent: "/",
+    },
     { title: "Chats", path: "/channels", icon: <ForumIcon />, parent: "/" },
   ];
 
@@ -221,7 +228,7 @@ const Layout = () => {
           userUuid={userUuid}
         />
 
-        {location.pathname !== "/" && previousPage && (
+        {location.pathname !== "/" && previousPage && previousPage !== "/" && (
           <IconButton
             onClick={() => navigate(previousPage)}
             sx={{
