@@ -45,12 +45,12 @@ import Channel from "./pages/chat/Channel";
 import Presence from "./pages/agent/presence/Presence";
 import Diaper from "./pages/agent/diaper/Diaper";
 import Care from "./pages/agent/care/Care";
-<<<<<<< Updated upstream
-=======
+
 import ActivityAction from "./pages/agent/activity/Activity";
 import Rest from "./pages/agent/rest/Rest";
 import TreatmentAction from "./pages/agent/treatment/Treatment";
->>>>>>> Stashed changes
+import Historic from "./pages/agent/historic/Historic";
+
 
 import "./App.css";
 
@@ -123,8 +123,6 @@ function App() {
 
           {/* Care */}
           <Route path="actions/cares" element={<Care />} />
-<<<<<<< Updated upstream
-=======
 
           {/* Activity */}
           <Route path="actions/activities" element={<ActivityAction />} />
@@ -134,7 +132,9 @@ function App() {
 
           {/* Treatment */}
           <Route path="actions/treatments" element={<TreatmentAction />} />
->>>>>>> Stashed changes
+
+          {/* Historic */}
+          <Route path="actions/historics" element={<Historic />} />
         </Route>
       </Routes>
     </Router>
