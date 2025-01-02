@@ -52,8 +52,20 @@ const AppBarComponent = ({
       setNurseries(nurseriesList);
 
       if (nurseriesList.length > 0) {
-        setSelectedNursery(nurseriesList[0].name);
-        setSelectedNurseryUuid(nurseriesList[0].uuid);
+        const savedNursery = JSON.parse(
+          localStorage.getItem("selectedNursery")
+        );
+
+        if (
+          savedNursery &&
+          nurseriesList.some((n) => n.uuid === savedNursery.uuid)
+        ) {
+          setSelectedNursery(savedNursery.name);
+          setSelectedNurseryUuid(savedNursery.uuid);
+        } else {
+          setSelectedNursery(nurseriesList[0].name);
+          setSelectedNurseryUuid(nurseriesList[0].uuid);
+        }
       }
     } catch (error) {
       console.error("Error fetching nurseries:", error);
@@ -72,9 +84,16 @@ const AppBarComponent = ({
     const selectedNursery = nurseries.find(
       (nursery) => nursery.name === selectedName
     );
-    console.log(selectedNursery);
     setSelectedNursery(selectedName);
     setSelectedNurseryUuid(selectedNursery.uuid);
+
+    localStorage.setItem(
+      "selectedNursery",
+      JSON.stringify({
+        name: selectedNursery.name,
+        uuid: selectedNursery.uuid,
+      })
+    );
   };
 
   return (
