@@ -1,38 +1,33 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import axios from "../../../api/axios";
+import React, { useState } from 'react';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import axios from '../../../api/axios';
 
 const AddActivity = () => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [error, setError] = useState("");
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/activities", { name, description });
-      navigate("/activities");
+      await axios.post('/activities', { name, description });
+      navigate('/activities');
     } catch (err) {
-      setError("Failed to add the activity. Please try again.");
+      setError('Failed to add the activity. Please try again.');
     }
   };
 
   return (
     <Box
-      sx={{ width: "400px", margin: "auto", padding: 4, textAlign: "center" }}
+      sx={{ width: '400px', margin: 'auto', padding: 4, textAlign: 'center' }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Typography variant='h4' gutterBottom>
         Ajouter une Activité
       </Typography>
 
-      {error && <Typography color="error">{error}</Typography>}
+      {error && <Typography color='error'>{error}</Typography>}
 
       <form onSubmit={handleSubmit}>
         <TextField
@@ -40,21 +35,21 @@ const AddActivity = () => {
           label="Nom de l'Activité"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          margin="normal"
+          margin='normal'
           required
         />
         <TextField
           fullWidth
-          label="Description"
+          label='Description'
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          margin="normal"
+          margin='normal'
           required
         />
         <Button
-          type="submit"
-          variant="contained"
-          color="primary"
+          type='submit'
+          variant='contained'
+          color='primary'
           fullWidth
           sx={{ marginTop: 2 }}
         >

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from 'react';
 import {
   Avatar,
   Typography,
@@ -22,18 +22,18 @@ import {
   InputLabel,
   Select,
   MenuItem,
-} from "@mui/material";
-import { Edit } from "@mui/icons-material";
-import LogoutIcon from "@mui/icons-material/Logout";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { TimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
-import axios from "../../../api/axios";
-import { SelectedNurseryContext } from "../../../contexts/SelectedNurseryContext";
-import "./Presence.css";
+} from '@mui/material';
+import { Edit } from '@mui/icons-material';
+import LogoutIcon from '@mui/icons-material/Logout';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import axios from '../../../api/axios';
+import { SelectedNurseryContext } from '../../../contexts/SelectedNurseryContext';
+import './Presence.css';
 
-const formatTime = (dateTime) => dayjs(dateTime).format("HH:mm");
+const formatTime = (dateTime) => dayjs(dateTime).format('HH:mm');
 
 const Presence = () => {
   const { selectedNurseryUuid } = useContext(SelectedNurseryContext);
@@ -55,12 +55,12 @@ const Presence = () => {
 
   // --- Nouveaux états pour la gestion des agents ---
   const [agents, setAgents] = useState([]);
-  const [selectedAgentUuid, setSelectedAgentUuid] = useState("");
+  const [selectedAgentUuid, setSelectedAgentUuid] = useState('');
 
   // Récupération de l'agent actuel / mode de login
-  const currentAgentUuid = localStorage.getItem("uuid");
+  const currentAgentUuid = localStorage.getItem('uuid');
   const agentLoginWithPhone =
-    JSON.parse(localStorage.getItem("AGENT_LOGIN_WITH_PHONE")) ?? false;
+    JSON.parse(localStorage.getItem('AGENT_LOGIN_WITH_PHONE')) ?? false;
 
   /* ──────────────────────────────────────────────────────────────────────────
      1) Récupération de contractDates du jour 
@@ -74,9 +74,9 @@ const Presence = () => {
         const res = await axios.get(
           `/contract_dates?nursery_structure_uuid=${selectedNurseryUuid}&is_today=1`
         );
-        setContractDates(res.data["hydra:member"] ?? []);
+        setContractDates(res.data['hydra:member'] ?? []);
       } catch (error) {
-        console.error("Error fetching contract dates:", error);
+        console.error('Error fetching contract dates:', error);
       } finally {
         setLoading(false);
       }
@@ -93,11 +93,11 @@ const Presence = () => {
 
     const fetchPresenceActions = async () => {
       try {
-        const today = dayjs().format("YYYY-MM-DD");
+        const today = dayjs().format('YYYY-MM-DD');
         const res = await axios.get(
           `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=presence&start_date_time=${today} 00:00:00&end_date_time=${today} 23:59:59`
         );
-        const actions = res.data["hydra:member"] ?? [];
+        const actions = res.data['hydra:member'] ?? [];
         const present = [];
         const absent = [];
 
@@ -118,7 +118,7 @@ const Presence = () => {
         setAbsentChildren(absent);
         setRefetch(false);
       } catch (error) {
-        console.error("Error fetching presence actions:", error);
+        console.error('Error fetching presence actions:', error);
       }
     };
 
@@ -136,9 +136,9 @@ const Presence = () => {
         const res = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        setAgents(res.data["hydra:member"] ?? []);
+        setAgents(res.data['hydra:member'] ?? []);
       } catch (error) {
-        console.error("Erreur lors de la récupération des agents:", error);
+        console.error('Erreur lors de la récupération des agents:', error);
       }
     };
 
@@ -164,12 +164,12 @@ const Presence = () => {
     try {
       setDialogLoading(true);
 
-      const today = dayjs().format("YYYY-MM-DD");
+      const today = dayjs().format('YYYY-MM-DD');
       await Promise.all(
         selectedChildren.map(async (uuid) => {
           const startDateTimeISO = isAbsent
             ? null
-            : dayjs(`${today}T${dayjs().format("HH:mm")}`).toISOString();
+            : dayjs(`${today}T${dayjs().format('HH:mm')}`).toISOString();
 
           // On choisit l'agentUuid selon le mode
           const agentUuidToUse = agentLoginWithPhone
@@ -179,13 +179,13 @@ const Presence = () => {
           const data = {
             agentUuid: agentUuidToUse,
             childUuid: uuid,
-            actionType: "presence",
+            actionType: 'presence',
             presence: { startDateTime: startDateTimeISO, isAbsent },
           };
 
-          const response = await axios.post("/actions", data, {
+          const response = await axios.post('/actions', data, {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           });
 
@@ -223,7 +223,7 @@ const Presence = () => {
   ───────────────────────────────────────────────────────────────────────────*/
   const handleEditChild = (child) => {
     setEditingChild(child);
-    setDialogType("editPresent");
+    setDialogType('editPresent');
     setOpenDialog(true);
 
     setStartTime(dayjs(child.startDateTime));
@@ -234,7 +234,7 @@ const Presence = () => {
   const handleLeaveDaycare = async (child) => {
     try {
       const data = {
-        actionType: "presence",
+        actionType: 'presence',
         presence: {
           startDateTime: dayjs(child.startDateTime).toISOString(),
           endDateTime: dayjs().toISOString(),
@@ -254,7 +254,7 @@ const Presence = () => {
     try {
       setDialogLoading(true);
       await axios.put(`/actions/${editingChild.actionUuid}`, {
-        actionType: "presence",
+        actionType: 'presence',
         presence: { isAbsent: true },
       });
 
@@ -266,7 +266,7 @@ const Presence = () => {
 
       closeDialog();
     } catch (error) {
-      console.error("Erreur marquer absent:", error);
+      console.error('Erreur marquer absent:', error);
     } finally {
       setDialogLoading(false);
     }
@@ -278,7 +278,7 @@ const Presence = () => {
     try {
       setDialogLoading(true);
       await axios.put(`/actions/${editingChild.actionUuid}`, {
-        actionType: "presence",
+        actionType: 'presence',
         presence: {
           startDateTime: startTime.toISOString(),
           endDateTime: endTime?.toISOString() || null,
@@ -288,7 +288,7 @@ const Presence = () => {
       setRefetch(true);
       closeDialog();
     } catch (error) {
-      console.error("Erreur lors de la mise à jour de la présence:", error);
+      console.error('Erreur lors de la mise à jour de la présence:', error);
     } finally {
       setDialogLoading(false);
     }
@@ -307,7 +307,7 @@ const Presence = () => {
       const startDateTimeISO = dayjs().toISOString();
 
       const data = {
-        actionType: "presence",
+        actionType: 'presence',
         presence: {
           startDateTime: startDateTimeISO,
           isAbsent: false,
@@ -317,7 +317,7 @@ const Presence = () => {
       await axios.put(`/actions/${child.actionUuid}`, data);
       setRefetch(true);
     } catch (error) {
-      console.error("Erreur marquer présent:", error);
+      console.error('Erreur marquer présent:', error);
     }
   };
 
@@ -345,7 +345,7 @@ const Presence = () => {
 
   if (loading) {
     return (
-      <Box className="loading-box">
+      <Box className='loading-box'>
         <CircularProgress />
       </Box>
     );
@@ -355,12 +355,12 @@ const Presence = () => {
   // Désactivation des boutons "Marquer Présent/Absent" si pas d'agent sélectionné
   // quand agentLoginWithPhone === false
   const isAgentSelectedOrPhoneLogin =
-    agentLoginWithPhone || (selectedAgentUuid && selectedAgentUuid !== "");
+    agentLoginWithPhone || (selectedAgentUuid && selectedAgentUuid !== '');
 
   return (
-    <Box className="presence-container">
-      <Typography variant="h5" className="presence-title">
-        Présence d'aujourd'hui
+    <Box className='presence-container'>
+      <Typography variant='h5' className='presence-title'>
+        Présence d&apos;aujourd&apos;hui
       </Typography>
 
       {/* Sélection d'agent si agentLoginWithPhone = false */}
@@ -370,10 +370,10 @@ const Presence = () => {
             <InputLabel>Agent</InputLabel>
             <Select
               value={selectedAgentUuid}
-              label="Agent"
+              label='Agent'
               onChange={(e) => setSelectedAgentUuid(e.target.value)}
             >
-              <MenuItem value="">-- Sélectionnez un agent --</MenuItem>
+              <MenuItem value=''>-- Sélectionnez un agent --</MenuItem>
               {agents.map((agent) => (
                 <MenuItem key={agent.uuid} value={agent.uuid}>
                   {agent.firstname} {agent.lastname}
@@ -385,36 +385,36 @@ const Presence = () => {
       )}
 
       {remainingChildren.length === 0 ? (
-        <Typography variant="body1" className="no-data-text">
-          Aucune donnée disponible pour aujourd'hui.
+        <Typography variant='body1' className='no-data-text'>
+          Aucune donnée disponible pour aujourd&apos;hui.
         </Typography>
       ) : (
-        <Box className="children-selection">
-          <Box className="presence-list">
+        <Box className='children-selection'>
+          <Box className='presence-list'>
             {remainingChildren.map((child) => {
               const isSelected = selectedChildren.includes(child.childUuid);
               return (
                 <Box
                   key={child.childUuid}
-                  className={`presence-item ${isSelected ? "selected" : ""}`}
+                  className={`presence-item ${isSelected ? 'selected' : ''}`}
                   onClick={() => toggleChildSelection(child.childUuid)}
                 >
                   <Avatar
                     src={child.avatar}
                     alt={`${child.firstname} ${child.lastname}`}
-                    className="presence-avatar"
+                    className='presence-avatar'
                   />
-                  <Typography variant="h6" className="presence-name">
+                  <Typography variant='h6' className='presence-name'>
                     {child.firstname} {child.lastname}
                   </Typography>
                 </Box>
               );
             })}
           </Box>
-          <Box className="buttons-container">
+          <Box className='buttons-container'>
             <Button
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               onClick={() => handleSubmitPresence(false)}
               disabled={
                 selectedChildren.length === 0 ||
@@ -425,12 +425,12 @@ const Presence = () => {
               {dialogLoading ? (
                 <CircularProgress size={24} />
               ) : (
-                "Marquer Présent"
+                'Marquer Présent'
               )}
             </Button>
             <Button
-              variant="contained"
-              sx={{ ml: 2, bgcolor: "red" }}
+              variant='contained'
+              sx={{ ml: 2, bgcolor: 'red' }}
               onClick={() => handleSubmitPresence(true)}
               disabled={
                 selectedChildren.length === 0 ||
@@ -441,7 +441,7 @@ const Presence = () => {
               {dialogLoading ? (
                 <CircularProgress size={24} />
               ) : (
-                "Marquer Absent"
+                'Marquer Absent'
               )}
             </Button>
           </Box>
@@ -449,10 +449,10 @@ const Presence = () => {
       )}
 
       {/* Enfants présents / absents */}
-      <Box className="presence-content">
+      <Box className='presence-content'>
         {/* ENFANTS PRÉSENTS */}
-        <Box className="present-children">
-          <Typography variant="h6">Enfants présents</Typography>
+        <Box className='present-children'>
+          <Typography variant='h6'>Enfants présents</Typography>
           {presentChildren.length === 0 ? (
             <Typography>Aucun enfant présent</Typography>
           ) : (
@@ -462,7 +462,7 @@ const Presence = () => {
                   <TableRow>
                     <TableCell>Avatar</TableCell>
                     <TableCell>Nom</TableCell>
-                    <TableCell>Heure d'arrivée</TableCell>
+                    <TableCell>Heure d&apos;arrivée</TableCell>
                     <TableCell>Heure de fin</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
@@ -481,7 +481,7 @@ const Presence = () => {
                       </TableCell>
                       <TableCell>{formatTime(child.startDateTime)}</TableCell>
                       <TableCell>
-                        {child.endDateTime ? formatTime(child.endDateTime) : ""}
+                        {child.endDateTime ? formatTime(child.endDateTime) : ''}
                       </TableCell>
                       <TableCell>
                         <IconButton onClick={() => handleEditChild(child)}>
@@ -502,8 +502,8 @@ const Presence = () => {
         </Box>
 
         {/* ENFANTS ABSENTS */}
-        <Box className="absent-children">
-          <Typography variant="h6">Enfants absents</Typography>
+        <Box className='absent-children'>
+          <Typography variant='h6'>Enfants absents</Typography>
           {absentChildren.length === 0 ? (
             <Typography>Aucun enfant absent</Typography>
           ) : (
@@ -547,7 +547,7 @@ const Presence = () => {
 
       {/* DIALOG : Éditer un enfant présent */}
       <Dialog open={openDialog} onClose={closeDialog}>
-        {dialogType === "editPresent" && (
+        {dialogType === 'editPresent' && (
           <>
             <DialogTitle>Modifier la présence</DialogTitle>
             <DialogContent>
@@ -560,7 +560,7 @@ const Presence = () => {
                   renderInput={(params) => <TextField {...params} fullWidth />}
                 />
                 <TimePicker
-                  label="Heure de fin"
+                  label='Heure de fin'
                   ampm={false}
                   value={endTime}
                   onChange={(val) => setEndTime(val)}
@@ -572,7 +572,7 @@ const Presence = () => {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleModification} disabled={dialogLoading}>
-                {dialogLoading ? <CircularProgress size={24} /> : "Modifier"}
+                {dialogLoading ? <CircularProgress size={24} /> : 'Modifier'}
               </Button>
               <Button
                 onClick={handleMarkAbsentFromPresent}
@@ -581,7 +581,7 @@ const Presence = () => {
                 {dialogLoading ? (
                   <CircularProgress size={24} />
                 ) : (
-                  "Marquer absent"
+                  'Marquer absent'
                 )}
               </Button>
             </DialogActions>

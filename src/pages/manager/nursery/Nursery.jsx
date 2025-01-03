@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Box, Typography, Paper, IconButton } from "@mui/material";
-import { useParams, useNavigate } from "react-router-dom";
-import { Edit, Delete } from "@mui/icons-material";
-import axios from "../../../api/axios";
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Paper, IconButton } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Edit, Delete } from '@mui/icons-material';
+import axios from '../../../api/axios';
 
 const Nursery = () => {
   const { uuid } = useParams();
   const [nursery, setNursery] = useState(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const Nursery = () => {
         const response = await axios.get(`/nursery_structures/${uuid}`);
         setNursery(response.data);
       } catch (err) {
-        setError("Failed to fetch nursery details.");
+        setError('Failed to fetch nursery details.');
       }
     };
     fetchNursery();
@@ -27,12 +27,12 @@ const Nursery = () => {
       await axios.delete(`/nursery_structures/${uuid}`);
       navigate(`/nurseries`);
     } catch (error) {
-      console.error("Failed to delete nursery", error);
+      console.error('Failed to delete nursery', error);
     }
   };
 
   if (!nursery) {
-    return <Typography variant="h6">{error || "Loading..."}</Typography>;
+    return <Typography variant='h6'>{error || 'Loading...'}</Typography>;
   }
 
   return (
@@ -40,27 +40,27 @@ const Nursery = () => {
       <Paper
         sx={{
           padding: 3,
-          backgroundColor: "#f5f5f5",
-          margin: "auto",
-          marginTop: "60px",
-          maxWidth: "600px",
-          textAlign: "center",
+          backgroundColor: '#f5f5f5',
+          margin: 'auto',
+          marginTop: '60px',
+          maxWidth: '600px',
+          textAlign: 'center',
           boxShadow: 3,
         }}
       >
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           {nursery.name}
         </Typography>
-        <Typography variant="body1">Adresse: {nursery.address}</Typography>
+        <Typography variant='body1'>Adresse: {nursery.address}</Typography>
 
         {/* Display opening hours */}
-        <Typography variant="h5" gutterBottom sx={{ marginTop: 2 }}>
-          Horaires d'ouverture
+        <Typography variant='h5' gutterBottom sx={{ marginTop: 2 }}>
+          Horaires d&apos;ouverture
         </Typography>
         {nursery.openings && nursery.openings.length > 0 ? (
           nursery.openings.map((opening, index) => (
             <Typography key={index}>
-              {opening.openingDay}: {opening.openingHour} -{" "}
+              {opening.openingDay}: {opening.openingHour} -{' '}
               {opening.closingHour}
             </Typography>
           ))
@@ -69,7 +69,7 @@ const Nursery = () => {
         )}
 
         {/* Display agents */}
-        <Typography variant="h5" gutterBottom sx={{ marginTop: 2 }}>
+        <Typography variant='h5' gutterBottom sx={{ marginTop: 2 }}>
           Agents
         </Typography>
         {nursery.agents && nursery.agents.length > 0 ? (
@@ -83,7 +83,7 @@ const Nursery = () => {
         )}
 
         {/* Display children */}
-        <Typography variant="h5" gutterBottom sx={{ marginTop: 2 }}>
+        <Typography variant='h5' gutterBottom sx={{ marginTop: 2 }}>
           Enfants
         </Typography>
         {nursery.children && nursery.children.length > 0 ? (
@@ -98,13 +98,13 @@ const Nursery = () => {
 
         <Box sx={{ marginTop: 3 }}>
           <IconButton
-            color="primary"
+            color='primary'
             sx={{ marginRight: 2 }}
             onClick={() => navigate(`/nurseries/edit/${uuid}`)}
           >
             <Edit />
           </IconButton>
-          <IconButton color="error" onClick={() => handleDelete(nursery.uuid)}>
+          <IconButton color='error' onClick={() => handleDelete(nursery.uuid)}>
             <Delete />
           </IconButton>
         </Box>

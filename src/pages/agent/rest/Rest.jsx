@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from 'react';
 import {
   Box,
   Typography,
@@ -20,13 +20,13 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
-} from "@mui/material";
-import axios from "../../../api/axios";
-import { SelectedNurseryContext } from "../../../contexts/SelectedNurseryContext";
-import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
-import "./Rest.css";
+} from '@mui/material';
+import axios from '../../../api/axios';
+import { SelectedNurseryContext } from '../../../contexts/SelectedNurseryContext';
+import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import './Rest.css';
 
 const Rest = () => {
   const { selectedNurseryUuid } = useContext(SelectedNurseryContext);
@@ -42,24 +42,24 @@ const Rest = () => {
   const [selectedAgentUuid, setSelectedAgentUuid] = useState(null);
   const [selectedWakeAgentUuid, setSelectedWakeAgentUuid] = useState(null);
   const agentLoginWithPhone =
-    JSON.parse(localStorage.getItem("AGENT_LOGIN_WITH_PHONE")) ?? false;
-  const currentAgentUuid = localStorage.getItem("uuid");
+    JSON.parse(localStorage.getItem('AGENT_LOGIN_WITH_PHONE')) ?? false;
+  const currentAgentUuid = localStorage.getItem('uuid');
   const [loading, setLoading] = useState(false);
   const [dialogLoading, setDialogLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchPresentChildren = async () => {
       if (!selectedNurseryUuid) return;
       setLoading(true);
       try {
-        const todayDate = dayjs().format("YYYY-MM-DD");
+        const todayDate = dayjs().format('YYYY-MM-DD');
         const response = await axios.get(
           `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=presence&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59`
         );
-        if (response.data["hydra:member"]) {
-          const actions = response.data["hydra:member"];
+        if (response.data['hydra:member']) {
+          const actions = response.data['hydra:member'];
           const nonAbsentChildren = actions
             .filter((action) => !action.presence.isAbsent)
             .map((action) => ({
@@ -71,7 +71,7 @@ const Rest = () => {
           setPresentChildren(nonAbsentChildren);
         }
       } catch (error) {
-        console.error("Error fetching present children:", error);
+        console.error('Error fetching present children:', error);
       } finally {
         setLoading(false);
       }
@@ -85,12 +85,12 @@ const Rest = () => {
       if (!selectedNurseryUuid) return;
       setLoading(true);
       try {
-        const todayDate = dayjs().format("YYYY-MM-DD");
+        const todayDate = dayjs().format('YYYY-MM-DD');
         const response = await axios.get(
           `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=rest&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
         );
-        if (response.data["hydra:member"]) {
-          const actions = response.data["hydra:member"];
+        if (response.data['hydra:member']) {
+          const actions = response.data['hydra:member'];
           const restingData = actions.map((action) => ({
             actionUuid: action.uuid,
             childUuid: action.child.uuid,
@@ -102,7 +102,7 @@ const Rest = () => {
           setRestingChildren(restingData);
         }
       } catch (error) {
-        console.error("Error fetching resting children:", error);
+        console.error('Error fetching resting children:', error);
       } finally {
         setLoading(false);
       }
@@ -118,11 +118,11 @@ const Rest = () => {
         const response = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        if (response.data["hydra:member"]) {
-          setAgents(response.data["hydra:member"]);
+        if (response.data['hydra:member']) {
+          setAgents(response.data['hydra:member']);
         }
       } catch (error) {
-        console.error("Error fetching agents:", error);
+        console.error('Error fetching agents:', error);
       }
     };
     getAgents();
@@ -139,11 +139,11 @@ const Rest = () => {
 
   const handleOpenRestDialog = () => {
     if (selectedChildren.length === 0) {
-      alert("Veuillez sélectionner au moins un enfant.");
+      alert('Veuillez sélectionner au moins un enfant.');
       return;
     }
     if (!agentLoginWithPhone && !selectedAgentUuid) {
-      alert("Veuillez sélectionner un agent pour enregistrer le sommeil.");
+      alert('Veuillez sélectionner un agent pour enregistrer le sommeil.');
       return;
     }
     setRestTime(dayjs());
@@ -157,12 +157,12 @@ const Rest = () => {
   const handleSubmitRest = async () => {
     setDialogLoading(true);
     try {
-      const todayDate = dayjs().format("YYYY-MM-DD");
+      const todayDate = dayjs().format('YYYY-MM-DD');
 
       const promises = selectedChildren.map((childUuid) => {
         const restData = {
           childUuid,
-          actionType: "rest",
+          actionType: 'rest',
           rest: {
             startDateTime: restTime.toISOString(),
           },
@@ -171,7 +171,7 @@ const Rest = () => {
         if (!agentLoginWithPhone && selectedAgentUuid) {
           restData.agentUuid = selectedAgentUuid;
         }
-        return axios.post("/actions", restData);
+        return axios.post('/actions', restData);
       });
 
       await Promise.all(promises);
@@ -179,16 +179,16 @@ const Rest = () => {
       setSelectedChildren([]);
       setSelectedAgentUuid(null);
 
-      setSuccessMessage("Sommeil enregistré avec succès.");
+      setSuccessMessage('Sommeil enregistré avec succès.');
       setTimeout(() => {
-        setSuccessMessage("");
+        setSuccessMessage('');
       }, 6000);
 
       const response = await axios.get(
         `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=rest&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
       );
-      if (response.data["hydra:member"]) {
-        const actions = response.data["hydra:member"];
+      if (response.data['hydra:member']) {
+        const actions = response.data['hydra:member'];
         const restingData = actions.map((action) => ({
           actionUuid: action.uuid,
           childUuid: action.child.uuid,
@@ -205,7 +205,7 @@ const Rest = () => {
       console.error("Erreur lors de l'enregistrement du sommeil :", error);
       setErrorMessage("Une erreur s'est produite lors de l'enregistrement.");
       setTimeout(() => {
-        setErrorMessage("");
+        setErrorMessage('');
       }, 6000);
     } finally {
       setDialogLoading(false);
@@ -223,11 +223,11 @@ const Rest = () => {
 
   const handleOpenWakeUpDialog = () => {
     if (selectedRestingRows.length === 0) {
-      alert("Veuillez sélectionner au moins un enfant endormi.");
+      alert('Veuillez sélectionner au moins un enfant endormi.');
       return;
     }
     if (!agentLoginWithPhone && !selectedWakeAgentUuid) {
-      alert("Veuillez sélectionner un agent pour enregistrer le réveil.");
+      alert('Veuillez sélectionner un agent pour enregistrer le réveil.');
       return;
     }
     setWakeUpTime(dayjs());
@@ -241,7 +241,7 @@ const Rest = () => {
   const handleSubmitWakeUp = async () => {
     setDialogLoading(true);
     try {
-      const todayDate = dayjs().format("YYYY-MM-DD");
+      const todayDate = dayjs().format('YYYY-MM-DD');
       const promises = selectedRestingRows.map((childUuid) => {
         const childData = restingChildren.find(
           (c) => c.childUuid === childUuid
@@ -249,7 +249,7 @@ const Rest = () => {
         if (!childData) return null;
 
         const wakeUpData = {
-          actionType: "rest",
+          actionType: 'rest',
           rest: {
             startDateTime: childData.startDateTime,
             endDateTime: wakeUpTime.toISOString(),
@@ -267,16 +267,16 @@ const Rest = () => {
       setSelectedRestingRows([]);
       setSelectedWakeAgentUuid(null);
 
-      setSuccessMessage("Réveil enregistré avec succès.");
+      setSuccessMessage('Réveil enregistré avec succès.');
       setTimeout(() => {
-        setSuccessMessage("");
+        setSuccessMessage('');
       }, 6000);
 
       const response = await axios.get(
         `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=rest&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
       );
-      if (response.data["hydra:member"]) {
-        const actions = response.data["hydra:member"];
+      if (response.data['hydra:member']) {
+        const actions = response.data['hydra:member'];
         const restingData = actions.map((action) => ({
           actionUuid: action.uuid,
           childUuid: action.child.uuid,
@@ -295,7 +295,7 @@ const Rest = () => {
       console.error("Erreur lors de l'enregistrement du réveil :", error);
       setErrorMessage("Une erreur s'est produite lors de l'enregistrement.");
       setTimeout(() => {
-        setErrorMessage("");
+        setErrorMessage('');
       }, 6000);
     } finally {
       setDialogLoading(false);
@@ -304,24 +304,24 @@ const Rest = () => {
 
   if (loading) {
     return (
-      <Box className="loading-box">
+      <Box className='loading-box'>
         <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <Box className="rest-container">
+    <Box className='rest-container'>
       <Snackbar
         open={!!successMessage}
         autoHideDuration={6000}
-        onClose={() => setSuccessMessage("")}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        onClose={() => setSuccessMessage('')}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
-          severity="success"
-          variant="filled"
-          onClose={() => setSuccessMessage("")}
+          severity='success'
+          variant='filled'
+          onClose={() => setSuccessMessage('')}
         >
           {successMessage}
         </Alert>
@@ -331,43 +331,43 @@ const Rest = () => {
         <Snackbar
           open={!!errorMessage}
           autoHideDuration={6000}
-          onClose={() => setErrorMessage("")}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => setErrorMessage('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
-            severity="error"
-            variant="filled"
-            onClose={() => setErrorMessage("")}
+            severity='error'
+            variant='filled'
+            onClose={() => setErrorMessage('')}
           >
             {errorMessage}
           </Alert>
         </Snackbar>
       )}
 
-      <Typography variant="h5" className="rest-title">
+      <Typography variant='h5' className='rest-title'>
         Suivi du Sommeil
       </Typography>
 
-      <Box className="children-selection">
-        <Typography variant="h6">Enfants présents</Typography>
+      <Box className='children-selection'>
+        <Typography variant='h6'>Enfants présents</Typography>
         {presentChildren.length === 0 ? (
           <Typography>Aucun enfant présent</Typography>
         ) : (
-          <Box className="rest-children-list">
+          <Box className='rest-children-list'>
             {presentChildren.map((child) => {
               const isSelected = selectedChildren.includes(child.childUuid);
               return (
                 <Box
                   key={child.childUuid}
-                  className={`rest-child-item ${isSelected ? "selected" : ""}`}
+                  className={`rest-child-item ${isSelected ? 'selected' : ''}`}
                   onClick={() => handleChildClick(child.childUuid)}
                 >
                   <Avatar
                     src={child.avatar}
                     alt={`${child.firstname} ${child.lastname}`}
-                    className="rest-child-avatar"
+                    className='rest-child-avatar'
                   />
-                  <Typography variant="body1" className="rest-child-name">
+                  <Typography variant='body1' className='rest-child-name'>
                     {child.firstname} {child.lastname}
                   </Typography>
                 </Box>
@@ -377,9 +377,9 @@ const Rest = () => {
         )}
 
         {!agentLoginWithPhone && (
-          <Box className="agent-selection" sx={{ marginTop: 2 }}>
-            <Typography variant="h6">Sélectionner un agent (début)</Typography>
-            <Box className="agent-list">
+          <Box className='agent-selection' sx={{ marginTop: 2 }}>
+            <Typography variant='h6'>Sélectionner un agent (début)</Typography>
+            <Box className='agent-list'>
               {agents
                 .filter((agent) => agent.uuid !== currentAgentUuid)
                 .map((agent) => {
@@ -388,16 +388,16 @@ const Rest = () => {
                     <Box
                       key={agent.uuid}
                       className={`agent-box ${
-                        isSelected ? "agent-selected" : ""
+                        isSelected ? 'agent-selected' : ''
                       }`}
                       onClick={() => setSelectedAgentUuid(agent.uuid)}
                     >
                       <Avatar
                         src={agent.avatar}
                         alt={`${agent.firstname} ${agent.lastname}`}
-                        className="rest-child-avatar"
+                        className='rest-child-avatar'
                       />
-                      <Typography variant="body1" className="rest-child-name">
+                      <Typography variant='body1' className='rest-child-name'>
                         {agent.firstname} {agent.lastname}
                       </Typography>
                     </Box>
@@ -407,10 +407,10 @@ const Rest = () => {
           </Box>
         )}
 
-        <Box className="rest-button">
+        <Box className='rest-button'>
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             onClick={handleOpenRestDialog}
             disabled={selectedChildren.length === 0}
           >
@@ -419,8 +419,8 @@ const Rest = () => {
         </Box>
       </Box>
 
-      <Box className="resting-list">
-        <Typography variant="h6" sx={{ marginTop: 3 }}>
+      <Box className='resting-list'>
+        <Typography variant='h6' sx={{ marginTop: 3 }}>
           Enfants endormis
         </Typography>
         {restingChildren.length === 0 ? (
@@ -430,7 +430,7 @@ const Rest = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell padding="checkbox"></TableCell>
+                  <TableCell padding='checkbox'></TableCell>
                   <TableCell>Avatar</TableCell>
                   <TableCell>Nom</TableCell>
                   <TableCell>Heure de début</TableCell>
@@ -447,7 +447,7 @@ const Rest = () => {
                       onClick={() => handleRestingRowClick(child.childUuid)}
                       selected={isSelected}
                     >
-                      <TableCell padding="checkbox">
+                      <TableCell padding='checkbox'>
                         <Checkbox checked={isSelected} />
                       </TableCell>
                       <TableCell>
@@ -460,7 +460,7 @@ const Rest = () => {
                         {child.firstname} {child.lastname}
                       </TableCell>
                       <TableCell>
-                        {dayjs(child.startDateTime).format("HH:mm")}
+                        {dayjs(child.startDateTime).format('HH:mm')}
                       </TableCell>
                     </TableRow>
                   );
@@ -471,9 +471,9 @@ const Rest = () => {
         )}
 
         {!agentLoginWithPhone && (
-          <Box className="agent-selection" sx={{ marginTop: 2 }}>
-            <Typography variant="h6">Sélectionner un agent (réveil)</Typography>
-            <Box className="agent-list">
+          <Box className='agent-selection' sx={{ marginTop: 2 }}>
+            <Typography variant='h6'>Sélectionner un agent (réveil)</Typography>
+            <Box className='agent-list'>
               {agents
                 .filter((agent) => agent.uuid !== currentAgentUuid)
                 .map((agent) => {
@@ -482,16 +482,16 @@ const Rest = () => {
                     <Box
                       key={agent.uuid}
                       className={`agent-box ${
-                        isSelected ? "agent-selected" : ""
+                        isSelected ? 'agent-selected' : ''
                       }`}
                       onClick={() => setSelectedWakeAgentUuid(agent.uuid)}
                     >
                       <Avatar
                         src={agent.avatar}
                         alt={`${agent.firstname} ${agent.lastname}`}
-                        className="rest-child-avatar"
+                        className='rest-child-avatar'
                       />
-                      <Typography variant="body1" className="rest-child-name">
+                      <Typography variant='body1' className='rest-child-name'>
                         {agent.firstname} {agent.lastname}
                       </Typography>
                     </Box>
@@ -501,10 +501,10 @@ const Rest = () => {
           </Box>
         )}
 
-        <Box className="wake-button">
+        <Box className='wake-button'>
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             onClick={handleOpenWakeUpDialog}
             disabled={selectedRestingRows.length === 0}
             sx={{ marginTop: 2 }}
@@ -519,7 +519,7 @@ const Rest = () => {
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
-              label="Heure de début"
+              label='Heure de début'
               value={restTime}
               onChange={(newValue) => setRestTime(newValue)}
               renderInput={(params) => <TextField {...params} fullWidth />}
@@ -528,15 +528,15 @@ const Rest = () => {
           </LocalizationProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseRestDialog} color="secondary">
+          <Button onClick={handleCloseRestDialog} color='secondary'>
             Annuler
           </Button>
           <Button
             onClick={handleSubmitRest}
-            color="primary"
+            color='primary'
             disabled={dialogLoading}
           >
-            {dialogLoading ? <CircularProgress size={24} /> : "Soumettre"}
+            {dialogLoading ? <CircularProgress size={24} /> : 'Soumettre'}
           </Button>
         </DialogActions>
       </Dialog>
@@ -546,7 +546,7 @@ const Rest = () => {
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
-              label="Heure de fin"
+              label='Heure de fin'
               value={wakeUpTime}
               onChange={(newValue) => setWakeUpTime(newValue)}
               renderInput={(params) => <TextField {...params} fullWidth />}
@@ -555,15 +555,15 @@ const Rest = () => {
           </LocalizationProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseWakeUpDialog} color="secondary">
+          <Button onClick={handleCloseWakeUpDialog} color='secondary'>
             Annuler
           </Button>
           <Button
             onClick={handleSubmitWakeUp}
-            color="primary"
+            color='primary'
             disabled={dialogLoading}
           >
-            {dialogLoading ? <CircularProgress size={24} /> : "Soumettre"}
+            {dialogLoading ? <CircularProgress size={24} /> : 'Soumettre'}
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,5 +1,5 @@
 // src/components/presence/EditPresence.jsx
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from 'react';
 import {
   Avatar,
   Typography,
@@ -15,39 +15,39 @@ import {
   DialogActions,
   FormControlLabel,
   Checkbox,
-} from "@mui/material";
-import axios from "../../../api/axios";
-import dayjs from "dayjs";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { SelectedNurseryContext } from "../../../contexts/SelectedNurseryContext";
+} from '@mui/material';
+import axios from '../../../api/axios';
+import dayjs from 'dayjs';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { SelectedNurseryContext } from '../../../contexts/SelectedNurseryContext';
 
 const EditPresence = ({ open, onClose, action, onActionUpdated }) => {
   const { selectedNurseryUuid } = useContext(SelectedNurseryContext);
-  const [childUuid, setChildUuid] = useState("");
-  const [comment, setComment] = useState("");
+  const [childUuid, setChildUuid] = useState('');
+  const [comment, setComment] = useState('');
   const [isAbsent, setIsAbsent] = useState(false);
   const [startDateTime, setStartDateTime] = useState(null);
   const [endDateTime, setEndDateTime] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [agents, setAgents] = useState([]);
   const [selectedAgentUuid, setSelectedAgentUuid] = useState(null);
   const agentLoginWithPhone =
-    JSON.parse(localStorage.getItem("AGENT_LOGIN_WITH_PHONE")) ?? false;
-  const currentAgentUuid = localStorage.getItem("uuid");
+    JSON.parse(localStorage.getItem('AGENT_LOGIN_WITH_PHONE')) ?? false;
+  const currentAgentUuid = localStorage.getItem('uuid');
 
   useEffect(() => {
     if (action) {
       setChildUuid(action.childUuid);
-      setComment(action.comment || "");
+      setComment(action.comment || '');
       setIsAbsent(action.isAbsent || false);
       setStartDateTime(dayjs(action.startDateTime));
       setEndDateTime(action.endDateTime ? dayjs(action.endDateTime) : null);
     } else {
-      setChildUuid("");
-      setComment("");
+      setChildUuid('');
+      setComment('');
       setIsAbsent(false);
       setStartDateTime(null);
       setEndDateTime(null);
@@ -62,11 +62,11 @@ const EditPresence = ({ open, onClose, action, onActionUpdated }) => {
         const response = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        if (response.data["hydra:member"]) {
-          setAgents(response.data["hydra:member"]);
+        if (response.data['hydra:member']) {
+          setAgents(response.data['hydra:member']);
         }
       } catch (error) {
-        console.error("Error fetching agents:", error);
+        console.error('Error fetching agents:', error);
       }
     };
 
@@ -75,14 +75,14 @@ const EditPresence = ({ open, onClose, action, onActionUpdated }) => {
 
   const handleSave = async () => {
     if (!action) {
-      setErrorMessage("Action non définie.");
+      setErrorMessage('Action non définie.');
       return;
     }
     setLoading(true);
     try {
       const presenceData = {
         childUuid,
-        actionType: "presence",
+        actionType: 'presence',
         comment,
         presence: {
           isAbsent: isAbsent,
@@ -98,7 +98,7 @@ const EditPresence = ({ open, onClose, action, onActionUpdated }) => {
 
       const response = await axios.put(`/actions/${action.uuid}`, presenceData);
       onActionUpdated(response.data);
-      setSuccessMessage("Action mise à jour avec succès !");
+      setSuccessMessage('Action mise à jour avec succès !');
       onClose();
     } catch (err) {
       console.error("Erreur lors de la mise à jour de l'action :", err);
@@ -109,8 +109,8 @@ const EditPresence = ({ open, onClose, action, onActionUpdated }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Modifier l'action - Présence</DialogTitle>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth='sm'>
+      <DialogTitle>Modifier l&apos;action - Présence</DialogTitle>
       <DialogContent>
         <Box sx={{ marginTop: 2 }}>
           <FormControlLabel
@@ -118,36 +118,36 @@ const EditPresence = ({ open, onClose, action, onActionUpdated }) => {
               <Checkbox
                 checked={isAbsent}
                 onChange={(e) => setIsAbsent(e.target.checked)}
-                color="primary"
+                color='primary'
               />
             }
-            label="Absent"
+            label='Absent'
           />
         </Box>
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='fr'>
           <DateTimePicker
-            label="Heure de début"
+            label='Heure de début'
             value={startDateTime}
             onChange={(newValue) => setStartDateTime(newValue)}
             renderInput={(params) => (
-              <TextField {...params} fullWidth margin="normal" />
+              <TextField {...params} fullWidth margin='normal' />
             )}
           />
           <DateTimePicker
-            label="Heure de fin"
+            label='Heure de fin'
             value={endDateTime}
             onChange={(newValue) => setEndDateTime(newValue)}
             renderInput={(params) => (
-              <TextField {...params} fullWidth margin="normal" />
+              <TextField {...params} fullWidth margin='normal' />
             )}
           />
         </LocalizationProvider>
         <TextField
-          label="Commentaire"
+          label='Commentaire'
           multiline
           rows={4}
           fullWidth
-          margin="normal"
+          margin='normal'
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
@@ -160,15 +160,15 @@ const EditPresence = ({ open, onClose, action, onActionUpdated }) => {
             return (
               <Box
                 key={agent.uuid}
-                className={`agent-box ${isSelected ? "agent-selected" : ""}`}
+                className={`agent-box ${isSelected ? 'agent-selected' : ''}`}
                 onClick={() => setSelectedAgentUuid(agent.uuid)}
               >
                 <Avatar
                   src={`${agent.avatar}`}
                   alt={`${agent.firstname} ${agent.lastname}`}
-                  className="presence-avatar"
+                  className='presence-avatar'
                 />
-                <Typography variant="h6" className="presence-name">
+                <Typography variant='h6' className='presence-name'>
                   {agent.firstname} {agent.lastname}
                 </Typography>
               </Box>
@@ -179,8 +179,8 @@ const EditPresence = ({ open, onClose, action, onActionUpdated }) => {
         <Button onClick={onClose} disabled={loading}>
           Annuler
         </Button>
-        <Button onClick={handleSave} variant="contained" disabled={loading}>
-          {loading ? <CircularProgress size={24} /> : "Sauvegarder"}
+        <Button onClick={handleSave} variant='contained' disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : 'Sauvegarder'}
         </Button>
       </DialogActions>
 
@@ -189,13 +189,13 @@ const EditPresence = ({ open, onClose, action, onActionUpdated }) => {
         <Snackbar
           open={!!successMessage}
           autoHideDuration={3000}
-          onClose={() => setSuccessMessage("")}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => setSuccessMessage('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
-            severity="success"
-            variant="filled"
-            onClose={() => setSuccessMessage("")}
+            severity='success'
+            variant='filled'
+            onClose={() => setSuccessMessage('')}
           >
             {successMessage}
           </Alert>
@@ -205,13 +205,13 @@ const EditPresence = ({ open, onClose, action, onActionUpdated }) => {
         <Snackbar
           open={!!errorMessage}
           autoHideDuration={3000}
-          onClose={() => setErrorMessage("")}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => setErrorMessage('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
-            severity="error"
-            variant="filled"
-            onClose={() => setErrorMessage("")}
+            severity='error'
+            variant='filled'
+            onClose={() => setErrorMessage('')}
           >
             {errorMessage}
           </Alert>

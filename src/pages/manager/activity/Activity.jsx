@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Box, Typography, Button, Paper } from "@mui/material";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "../../../api/axios";
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Button, Paper } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from '../../../api/axios';
 
 const Activity = () => {
   const { uuid } = useParams();
   const [activity, setActivity] = useState(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const Activity = () => {
         const response = await axios.get(`/activities/${uuid}`);
         setActivity(response.data);
       } catch (err) {
-        setError("Failed to fetch activity details.");
+        setError('Failed to fetch activity details.');
       }
     };
     fetchActivity();
@@ -24,14 +24,14 @@ const Activity = () => {
   const handleDelete = async () => {
     try {
       await axios.delete(`/activities/${uuid}`);
-      navigate("/activities");
+      navigate('/activities');
     } catch (error) {
-      console.error("Failed to delete activity", error);
+      console.error('Failed to delete activity', error);
     }
   };
 
   if (!activity) {
-    return <Typography variant="h6">{error || "Loading..."}</Typography>;
+    return <Typography variant='h6'>{error || 'Loading...'}</Typography>;
   }
 
   return (
@@ -39,30 +39,30 @@ const Activity = () => {
       <Paper
         sx={{
           padding: 3,
-          backgroundColor: "#f5f5f5",
-          margin: "auto",
-          marginTop: "60px",
-          maxWidth: "600px",
-          textAlign: "center",
+          backgroundColor: '#f5f5f5',
+          margin: 'auto',
+          marginTop: '60px',
+          maxWidth: '600px',
+          textAlign: 'center',
           boxShadow: 3,
         }}
       >
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           {activity.name}
         </Typography>
-        <Typography variant="body1">
+        <Typography variant='body1'>
           Description: {activity.description}
         </Typography>
         <Box sx={{ marginTop: 3 }}>
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             sx={{ marginRight: 2 }}
             onClick={() => navigate(`/activities/edit/${uuid}`)}
           >
             Modifier
           </Button>
-          <Button variant="contained" color="error" onClick={handleDelete}>
+          <Button variant='contained' color='error' onClick={handleDelete}>
             Supprimer
           </Button>
         </Box>

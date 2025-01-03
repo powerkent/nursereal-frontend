@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -8,22 +8,20 @@ import {
   Select,
   InputLabel,
   FormControl,
-} from "@mui/material";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
-import axios from "../../../api/axios";
-import { useNavigate, useParams } from "react-router-dom";
+} from '@mui/material';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import axios from '../../../api/axios';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EditCustomer = () => {
   const { uuid } = useParams();
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedChildren, setSelectedChildren] = useState([]);
-  const [children, setChildren] = useState([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +32,7 @@ const EditCustomer = () => {
         setLastname(response.data.lastname);
         setEmail(response.data.email);
       } catch (err) {
-        setError("Failed to load customer details.");
+        setError('Failed to load customer details.');
       }
     };
     fetchCustomer();
@@ -56,75 +54,75 @@ const EditCustomer = () => {
     };
 
     try {
-      await axios.post("/customers", requestBody);
-      navigate("/customers");
+      await axios.post('/customers', requestBody);
+      navigate('/customers');
     } catch (err) {
-      setError("Failed to add the customer. Please try again.");
+      setError('Failed to add the customer. Please try again.');
     }
   };
 
   return (
     <Box
-      sx={{ width: "400px", margin: "auto", padding: 4, textAlign: "center" }}
+      sx={{ width: '400px', margin: 'auto', padding: 4, textAlign: 'center' }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Typography variant='h4' gutterBottom>
         Modifier le Parent
       </Typography>
 
-      {error && <Typography color="error">{error}</Typography>}
+      {error && <Typography color='error'>{error}</Typography>}
 
       <form onSubmit={handleSubmit}>
         <TextField
           fullWidth
-          label="Prénom"
+          label='Prénom'
           value={firstname}
           onChange={(e) => setFirstname(e.target.value)}
-          margin="normal"
+          margin='normal'
           required
         />
         <TextField
           fullWidth
-          label="Nom"
+          label='Nom'
           value={lastname}
           onChange={(e) => setLastname(e.target.value)}
-          margin="normal"
+          margin='normal'
           required
         />
         <TextField
           fullWidth
-          label="Email"
+          label='Email'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          margin="normal"
+          margin='normal'
           required
         />
         <TextField
           fullWidth
-          label="Nom"
+          label='Nom'
           value={lastname}
           onChange={(e) => setLastname(e.target.value)}
-          margin="normal"
+          margin='normal'
           required
         />
         <PhoneInput
-          country={"fr"}
+          country={'fr'}
           value={phoneNumber}
           onChange={setPhoneNumber}
-          inputStyle={{ width: "100%", marginBottom: "16px" }}
+          inputStyle={{ width: '100%', marginBottom: '16px' }}
           required
         />
-        <FormControl fullWidth margin="normal">
+        <FormControl fullWidth margin='normal'>
           <InputLabel>Enfants</InputLabel>
           <Select
             multiple
             value={selectedChildren}
             onChange={(e) => setSelectedChildren(e.target.value)}
-            renderValue={(selected) => selected.join(", ")}
+            renderValue={(selected) => selected.join(', ')}
           >
             {children.map((child) => (
               <MenuItem
                 key={child.uuid}
-                value={child.firstname + " " + child.lastname}
+                value={child.firstname + ' ' + child.lastname}
               >
                 {child.firstname} {child.lastname}
               </MenuItem>
@@ -132,9 +130,9 @@ const EditCustomer = () => {
           </Select>
         </FormControl>
         <Button
-          type="submit"
-          variant="contained"
-          color="primary"
+          type='submit'
+          variant='contained'
+          color='primary'
           fullWidth
           sx={{ marginTop: 2 }}
         >

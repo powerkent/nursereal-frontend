@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
 
 function MercureListener() {
-  useEffect(() => { 
+  useEffect(() => {
     const url = new URL('http://localhost:8081/.well-known/mercure');
-    url.searchParams.append('topic', 'http://localhost:8080/api/message_resources'); 
+    url.searchParams.append(
+      'topic',
+      'http://localhost:8080/api/message_resources'
+    );
 
     const eventSource = new EventSource(url);
 

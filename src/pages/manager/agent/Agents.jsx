@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Box, Typography, Paper, IconButton, Button } from "@mui/material";
-import { Visibility, Edit, Delete } from "@mui/icons-material";
-import axios from "../../../api/axios";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Paper, IconButton, Button } from '@mui/material';
+import { Visibility, Edit, Delete } from '@mui/icons-material';
+import axios from '../../../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 const Agents = () => {
   const [agents, setAgents] = useState([]);
@@ -11,10 +11,10 @@ const Agents = () => {
   useEffect(() => {
     const fetchAgents = async () => {
       try {
-        const response = await axios.get("/agents");
-        setAgents(response.data["hydra:member"]);
+        const response = await axios.get('/agents');
+        setAgents(response.data['hydra:member']);
       } catch (error) {
-        console.error("Failed to fetch agents", error);
+        console.error('Failed to fetch agents', error);
       }
     };
     fetchAgents();
@@ -33,62 +33,62 @@ const Agents = () => {
       await axios.delete(`/agents/${uuid}`);
       setAgents(agents.filter((agent) => agent.uuid !== uuid));
     } catch (error) {
-      console.error("Failed to delete agent", error);
+      console.error('Failed to delete agent', error);
     }
   };
 
   const handleAddAgent = () => {
-    navigate("/agents/add");
+    navigate('/agents/add');
   };
 
   return (
-    <Box sx={{ padding: 4, position: "relative" }}>
-      <Typography variant="h4" gutterBottom align="center">
+    <Box sx={{ padding: 4, position: 'relative' }}>
+      <Typography variant='h4' gutterBottom align='center'>
         Liste des Agents
       </Typography>
 
       <Box
         sx={{
-          maxWidth: "800px",
-          margin: "auto",
+          maxWidth: '800px',
+          margin: 'auto',
         }}
       >
         {agents.map((agent) => (
           <Paper
             key={agent.uuid}
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
               padding: 2,
               marginBottom: 2,
-              backgroundColor: "#f5f5f5",
+              backgroundColor: '#f5f5f5',
               boxShadow: 3,
             }}
           >
             <Box>
-              <Typography variant="h6">
+              <Typography variant='h6'>
                 {agent.firstname} {agent.lastname}
               </Typography>
               <Typography>Email: {agent.email}</Typography>
-              <Typography>Rôle: {agent.roles.join(", ")}</Typography>
+              <Typography>Rôle: {agent.roles.join(', ')}</Typography>
             </Box>
 
-            <Box sx={{ display: "flex", gap: 1 }}>
+            <Box sx={{ display: 'flex', gap: 1 }}>
               <IconButton
-                color="primary"
+                color='primary'
                 onClick={() => handleSelect(agent.uuid)}
               >
                 <Visibility />
               </IconButton>
               <IconButton
-                sx={{ color: "orange" }}
+                sx={{ color: 'orange' }}
                 onClick={() => handleEdit(agent.uuid)}
               >
                 <Edit />
               </IconButton>
               <IconButton
-                color="error"
+                color='error'
                 onClick={() => handleDelete(agent.uuid)}
               >
                 <Delete />
@@ -98,8 +98,8 @@ const Agents = () => {
         ))}
       </Box>
 
-      <Box sx={{ marginTop: 4, textAlign: "center" }}>
-        <Button variant="contained" color="success" onClick={handleAddAgent}>
+      <Box sx={{ marginTop: 4, textAlign: 'center' }}>
+        <Button variant='contained' color='success' onClick={handleAddAgent}>
           Ajouter un Agent
         </Button>
       </Box>
