@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -10,15 +10,15 @@ import {
   InputLabel,
   FormControl,
   Dialog,
-} from "@mui/material";
-import axios from "../../api/axios";
-import Channel from "./Channel";
-import "./Channels.css";
-import Layout from "../../components/Layout";
+} from '@mui/material';
+import axios from '../../api/axios';
+import Channel from './Channel';
+import './Channels.css';
+import Layout from '../../components/Layout';
 
 const Channels = () => {
   const [channels, setChannels] = useState([]);
-  const [newChannelName, setNewChannelName] = useState("");
+  const [newChannelName, setNewChannelName] = useState('');
   const [agents, setAgents] = useState([]);
   const [selectedAgents, setSelectedAgents] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
@@ -29,11 +29,11 @@ const Channels = () => {
   useEffect(() => {
     const fetchChannels = async () => {
       try {
-        const memberId = localStorage.getItem("id");
+        const memberId = localStorage.getItem('id');
         const response = await axios.get(`/channels?memberId=${memberId}`);
-        setChannels(response.data["hydra:member"]);
+        setChannels(response.data['hydra:member']);
       } catch (error) {
-        console.error("Failed to fetch channels", error);
+        console.error('Failed to fetch channels', error);
       }
     };
     fetchChannels();
@@ -44,9 +44,9 @@ const Channels = () => {
     const fetchAgents = async () => {
       try {
         const response = await axios.get(`/agents`);
-        setAgents(response.data["hydra:member"]);
+        setAgents(response.data['hydra:member']);
       } catch (error) {
-        console.error("Failed to fetch agents", error);
+        console.error('Failed to fetch agents', error);
       }
     };
     fetchAgents();
@@ -55,8 +55,8 @@ const Channels = () => {
   // Gestion des notifications via Mercure à chaque nouveau message reçu
   useEffect(() => {
     channels.forEach((channel) => {
-      const url = new URL("http://localhost:8001/.well-known/mercure");
-      url.searchParams.append("topic", `/channels/${channel.id}`);
+      const url = new URL('http://localhost:8001/.well-known/mercure');
+      url.searchParams.append('topic', `/channels/${channel.id}`);
 
       const eventSource = new EventSource(url, { withCredentials: true });
 
@@ -65,7 +65,7 @@ const Channels = () => {
 
         // Si le message vient d'un autre utilisateur et que le canal n'est pas ouvert
         if (
-          newMessage.author.memberId !== parseInt(localStorage.getItem("id")) &&
+          newMessage.author.memberId !== parseInt(localStorage.getItem('id')) &&
           currentChannelId !== channel.id
         ) {
           setNotifications((prev) => ({
@@ -84,14 +84,14 @@ const Channels = () => {
   // Fonction pour créer un nouveau channel
   const handleCreateChannel = async () => {
     try {
-      const myId = parseInt(localStorage.getItem("id"));
+      const myId = parseInt(localStorage.getItem('id'));
       const members = [
         ...selectedAgents.map((agentId) => ({
-          memberType: "Agent",
+          memberType: 'Agent',
           memberId: agentId,
         })),
         {
-          memberType: "Agent",
+          memberType: 'Agent',
           memberId: myId,
         },
       ];
@@ -101,11 +101,11 @@ const Channels = () => {
         members: members,
       };
 
-      const response = await axios.post("/channels", newChannel);
+      const response = await axios.post('/channels', newChannel);
       setChannels([...channels, response.data]);
       handleOpenDialog(response.data.id);
     } catch (error) {
-      console.error("Failed to create channel", error);
+      console.error('Failed to create channel', error);
     }
   };
 
@@ -131,30 +131,30 @@ const Channels = () => {
 
   return (
     <Layout>
-      <Box className="container">
+      <Box className='container'>
         {/* Liste des channels avec la gestion des notifications */}
-        <Box className="channel-list">
+        <Box className='channel-list'>
           {channels.map((channel) => (
             <Paper
               key={channel.id}
-              className="channel-item"
+              className='channel-item'
               onClick={() => handleOpenDialog(channel.id)}
             >
               <Box>
-                <Typography className="channel-name">
+                <Typography className='channel-name'>
                   {/* Badge rouge pour les notifications */}
                   <Badge
-                    color="error"
+                    color='error'
                     badgeContent={notifications[channel.id] || 0}
                     invisible={notifications[channel.id] === 0} // Masquer si aucune notification
                   >
                     {channel.name}
                   </Badge>
                 </Typography>
-                <Typography className="channel-members">
+                <Typography className='channel-members'>
                   {channel.members
                     .map((member) => `${member.firstname} ${member.lastname}`)
-                    .join(", ")}
+                    .join(', ')}
                 </Typography>
               </Box>
             </Paper>
@@ -162,20 +162,20 @@ const Channels = () => {
         </Box>
 
         {/* Formulaire pour créer un nouveau channel */}
-        <Box className="create-channel-form">
+        <Box className='create-channel-form'>
           <input
-            type="text"
+            type='text'
             value={newChannelName}
             onChange={(e) => setNewChannelName(e.target.value)}
-            placeholder="Nom du Channel"
+            placeholder='Nom du Channel'
           />
 
           <FormControl fullWidth>
-            <InputLabel id="agent-select-label">
+            <InputLabel id='agent-select-label'>
               Sélectionner des agents
             </InputLabel>
             <Select
-              labelId="agent-select-label"
+              labelId='agent-select-label'
               multiple
               value={selectedAgents}
               onChange={handleAgentSelect}
@@ -183,9 +183,9 @@ const Channels = () => {
                 selected
                   .map((id) => {
                     const agent = agents.find((agent) => agent.id === id);
-                    return agent ? `${agent.firstname} ${agent.lastname}` : "";
+                    return agent ? `${agent.firstname} ${agent.lastname}` : '';
                   })
-                  .join(", ")
+                  .join(', ')
               }
             >
               {agents.map((agent) => (
@@ -197,8 +197,8 @@ const Channels = () => {
           </FormControl>
 
           <Button
-            variant="contained"
-            color="success"
+            variant='contained'
+            color='success'
             onClick={handleCreateChannel}
           >
             Créer une discussion
@@ -209,9 +209,9 @@ const Channels = () => {
         <Dialog
           open={openDialog}
           onClose={handleCloseDialog}
-          maxWidth="md"
+          maxWidth='md'
           fullWidth
-          classes={{ paper: "custom-dialog" }}
+          classes={{ paper: 'custom-dialog' }}
         >
           {currentChannelId ? (
             <Channel channelId={currentChannelId} onClose={handleCloseDialog} />

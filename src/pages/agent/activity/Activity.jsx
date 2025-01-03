@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from 'react';
 import {
   Avatar,
   Typography,
@@ -24,50 +24,50 @@ import {
   TableRow,
   Paper,
   Checkbox,
-} from "@mui/material";
-import axios from "../../../api/axios";
-import { SelectedNurseryContext } from "../../../contexts/SelectedNurseryContext";
-import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
-import "./Activity.css";
+} from '@mui/material';
+import axios from '../../../api/axios';
+import { SelectedNurseryContext } from '../../../contexts/SelectedNurseryContext';
+import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import './Activity.css';
 
 const Activity = () => {
   const { selectedNurseryUuid } = useContext(SelectedNurseryContext);
   const [presentChildren, setPresentChildren] = useState([]);
   const [selectedChildren, setSelectedChildren] = useState([]);
   const [activities, setActivities] = useState([]);
-  const [selectedActivityUuid, setSelectedActivityUuid] = useState("");
-  const [comment, setComment] = useState("");
+  const [selectedActivityUuid, setSelectedActivityUuid] = useState('');
+  const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [dialogLoading, setDialogLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [startDateTime, setStartDateTime] = useState(dayjs());
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [inProgressActivities, setInProgressActivities] = useState([]);
   const [selectedActivityRows, setSelectedActivityRows] = useState([]);
   const [endDialogOpen, setEndDialogOpen] = useState(false);
   const [endDateTime, setEndDateTime] = useState(dayjs());
-  const [endComment, setEndComment] = useState("");
+  const [endComment, setEndComment] = useState('');
   const [agents, setAgents] = useState([]);
   const [selectedAgentUuid, setSelectedAgentUuid] = useState(null);
   const [selectedEndingAgentUuid, setSelectedEndingAgentUuid] = useState(null);
   const agentLoginWithPhone =
-    JSON.parse(localStorage.getItem("AGENT_LOGIN_WITH_PHONE")) ?? false;
-  const currentAgentUuid = localStorage.getItem("uuid");
+    JSON.parse(localStorage.getItem('AGENT_LOGIN_WITH_PHONE')) ?? false;
+  const currentAgentUuid = localStorage.getItem('uuid');
 
   useEffect(() => {
     const fetchPresentChildren = async () => {
       if (!selectedNurseryUuid) return;
       setLoading(true);
       try {
-        const todayDate = dayjs().format("YYYY-MM-DD");
+        const todayDate = dayjs().format('YYYY-MM-DD');
         const response = await axios.get(
           `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=presence&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59`
         );
-        if (response.data["hydra:member"]) {
-          const actions = response.data["hydra:member"];
+        if (response.data['hydra:member']) {
+          const actions = response.data['hydra:member'];
           const presentChildrenData = actions
             .filter((action) => !action.presence.isAbsent)
             .map((action) => ({
@@ -79,7 +79,7 @@ const Activity = () => {
           setPresentChildren(presentChildrenData);
         }
       } catch (error) {
-        console.error("Error fetching present children:", error);
+        console.error('Error fetching present children:', error);
       } finally {
         setLoading(false);
       }
@@ -91,12 +91,12 @@ const Activity = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await axios.get("/activities");
-        if (response.data["hydra:member"]) {
-          setActivities(response.data["hydra:member"]);
+        const response = await axios.get('/activities');
+        if (response.data['hydra:member']) {
+          setActivities(response.data['hydra:member']);
         }
       } catch (error) {
-        console.error("Error fetching activities:", error);
+        console.error('Error fetching activities:', error);
       }
     };
 
@@ -108,12 +108,12 @@ const Activity = () => {
       if (!selectedNurseryUuid) return;
       setLoading(true);
       try {
-        const todayDate = dayjs().format("YYYY-MM-DD");
+        const todayDate = dayjs().format('YYYY-MM-DD');
         const response = await axios.get(
           `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=activity&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
         );
-        if (response.data["hydra:member"]) {
-          const actions = response.data["hydra:member"];
+        if (response.data['hydra:member']) {
+          const actions = response.data['hydra:member'];
           const inProgressData = actions.map((action) => ({
             actionUuid: action.uuid,
             childUuid: action.child.uuid,
@@ -127,7 +127,7 @@ const Activity = () => {
           setInProgressActivities(inProgressData);
         }
       } catch (error) {
-        console.error("Error fetching in-progress activities:", error);
+        console.error('Error fetching in-progress activities:', error);
       } finally {
         setLoading(false);
       }
@@ -143,11 +143,11 @@ const Activity = () => {
         const response = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        if (response.data["hydra:member"]) {
-          setAgents(response.data["hydra:member"]);
+        if (response.data['hydra:member']) {
+          setAgents(response.data['hydra:member']);
         }
       } catch (error) {
-        console.error("Error fetching agents:", error);
+        console.error('Error fetching agents:', error);
       }
     };
     getAgents();
@@ -164,12 +164,12 @@ const Activity = () => {
 
   const handleOpenDialog = () => {
     if (selectedChildren.length === 0 || !selectedActivityUuid) {
-      alert("Veuillez sélectionner au moins un enfant et une activité.");
+      alert('Veuillez sélectionner au moins un enfant et une activité.');
       return;
     }
 
     if (!agentLoginWithPhone && !selectedAgentUuid) {
-      alert("Veuillez sélectionner un agent pour démarrer l’activité.");
+      alert('Veuillez sélectionner un agent pour démarrer l’activité.');
       return;
     }
 
@@ -187,7 +187,7 @@ const Activity = () => {
       const promises = selectedChildren.map((childUuid) => {
         const activityData = {
           childUuid,
-          actionType: "activity",
+          actionType: 'activity',
           comment,
           activity: {
             uuid: selectedActivityUuid,
@@ -199,24 +199,24 @@ const Activity = () => {
           activityData.agentUuid = selectedAgentUuid;
         }
 
-        return axios.post("/actions", activityData);
+        return axios.post('/actions', activityData);
       });
 
       await Promise.all(promises);
 
       setSelectedChildren([]);
-      setSelectedActivityUuid("");
-      setComment("");
+      setSelectedActivityUuid('');
+      setComment('');
       setSelectedAgentUuid(null);
-      setSuccessMessage("Les activités ont été enregistrées avec succès.");
-      setTimeout(() => setSuccessMessage(""), 6000);
+      setSuccessMessage('Les activités ont été enregistrées avec succès.');
+      setTimeout(() => setSuccessMessage(''), 6000);
 
-      const todayDate = dayjs().format("YYYY-MM-DD");
+      const todayDate = dayjs().format('YYYY-MM-DD');
       const response = await axios.get(
         `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=activity&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
       );
-      if (response.data["hydra:member"]) {
-        const actions = response.data["hydra:member"];
+      if (response.data['hydra:member']) {
+        const actions = response.data['hydra:member'];
         const inProgressData = actions.map((action) => ({
           actionUuid: action.uuid,
           childUuid: action.child.uuid,
@@ -235,7 +235,7 @@ const Activity = () => {
         "Une erreur s'est produite lors de l'enregistrement des activités."
       );
       setTimeout(() => {
-        setErrorMessage("");
+        setErrorMessage('');
       }, 6000);
     } finally {
       setDialogLoading(false);
@@ -258,7 +258,7 @@ const Activity = () => {
     }
 
     if (!agentLoginWithPhone && !selectedEndingAgentUuid) {
-      alert("Veuillez sélectionner un agent pour terminer l’activité.");
+      alert('Veuillez sélectionner un agent pour terminer l’activité.');
       return;
     }
 
@@ -278,7 +278,7 @@ const Activity = () => {
           (act) => act.childUuid === childUuid
         );
         const activityData = {
-          actionType: "activity",
+          actionType: 'activity',
           comment: endComment,
           activity: {
             uuid: activity.activityUuid,
@@ -297,19 +297,19 @@ const Activity = () => {
       await Promise.all(promises);
 
       setSelectedActivityRows([]);
-      setEndComment("");
+      setEndComment('');
       setSelectedEndingAgentUuid(null);
-      setSuccessMessage("Les activités ont été terminées avec succès.");
+      setSuccessMessage('Les activités ont été terminées avec succès.');
       setTimeout(() => {
-        setSuccessMessage("");
+        setSuccessMessage('');
       }, 6000);
 
-      const todayDate = dayjs().format("YYYY-MM-DD");
+      const todayDate = dayjs().format('YYYY-MM-DD');
       const response = await axios.get(
         `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=activity&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
       );
-      if (response.data["hydra:member"]) {
-        const actions = response.data["hydra:member"];
+      if (response.data['hydra:member']) {
+        const actions = response.data['hydra:member'];
         const inProgressData = actions.map((action) => ({
           actionUuid: action.uuid,
           childUuid: action.child.uuid,
@@ -325,12 +325,12 @@ const Activity = () => {
         setInProgressActivities([]);
       }
     } catch (error) {
-      console.error("Erreur lors de la terminaison des activités :", error);
+      console.error('Erreur lors de la terminaison des activités :', error);
       setErrorMessage(
         "Une erreur s'est produite lors de la terminaison des activités."
       );
       setTimeout(() => {
-        setErrorMessage("");
+        setErrorMessage('');
       }, 6000);
     } finally {
       setDialogLoading(false);
@@ -340,24 +340,24 @@ const Activity = () => {
 
   if (loading) {
     return (
-      <Box className="loading-box">
+      <Box className='loading-box'>
         <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <Box className="activity-container">
+    <Box className='activity-container'>
       <Snackbar
         open={!!successMessage}
         autoHideDuration={6000}
-        onClose={() => setSuccessMessage("")}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        onClose={() => setSuccessMessage('')}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
-          onClose={() => setSuccessMessage("")}
-          severity="success"
-          variant="filled"
+          onClose={() => setSuccessMessage('')}
+          severity='success'
+          variant='filled'
         >
           {successMessage}
         </Alert>
@@ -367,26 +367,26 @@ const Activity = () => {
         <Snackbar
           open={!!errorMessage}
           autoHideDuration={6000}
-          onClose={() => setErrorMessage("")}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => setErrorMessage('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
-            onClose={() => setErrorMessage("")}
-            severity="error"
-            variant="filled"
+            onClose={() => setErrorMessage('')}
+            severity='error'
+            variant='filled'
           >
             {errorMessage}
           </Alert>
         </Snackbar>
       )}
 
-      <Typography variant="h5" className="activity-title">
+      <Typography variant='h5' className='activity-title'>
         Suivi des activités
       </Typography>
 
-      <Box className="children-selection">
-        <Typography variant="h6">Enfants présents</Typography>
-        <Box className="children-list">
+      <Box className='children-selection'>
+        <Typography variant='h6'>Enfants présents</Typography>
+        <Box className='children-list'>
           {presentChildren.length === 0 ? (
             <Typography>Aucun enfant présent</Typography>
           ) : (
@@ -395,15 +395,15 @@ const Activity = () => {
               return (
                 <Box
                   key={child.childUuid}
-                  className={`child-item ${isSelected ? "selected" : ""}`}
+                  className={`child-item ${isSelected ? 'selected' : ''}`}
                   onClick={() => handleChildClick(child.childUuid)}
                 >
                   <Avatar
                     src={`${child.avatar}`}
                     alt={`${child.firstname} ${child.lastname}`}
-                    className="child-avatar"
+                    className='child-avatar'
                   />
-                  <Typography variant="body1" className="child-name">
+                  <Typography variant='body1' className='child-name'>
                     {child.firstname} {child.lastname}
                   </Typography>
                 </Box>
@@ -413,14 +413,14 @@ const Activity = () => {
         </Box>
       </Box>
 
-      <Box className="activity-selection">
+      <Box className='activity-selection'>
         <FormControl fullWidth>
-          <InputLabel id="activity-select-label">Activité</InputLabel>
+          <InputLabel id='activity-select-label'>Activité</InputLabel>
           <Select
-            labelId="activity-select-label"
-            id="activity-select"
+            labelId='activity-select-label'
+            id='activity-select'
             value={selectedActivityUuid}
-            label="Activité"
+            label='Activité'
             onChange={(e) => setSelectedActivityUuid(e.target.value)}
           >
             {activities.map((activity) => (
@@ -432,9 +432,9 @@ const Activity = () => {
         </FormControl>
       </Box>
 
-      <Box className="comment-field">
+      <Box className='comment-field'>
         <TextField
-          label="Commentaire"
+          label='Commentaire'
           multiline
           rows={4}
           fullWidth
@@ -444,9 +444,9 @@ const Activity = () => {
       </Box>
 
       {!agentLoginWithPhone && (
-        <Box className="agent-selection" sx={{ marginTop: 2 }}>
-          <Typography variant="h6">Sélectionner un agent (début)</Typography>
-          <Box className="agent-list">
+        <Box className='agent-selection' sx={{ marginTop: 2 }}>
+          <Typography variant='h6'>Sélectionner un agent (début)</Typography>
+          <Box className='agent-list'>
             {agents
               .filter((agent) => agent.uuid !== currentAgentUuid)
               .map((agent) => {
@@ -455,16 +455,16 @@ const Activity = () => {
                   <Box
                     key={agent.uuid}
                     className={`agent-box ${
-                      isSelected ? "agent-selected" : ""
+                      isSelected ? 'agent-selected' : ''
                     }`}
                     onClick={() => setSelectedAgentUuid(agent.uuid)}
                   >
                     <Avatar
                       src={`${agent.avatar}`}
                       alt={`${agent.firstname} ${agent.lastname}`}
-                      className="child-avatar"
+                      className='child-avatar'
                     />
-                    <Typography variant="body1" className="child-name">
+                    <Typography variant='body1' className='child-name'>
                       {agent.firstname} {agent.lastname}
                     </Typography>
                   </Box>
@@ -474,18 +474,18 @@ const Activity = () => {
         </Box>
       )}
 
-      <Box className="submit-button" sx={{ marginTop: 2 }}>
-        <Button variant="contained" color="primary" onClick={handleOpenDialog}>
-          Démarrer l'activité
+      <Box className='submit-button' sx={{ marginTop: 2 }}>
+        <Button variant='contained' color='primary' onClick={handleOpenDialog}>
+          Démarrer l&apos;activité
         </Button>
       </Box>
 
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-        <DialogTitle>Début de l'activité</DialogTitle>
+        <DialogTitle>Début de l&apos;activité</DialogTitle>
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
-              label="Heure de début"
+              label='Heure de début'
               value={startDateTime}
               onChange={(newValue) => setStartDateTime(newValue)}
               renderInput={(params) => <TextField {...params} fullWidth />}
@@ -494,21 +494,21 @@ const Activity = () => {
           </LocalizationProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
+          <Button onClick={handleCloseDialog} color='secondary'>
             Annuler
           </Button>
           <Button
             onClick={handleSubmitActivity}
-            color="primary"
+            color='primary'
             disabled={dialogLoading}
           >
-            {dialogLoading ? <CircularProgress size={24} /> : "Soumettre"}
+            {dialogLoading ? <CircularProgress size={24} /> : 'Soumettre'}
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Box className="in-progress-activities" sx={{ marginTop: 4 }}>
-        <Typography variant="h6">Activités en cours</Typography>
+      <Box className='in-progress-activities' sx={{ marginTop: 4 }}>
+        <Typography variant='h6'>Activités en cours</Typography>
         {inProgressActivities.length === 0 ? (
           <Typography>Aucune activité en cours</Typography>
         ) : (
@@ -516,7 +516,7 @@ const Activity = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell padding="checkbox">
+                  <TableCell padding='checkbox'>
                     <Checkbox
                       indeterminate={
                         selectedActivityRows.length > 0 &&
@@ -552,7 +552,7 @@ const Activity = () => {
                     onClick={() => handleActivityRowClick(activity.childUuid)}
                     selected={selectedActivityRows.includes(activity.childUuid)}
                   >
-                    <TableCell padding="checkbox">
+                    <TableCell padding='checkbox'>
                       <Checkbox
                         checked={selectedActivityRows.includes(
                           activity.childUuid
@@ -570,7 +570,7 @@ const Activity = () => {
                     </TableCell>
                     <TableCell>{activity.activityName}</TableCell>
                     <TableCell>
-                      {dayjs(activity.startDateTime).format("HH:mm")}
+                      {dayjs(activity.startDateTime).format('HH:mm')}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -581,9 +581,9 @@ const Activity = () => {
       </Box>
 
       {!agentLoginWithPhone && (
-        <Box className="agent-selection" sx={{ marginTop: 2 }}>
-          <Typography variant="h6">Sélectionner un agent (fin)</Typography>
-          <Box className="agent-list">
+        <Box className='agent-selection' sx={{ marginTop: 2 }}>
+          <Typography variant='h6'>Sélectionner un agent (fin)</Typography>
+          <Box className='agent-list'>
             {agents
               .filter((agent) => agent.uuid !== currentAgentUuid)
               .map((agent) => {
@@ -592,16 +592,16 @@ const Activity = () => {
                   <Box
                     key={agent.uuid}
                     className={`agent-box ${
-                      isSelected ? "agent-selected" : ""
+                      isSelected ? 'agent-selected' : ''
                     }`}
                     onClick={() => setSelectedEndingAgentUuid(agent.uuid)}
                   >
                     <Avatar
                       src={`${agent.avatar}`}
                       alt={`${agent.firstname} ${agent.lastname}`}
-                      className="child-avatar"
+                      className='child-avatar'
                     />
-                    <Typography variant="body1" className="child-name">
+                    <Typography variant='body1' className='child-name'>
                       {agent.firstname} {agent.lastname}
                     </Typography>
                   </Box>
@@ -611,23 +611,23 @@ const Activity = () => {
         </Box>
       )}
 
-      <Box className="end-activity-button" sx={{ marginTop: 2 }}>
+      <Box className='end-activity-button' sx={{ marginTop: 2 }}>
         <Button
-          variant="contained"
-          color="primary"
+          variant='contained'
+          color='primary'
           onClick={handleOpenEndDialog}
           disabled={selectedActivityRows.length === 0}
         >
-          Finir l'activité en cours
+          Finir l&apos;activité en cours
         </Button>
       </Box>
 
       <Dialog open={endDialogOpen} onClose={handleCloseEndDialog}>
-        <DialogTitle>Fin de l'activité</DialogTitle>
+        <DialogTitle>Fin de l&apos;activité</DialogTitle>
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
-              label="Heure de fin"
+              label='Heure de fin'
               value={endDateTime}
               onChange={(newValue) => setEndDateTime(newValue)}
               renderInput={(params) => <TextField {...params} fullWidth />}
@@ -635,22 +635,22 @@ const Activity = () => {
             />
           </LocalizationProvider>
           <TextField
-            label="Commentaire"
+            label='Commentaire'
             multiline
             rows={4}
             fullWidth
             value={endComment}
             onChange={(e) => setEndComment(e.target.value)}
-            style={{ marginTop: "1rem" }}
+            style={{ marginTop: '1rem' }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseEndDialog} color="secondary">
+          <Button onClick={handleCloseEndDialog} color='secondary'>
             Annuler
           </Button>
           <Button
             onClick={handleEndActivity}
-            color="primary"
+            color='primary'
             disabled={dialogLoading}
           >
             {dialogLoading ? (

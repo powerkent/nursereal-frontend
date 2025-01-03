@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from 'react';
 import {
   Box,
   Typography,
@@ -12,14 +12,14 @@ import {
   TextField,
   Snackbar,
   Alert,
-} from "@mui/material";
-import { TimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
+} from '@mui/material';
+import { TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
-import axios from "../../../api/axios";
-import { SelectedNurseryContext } from "../../../contexts/SelectedNurseryContext";
-import "./Treatment.css";
+import axios from '../../../api/axios';
+import { SelectedNurseryContext } from '../../../contexts/SelectedNurseryContext';
+import './Treatment.css';
 
 const Treatment = () => {
   const { selectedNurseryUuid } = useContext(SelectedNurseryContext);
@@ -28,31 +28,31 @@ const Treatment = () => {
   const [childTreatments, setChildTreatments] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedTreatment, setSelectedTreatment] = useState(null);
-  const [dose, setDose] = useState("");
+  const [dose, setDose] = useState('');
   const [dosingTime, setDosingTime] = useState(dayjs());
-  const [temperature, setTemperature] = useState("");
-  const [comment, setComment] = useState("");
+  const [temperature, setTemperature] = useState('');
+  const [comment, setComment] = useState('');
   const [agents, setAgents] = useState([]);
   const [selectedAgentUuid, setSelectedAgentUuid] = useState(null);
   const agentLoginWithPhone =
-    JSON.parse(localStorage.getItem("AGENT_LOGIN_WITH_PHONE")) ?? false;
-  const currentAgentUuid = localStorage.getItem("uuid");
+    JSON.parse(localStorage.getItem('AGENT_LOGIN_WITH_PHONE')) ?? false;
+  const currentAgentUuid = localStorage.getItem('uuid');
   const [loading, setLoading] = useState(false);
   const [dialogLoading, setDialogLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchPresentChildren = async () => {
       if (!selectedNurseryUuid) return;
       setLoading(true);
       try {
-        const todayDate = dayjs().format("YYYY-MM-DD");
+        const todayDate = dayjs().format('YYYY-MM-DD');
         const response = await axios.get(
           `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=presence&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59`
         );
-        if (response.data["hydra:member"]) {
-          const actions = response.data["hydra:member"];
+        if (response.data['hydra:member']) {
+          const actions = response.data['hydra:member'];
           const present = actions
             .filter((action) => !action.presence.isAbsent)
             .map((action) => ({
@@ -64,7 +64,7 @@ const Treatment = () => {
           setPresentChildren(present);
         }
       } catch (error) {
-        console.error("Error fetching present children:", error);
+        console.error('Error fetching present children:', error);
       } finally {
         setLoading(false);
       }
@@ -80,11 +80,11 @@ const Treatment = () => {
         const response = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        if (response.data["hydra:member"]) {
-          setAgents(response.data["hydra:member"]);
+        if (response.data['hydra:member']) {
+          setAgents(response.data['hydra:member']);
         }
       } catch (error) {
-        console.error("Error fetching agents:", error);
+        console.error('Error fetching agents:', error);
       }
     };
 
@@ -105,7 +105,7 @@ const Treatment = () => {
       const data = response.data;
       setChildTreatments(data.treatments || []);
     } catch (error) {
-      console.error("Error fetching child treatments:", error);
+      console.error('Error fetching child treatments:', error);
       setChildTreatments([]);
     } finally {
       setLoading(false);
@@ -114,10 +114,10 @@ const Treatment = () => {
 
   const handleSelectTreatment = (treatment) => {
     setSelectedTreatment(treatment);
-    setDose("");
+    setDose('');
     setDosingTime(dayjs());
-    setTemperature("");
-    setComment("");
+    setTemperature('');
+    setComment('');
     setOpenDialog(true);
   };
 
@@ -130,7 +130,7 @@ const Treatment = () => {
     if (!selectedChild || !selectedTreatment) return;
 
     if (!agentLoginWithPhone && !selectedAgentUuid) {
-      alert("Veuillez sélectionner un agent.");
+      alert('Veuillez sélectionner un agent.');
       return;
     }
 
@@ -138,12 +138,12 @@ const Treatment = () => {
     try {
       const payload = {
         childUuid: selectedChild.childUuid,
-        actionType: "treatment",
+        actionType: 'treatment',
         comment: comment,
         treatment: {
           uuid: selectedTreatment.uuid,
           dose: dose,
-          dosingTime: dosingTime.format("HH:mm"),
+          dosingTime: dosingTime.format('HH:mm'),
           temperature: parseFloat(temperature) || 0,
         },
       };
@@ -152,10 +152,10 @@ const Treatment = () => {
         payload.agentUuid = selectedAgentUuid;
       }
 
-      await axios.post("/actions", payload);
+      await axios.post('/actions', payload);
 
-      setSuccessMessage("Traitement enregistré avec succès.");
-      setTimeout(() => setSuccessMessage(""), 6000);
+      setSuccessMessage('Traitement enregistré avec succès.');
+      setTimeout(() => setSuccessMessage(''), 6000);
 
       handleCloseDialog();
     } catch (error) {
@@ -163,7 +163,7 @@ const Treatment = () => {
       setErrorMessage(
         "Une erreur s'est produite lors de l'envoi du traitement."
       );
-      setTimeout(() => setErrorMessage(""), 6000);
+      setTimeout(() => setErrorMessage(''), 6000);
     } finally {
       setDialogLoading(false);
     }
@@ -171,24 +171,24 @@ const Treatment = () => {
 
   if (loading) {
     return (
-      <Box className="treatment-loading">
+      <Box className='treatment-loading'>
         <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <Box className="treatment-container">
+    <Box className='treatment-container'>
       <Snackbar
         open={!!successMessage}
         autoHideDuration={6000}
-        onClose={() => setSuccessMessage("")}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        onClose={() => setSuccessMessage('')}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
-          severity="success"
-          variant="filled"
-          onClose={() => setSuccessMessage("")}
+          severity='success'
+          variant='filled'
+          onClose={() => setSuccessMessage('')}
         >
           {successMessage}
         </Alert>
@@ -198,29 +198,29 @@ const Treatment = () => {
         <Snackbar
           open={!!errorMessage}
           autoHideDuration={6000}
-          onClose={() => setErrorMessage("")}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => setErrorMessage('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
-            severity="error"
-            variant="filled"
-            onClose={() => setErrorMessage("")}
+            severity='error'
+            variant='filled'
+            onClose={() => setErrorMessage('')}
           >
             {errorMessage}
           </Alert>
         </Snackbar>
       )}
 
-      <Typography variant="h5" className="treatment-title">
+      <Typography variant='h5' className='treatment-title'>
         Traitements
       </Typography>
 
-      <Box className="children-selection">
-        <Typography variant="h6">Enfants présents</Typography>
+      <Box className='children-selection'>
+        <Typography variant='h6'>Enfants présents</Typography>
         {presentChildren.length === 0 ? (
           <Typography>Aucun enfant présent</Typography>
         ) : (
-          <Box className="treatment-children-list">
+          <Box className='treatment-children-list'>
             {presentChildren.map((child) => {
               const isSelected =
                 selectedChild && selectedChild.childUuid === child.childUuid;
@@ -228,16 +228,16 @@ const Treatment = () => {
                 <Box
                   key={child.childUuid}
                   className={`treatment-child-item ${
-                    isSelected ? "selected" : ""
+                    isSelected ? 'selected' : ''
                   }`}
                   onClick={() => handleSelectChild(child)}
                 >
                   <Avatar
                     src={child.avatar}
                     alt={`${child.firstname} ${child.lastname}`}
-                    className="treatment-child-avatar"
+                    className='treatment-child-avatar'
                   />
-                  <Typography variant="body1" className="treatment-child-name">
+                  <Typography variant='body1' className='treatment-child-name'>
                     {child.firstname} {child.lastname}
                   </Typography>
                 </Box>
@@ -248,25 +248,25 @@ const Treatment = () => {
       </Box>
 
       {selectedChild && (
-        <Box className="child-treatments">
-          <Typography variant="h6" sx={{ marginTop: 2 }}>
+        <Box className='child-treatments'>
+          <Typography variant='h6' sx={{ marginTop: 2 }}>
             Traitements de {selectedChild.firstname} {selectedChild.lastname}
           </Typography>
 
           {childTreatments.length === 0 ? (
             <Typography>Aucun traitement</Typography>
           ) : (
-            <Box className="treatments-list">
+            <Box className='treatments-list'>
               {childTreatments.map((treatment) => (
                 <Box
                   key={treatment.uuid}
-                  className="treatment-item"
+                  className='treatment-item'
                   onClick={() => handleSelectTreatment(treatment)}
                 >
-                  <Typography variant="subtitle1" className="treatment-name">
+                  <Typography variant='subtitle1' className='treatment-name'>
                     {treatment.name}
                   </Typography>
-                  <Typography variant="body2" className="treatment-description">
+                  <Typography variant='body2' className='treatment-description'>
                     {treatment.description}
                   </Typography>
 
@@ -274,7 +274,7 @@ const Treatment = () => {
                     treatment.dosages.length > 0 && (
                       <Box sx={{ marginTop: 1 }}>
                         {treatment.dosages.map((doseObj, idx) => (
-                          <Typography key={idx} variant="body2">
+                          <Typography key={idx} variant='body2'>
                             - {doseObj.dose} à {doseObj.dosingTime}
                           </Typography>
                         ))}
@@ -288,9 +288,9 @@ const Treatment = () => {
       )}
 
       {selectedChild && !agentLoginWithPhone && (
-        <Box className="agent-selection" sx={{ marginTop: 2 }}>
-          <Typography variant="h6">Sélectionner un agent</Typography>
-          <Box className="agent-list">
+        <Box className='agent-selection' sx={{ marginTop: 2 }}>
+          <Typography variant='h6'>Sélectionner un agent</Typography>
+          <Box className='agent-list'>
             {agents
               .filter((agent) => agent.uuid !== currentAgentUuid)
               .map((agent) => {
@@ -299,18 +299,18 @@ const Treatment = () => {
                   <Box
                     key={agent.uuid}
                     className={`agent-box ${
-                      isSelected ? "agent-selected" : ""
+                      isSelected ? 'agent-selected' : ''
                     }`}
                     onClick={() => setSelectedAgentUuid(agent.uuid)}
                   >
                     <Avatar
                       src={agent.avatar}
                       alt={`${agent.firstname} ${agent.lastname}`}
-                      className="treatment-child-avatar"
+                      className='treatment-child-avatar'
                     />
                     <Typography
-                      variant="body1"
-                      className="treatment-child-name"
+                      variant='body1'
+                      className='treatment-child-name'
                     >
                       {agent.firstname} {agent.lastname}
                     </Typography>
@@ -325,7 +325,7 @@ const Treatment = () => {
         <DialogTitle>Administrer le traitement</DialogTitle>
         <DialogContent>
           <TextField
-            label="Dose"
+            label='Dose'
             fullWidth
             sx={{ marginTop: 1 }}
             value={dose}
@@ -334,7 +334,7 @@ const Treatment = () => {
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
-              label="Heure de prise"
+              label='Heure de prise'
               ampm={false}
               value={dosingTime}
               onChange={(newValue) => setDosingTime(newValue)}
@@ -345,7 +345,7 @@ const Treatment = () => {
           </LocalizationProvider>
 
           <TextField
-            label="Température"
+            label='Température'
             fullWidth
             sx={{ marginTop: 2 }}
             value={temperature}
@@ -353,7 +353,7 @@ const Treatment = () => {
           />
 
           <TextField
-            label="Commentaire"
+            label='Commentaire'
             multiline
             rows={3}
             fullWidth
@@ -363,15 +363,15 @@ const Treatment = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
+          <Button onClick={handleCloseDialog} color='secondary'>
             Annuler
           </Button>
           <Button
             onClick={handleSubmitTreatment}
-            color="primary"
+            color='primary'
             disabled={dialogLoading}
           >
-            {dialogLoading ? <CircularProgress size={24} /> : "Soumettre"}
+            {dialogLoading ? <CircularProgress size={24} /> : 'Soumettre'}
           </Button>
         </DialogActions>
       </Dialog>

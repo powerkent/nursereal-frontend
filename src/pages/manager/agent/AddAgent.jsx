@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -8,16 +8,16 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
-} from "@mui/material";
-import axios from "../../../api/axios";
-import { useNavigate } from "react-router-dom";
+} from '@mui/material';
+import axios from '../../../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 const AddAgent = () => {
   const [agent, setAgent] = useState({
-    firstname: "",
-    lastname: "",
-    email: "",
-    password: "",
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
     roles: [],
     nurseryStructures: [],
   });
@@ -27,10 +27,10 @@ const AddAgent = () => {
   useEffect(() => {
     const fetchNurseries = async () => {
       try {
-        const response = await axios.get("/nursery_structures");
-        setNurseries(response.data["hydra:member"]);
+        const response = await axios.get('/nursery_structures');
+        setNurseries(response.data['hydra:member']);
       } catch (error) {
-        console.error("Failed to fetch nurseries", error);
+        console.error('Failed to fetch nurseries', error);
       }
     };
     fetchNurseries();
@@ -43,81 +43,81 @@ const AddAgent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/agents", agent);
-      navigate("/agents");
+      await axios.post('/agents', agent);
+      navigate('/agents');
     } catch (error) {
-      console.error("Failed to add agent", error);
+      console.error('Failed to add agent', error);
     }
   };
 
   return (
     <Box
       sx={{
-        width: "400px",
-        margin: "auto",
+        width: '400px',
+        margin: 'auto',
         padding: 4,
-        textAlign: "center",
+        textAlign: 'center',
       }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Typography variant='h4' gutterBottom>
         Ajouter un Agent
       </Typography>
 
       <form onSubmit={handleSubmit}>
         <TextField
           fullWidth
-          label="Prénom"
-          name="firstname"
+          label='Prénom'
+          name='firstname'
           value={agent.firstname}
           onChange={handleChange}
-          margin="normal"
+          margin='normal'
           required
         />
         <TextField
           fullWidth
-          label="Nom"
-          name="lastname"
+          label='Nom'
+          name='lastname'
           value={agent.lastname}
           onChange={handleChange}
-          margin="normal"
+          margin='normal'
           required
         />
         <TextField
           fullWidth
-          label="Email"
-          name="email"
-          type="email"
+          label='Email'
+          name='email'
+          type='email'
           value={agent.email}
           onChange={handleChange}
-          margin="normal"
+          margin='normal'
           required
         />
         <TextField
           fullWidth
-          label="Mot de passe"
-          name="password"
-          type="password"
+          label='Mot de passe'
+          name='password'
+          type='password'
           value={agent.password}
           onChange={handleChange}
-          margin="normal"
+          margin='normal'
           required
         />
-        <FormControl fullWidth margin="normal">
+        <FormControl fullWidth margin='normal'>
           <InputLabel>Rôles</InputLabel>
           <Select
-            name="roles"
+            name='roles'
             multiple
             value={agent.roles}
             onChange={handleChange}
           >
-            <MenuItem value="ROLE_MANAGER">ROLE_MANAGER</MenuItem>
-            <MenuItem value="ROLE_AGENT">ROLE_AGENT</MenuItem>
+            <MenuItem value='ROLE_MANAGER'>ROLE_MANAGER</MenuItem>
+            <MenuItem value='ROLE_AGENT'>ROLE_AGENT</MenuItem>
           </Select>
         </FormControl>
-        <FormControl fullWidth margin="normal">
+        <FormControl fullWidth margin='normal'>
           <InputLabel>Crèches</InputLabel>
           <Select
-            name="nurseryStructures"
+            name='nurseryStructures'
             multiple
             value={agent.nurseryStructures}
             onChange={handleChange}
@@ -130,9 +130,9 @@ const AddAgent = () => {
           </Select>
         </FormControl>
         <Button
-          type="submit"
-          variant="contained"
-          color="primary"
+          type='submit'
+          variant='contained'
+          color='primary'
           fullWidth
           sx={{ marginTop: 2 }}
         >

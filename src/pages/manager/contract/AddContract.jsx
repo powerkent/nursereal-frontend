@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -11,25 +11,25 @@ import {
   Select,
   MenuItem,
   Paper,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import { format, parse, startOfWeek, getDay } from "date-fns";
-import fr from "date-fns/locale/fr";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import axios from "../../../api/axios";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { format, parse, startOfWeek, getDay } from 'date-fns';
+import fr from 'date-fns/locale/fr';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import axios from '../../../api/axios';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const localTimeZone = "Europe/Paris";
+const localTimeZone = 'Europe/Paris';
 
 const locales = { fr: fr };
 
@@ -43,16 +43,16 @@ const localizer = dateFnsLocalizer({
 
 const messages = {
   today: "Aujourd'hui",
-  previous: "Précédent",
-  next: "Suivant",
-  month: "Mois",
-  week: "Semaine",
-  day: "Jour",
-  agenda: "Agenda",
-  date: "Date",
-  time: "Heure",
-  event: "Événement",
-  noEventsInRange: "Aucun événement à cette période.",
+  previous: 'Précédent',
+  next: 'Suivant',
+  month: 'Mois',
+  week: 'Semaine',
+  day: 'Jour',
+  agenda: 'Agenda',
+  date: 'Date',
+  time: 'Heure',
+  event: 'Événement',
+  noEventsInRange: 'Aucun événement à cette période.',
   showMore: (total) => `+ ${total} plus`,
 };
 
@@ -65,17 +65,17 @@ const AddContract = () => {
   const [endHour, setEndHour] = useState(dayjs().hour(18).minute(0));
   const [selectedChild, setSelectedChild] = useState(null);
   const [children, setChildren] = useState([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [openings, setOpenings] = useState([]);
 
   const navigate = useNavigate();
 
   const fetchChildren = async () => {
     try {
-      const response = await axios.get("/children");
-      setChildren(response.data["hydra:member"]);
+      const response = await axios.get('/children');
+      setChildren(response.data['hydra:member']);
     } catch (err) {
-      setError("Erreur lors de la récupération des enfants.");
+      setError('Erreur lors de la récupération des enfants.');
     }
   };
 
@@ -84,7 +84,7 @@ const AddContract = () => {
       const response = await axios.get(
         `/contract_dates?page=1&childId=${childId}`
       );
-      const contracts = response.data["hydra:member"];
+      const contracts = response.data['hydra:member'];
       const childEvents = contracts.flatMap((contract) =>
         contract.childDates.map((date) => ({
           title: `${contract.firstname} ${contract.lastname.charAt(0)}`,
@@ -95,7 +95,7 @@ const AddContract = () => {
       );
       setEvents(childEvents);
     } catch (err) {
-      console.error("Erreur lors de la récupération des contrats.");
+      console.error('Erreur lors de la récupération des contrats.');
     }
   };
 
@@ -115,7 +115,7 @@ const AddContract = () => {
   };
 
   const isOpenDay = (date) => {
-    const dayName = format(date, "EEEE");
+    const dayName = format(date, 'EEEE');
     return openings.some((opening) => opening.day === dayName);
   };
 
@@ -123,7 +123,7 @@ const AddContract = () => {
     if (!isOpenDay(date)) {
       return {
         style: {
-          backgroundColor: "rgba(255, 0, 0, 0.3)",
+          backgroundColor: 'rgba(255, 0, 0, 0.3)',
         },
       };
     }
@@ -136,7 +136,7 @@ const AddContract = () => {
       setSelectedDates(validSlots);
       setOpenPopup(true);
     } else {
-      alert("La crèche est fermée à ces dates.");
+      alert('La crèche est fermée à ces dates.');
     }
   };
 
@@ -160,12 +160,12 @@ const AddContract = () => {
 
       try {
         axios({
-          method: "delete",
-          url: "/contract_dates",
+          method: 'delete',
+          url: '/contract_dates',
           data: requestBody,
         });
       } catch (err) {
-        setError("Erreur lors de la récupération des enfants.");
+        setError('Erreur lors de la récupération des enfants.');
       }
     }
 
@@ -202,8 +202,8 @@ const AddContract = () => {
 
   const handleSubmitContracts = async () => {
     const contractDates = events.map((event) => ({
-      contractTimeStart: dayjs(event.start).utc().format("YYYY-MM-DD HH:mm:ss"),
-      contractTimeEnd: dayjs(event.end).utc().format("YYYY-MM-DD HH:mm:ss"),
+      contractTimeStart: dayjs(event.start).utc().format('YYYY-MM-DD HH:mm:ss'),
+      contractTimeEnd: dayjs(event.end).utc().format('YYYY-MM-DD HH:mm:ss'),
     }));
 
     const requestBody = {
@@ -212,8 +212,8 @@ const AddContract = () => {
     };
 
     try {
-      await axios.post("/contract_dates", requestBody);
-      navigate("/contracts");
+      await axios.post('/contract_dates', requestBody);
+      navigate('/contracts');
     } catch (error) {
       setError("Erreur lors de l'ajout des contrats");
     }
@@ -223,28 +223,28 @@ const AddContract = () => {
     <Paper
       elevation={3}
       sx={{
-        width: "60%",
-        margin: "auto",
+        width: '60%',
+        margin: 'auto',
         padding: 6,
-        textAlign: "center",
-        backgroundColor: "#fafafa",
-        borderRadius: "12px",
+        textAlign: 'center',
+        backgroundColor: '#fafafa',
+        borderRadius: '12px',
         marginTop: 8,
       }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Typography variant='h4' gutterBottom>
         Ajouter un contrat
       </Typography>
 
-      {error && <Typography color="error">{error}</Typography>}
+      {error && <Typography color='error'>{error}</Typography>}
 
       <FormControl
-        sx={{ width: "50%", marginBottom: 10 }}
+        sx={{ width: '50%', marginBottom: 10 }}
         disabled={events.length > 0}
       >
         <InputLabel>Choisissez un enfant</InputLabel>
         <Select
-          value={selectedChild?.uuid || ""}
+          value={selectedChild?.uuid || ''}
           onChange={(e) => {
             const selected = children.find(
               (child) => child.uuid === e.target.value
@@ -260,26 +260,26 @@ const AddContract = () => {
               </MenuItem>
             ))
           ) : (
-            <MenuItem disabled>Pas d'enfants disponibles</MenuItem>
+            <MenuItem disabled>Pas d&apos;enfants disponibles</MenuItem>
           )}
         </Select>
       </FormControl>
 
       <Calendar
         localizer={localizer}
-        culture="fr"
+        culture='fr'
         messages={messages}
         events={events}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 500, cursor: "pointer" }}
+        startAccessor='start'
+        endAccessor='end'
+        style={{ height: 500, cursor: 'pointer' }}
         selectable
         onSelectSlot={handleSelectSlot}
         dayPropGetter={dayPropGetter}
-        className="custom-calendar"
+        className='custom-calendar'
       />
 
-      <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
+      <Typography variant='h6' gutterBottom sx={{ marginTop: 2 }}>
         Contrats ajoutés :
       </Typography>
 
@@ -287,22 +287,22 @@ const AddContract = () => {
         <Box
           key={index}
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             marginBottom: 1,
           }}
         >
           <Typography>
-            {format(event.start, "dd/MM/yyyy")} de{" "}
-            {format(event.start, "HH:mm")} à {format(event.end, "HH:mm")} pour{" "}
+            {format(event.start, 'dd/MM/yyyy')} de{' '}
+            {format(event.start, 'HH:mm')} à {format(event.end, 'HH:mm')} pour{' '}
             {event.title}
           </Typography>
           <Box>
-            <IconButton onClick={() => handleEditEvent(index)} color="primary">
+            <IconButton onClick={() => handleEditEvent(index)} color='primary'>
               <EditIcon />
             </IconButton>
-            <IconButton onClick={() => handleDeleteEvent(index)} color="error">
+            <IconButton onClick={() => handleDeleteEvent(index)} color='error'>
               <DeleteIcon />
             </IconButton>
           </Box>
@@ -311,17 +311,17 @@ const AddContract = () => {
 
       <Dialog open={openPopup} onClose={() => setOpenPopup(false)}>
         <Box sx={{ padding: 3 }}>
-          <Typography variant="h6">Ajouter un horaire</Typography>
+          <Typography variant='h6'>Ajouter un horaire</Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
-              label="Heure de début"
+              label='Heure de début'
               value={startHour}
               onChange={(newValue) => setStartHour(newValue)}
               renderInput={(params) => <TextField {...params} fullWidth />}
               ampm={false}
             />
             <TimePicker
-              label="Heure de fin"
+              label='Heure de fin'
               value={endHour}
               onChange={(newValue) => setEndHour(newValue)}
               renderInput={(params) => <TextField {...params} fullWidth />}
@@ -329,20 +329,20 @@ const AddContract = () => {
             />
           </LocalizationProvider>
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             onClick={currentEvent !== null ? handleSaveEdit : handleSaveEvent}
             sx={{ marginTop: 2 }}
             fullWidth
           >
-            {currentEvent !== null ? "Modifier" : "Ajouter"}
+            {currentEvent !== null ? 'Modifier' : 'Ajouter'}
           </Button>
         </Box>
       </Dialog>
 
       <Button
-        variant="contained"
-        color="primary"
+        variant='contained'
+        color='primary'
         onClick={handleSubmitContracts}
         sx={{ marginTop: 4 }}
         disabled={!selectedChild || events.length === 0}

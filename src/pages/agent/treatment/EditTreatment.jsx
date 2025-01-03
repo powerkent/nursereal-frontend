@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from 'react';
 import {
   Avatar,
   Button,
@@ -12,45 +12,45 @@ import {
   DialogActions,
   Typography,
   Box,
-} from "@mui/material";
-import axios from "../../../api/axios";
-import dayjs from "dayjs";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { SelectedNurseryContext } from "../../../contexts/SelectedNurseryContext";
+} from '@mui/material';
+import axios from '../../../api/axios';
+import dayjs from 'dayjs';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { SelectedNurseryContext } from '../../../contexts/SelectedNurseryContext';
 
 const EditTreatment = ({ open, onClose, action, onActionUpdated }) => {
   const { selectedNurseryUuid } = useContext(SelectedNurseryContext);
-  const [childUuid, setChildUuid] = useState("");
-  const [treatmentUuid, setTreatmentUuid] = useState("");
-  const [comment, setComment] = useState("");
-  const [dose, setDose] = useState("");
+  const [childUuid, setChildUuid] = useState('');
+  const [treatmentUuid, setTreatmentUuid] = useState('');
+  const [comment, setComment] = useState('');
+  const [dose, setDose] = useState('');
   const [dosingTime, setDosingTime] = useState(dayjs());
-  const [temperature, setTemperature] = useState("");
+  const [temperature, setTemperature] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [agents, setAgents] = useState([]);
   const [selectedAgentUuid, setSelectedAgentUuid] = useState(null);
   const agentLoginWithPhone =
-    JSON.parse(localStorage.getItem("AGENT_LOGIN_WITH_PHONE")) ?? false;
-  const currentAgentUuid = localStorage.getItem("uuid");
+    JSON.parse(localStorage.getItem('AGENT_LOGIN_WITH_PHONE')) ?? false;
+  const currentAgentUuid = localStorage.getItem('uuid');
 
   useEffect(() => {
     if (action) {
       setChildUuid(action.childUuid);
       setTreatmentUuid(action.treatmentUuid);
-      setComment(action.comment || "");
-      setDose(action.dose || "");
+      setComment(action.comment || '');
+      setDose(action.dose || '');
       setDosingTime(action.dosingTime ? dayjs(action.dosingTime) : dayjs());
-      setTemperature(action.temperature || "");
+      setTemperature(action.temperature || '');
     } else {
-      setChildUuid("");
-      setTreatmentUuid("");
-      setComment("");
-      setDose("");
+      setChildUuid('');
+      setTreatmentUuid('');
+      setComment('');
+      setDose('');
       setDosingTime(dayjs());
-      setTemperature("");
+      setTemperature('');
     }
   }, [action]);
 
@@ -62,11 +62,11 @@ const EditTreatment = ({ open, onClose, action, onActionUpdated }) => {
         const response = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        if (response.data["hydra:member"]) {
-          setAgents(response.data["hydra:member"]);
+        if (response.data['hydra:member']) {
+          setAgents(response.data['hydra:member']);
         }
       } catch (error) {
-        console.error("Error fetching agents:", error);
+        console.error('Error fetching agents:', error);
       }
     };
 
@@ -75,17 +75,17 @@ const EditTreatment = ({ open, onClose, action, onActionUpdated }) => {
 
   const handleSave = async () => {
     if (!action) {
-      setErrorMessage("Action non définie.");
+      setErrorMessage('Action non définie.');
       return;
     }
     setLoading(true);
     try {
       const treatmentData = {
         childUuid,
-        actionType: "treatment",
+        actionType: 'treatment',
         comment,
         treatment: {
-          uuid: treatmentUuid,  
+          uuid: treatmentUuid,
           dose: dose,
           dosingTime: dosingTime,
           temperature: temperature,
@@ -102,7 +102,7 @@ const EditTreatment = ({ open, onClose, action, onActionUpdated }) => {
         treatmentData
       );
       onActionUpdated(response.data);
-      setSuccessMessage("Action mise à jour avec succès !");
+      setSuccessMessage('Action mise à jour avec succès !');
       onClose();
     } catch (err) {
       console.error("Erreur lors de la mise à jour de l'action :", err);
@@ -113,19 +113,19 @@ const EditTreatment = ({ open, onClose, action, onActionUpdated }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Modifier l'action - Traitement</DialogTitle>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth='sm'>
+      <DialogTitle>Modifier l&apos;action - Traitement</DialogTitle>
       <DialogContent>
         <TextField
-          label="Dose"
+          label='Dose'
           fullWidth
-          margin="normal"
+          margin='normal'
           value={dose}
           onChange={(e) => setDose(e.target.value)}
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateTimePicker
-            label="Heure de prise"
+            label='Heure de prise'
             ampm={false}
             value={dosingTime}
             onChange={(newValue) => setDosingTime(newValue)}
@@ -135,25 +135,25 @@ const EditTreatment = ({ open, onClose, action, onActionUpdated }) => {
           />
         </LocalizationProvider>
         <TextField
-          label="Température"
+          label='Température'
           fullWidth
-          margin="normal"
+          margin='normal'
           value={temperature}
           onChange={(e) => setTemperature(e.target.value)}
         />
         <TextField
-          label="Commentaire"
+          label='Commentaire'
           multiline
           rows={4}
           fullWidth
-          margin="normal"
+          margin='normal'
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
         {!agentLoginWithPhone && (
-          <Box className="agent-selection" sx={{ marginTop: 2 }}>
-            <Typography variant="h6">Sélectionner un agent</Typography>
-            <Box className="agent-list">
+          <Box className='agent-selection' sx={{ marginTop: 2 }}>
+            <Typography variant='h6'>Sélectionner un agent</Typography>
+            <Box className='agent-list'>
               {agents
                 .filter((agent) => agent.uuid !== currentAgentUuid)
                 .map((agent) => {
@@ -162,18 +162,18 @@ const EditTreatment = ({ open, onClose, action, onActionUpdated }) => {
                     <Box
                       key={agent.uuid}
                       className={`agent-box ${
-                        isSelected ? "agent-selected" : ""
+                        isSelected ? 'agent-selected' : ''
                       }`}
                       onClick={() => setSelectedAgentUuid(agent.uuid)}
                     >
                       <Avatar
                         src={agent.avatar}
                         alt={`${agent.firstname} ${agent.lastname}`}
-                        className="treatment-child-avatar"
+                        className='treatment-child-avatar'
                       />
                       <Typography
-                        variant="body1"
-                        className="treatment-child-name"
+                        variant='body1'
+                        className='treatment-child-name'
                       >
                         {agent.firstname} {agent.lastname}
                       </Typography>
@@ -188,8 +188,8 @@ const EditTreatment = ({ open, onClose, action, onActionUpdated }) => {
         <Button onClick={onClose} disabled={loading}>
           Annuler
         </Button>
-        <Button onClick={handleSave} variant="contained" disabled={loading}>
-          {loading ? <CircularProgress size={24} /> : "Sauvegarder"}
+        <Button onClick={handleSave} variant='contained' disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : 'Sauvegarder'}
         </Button>
       </DialogActions>
 
@@ -198,13 +198,13 @@ const EditTreatment = ({ open, onClose, action, onActionUpdated }) => {
         <Snackbar
           open={!!successMessage}
           autoHideDuration={3000}
-          onClose={() => setSuccessMessage("")}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => setSuccessMessage('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
-            severity="success"
-            variant="filled"
-            onClose={() => setSuccessMessage("")}
+            severity='success'
+            variant='filled'
+            onClose={() => setSuccessMessage('')}
           >
             {successMessage}
           </Alert>
@@ -214,13 +214,13 @@ const EditTreatment = ({ open, onClose, action, onActionUpdated }) => {
         <Snackbar
           open={!!errorMessage}
           autoHideDuration={3000}
-          onClose={() => setErrorMessage("")}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => setErrorMessage('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
-            severity="error"
-            variant="filled"
-            onClose={() => setErrorMessage("")}
+            severity='error'
+            variant='filled'
+            onClose={() => setErrorMessage('')}
           >
             {errorMessage}
           </Alert>

@@ -1,5 +1,4 @@
-// src/components/diaper/EditDiaper.jsx
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from 'react';
 import {
   Avatar,
   Typography,
@@ -14,53 +13,50 @@ import {
   DialogTitle,
   DialogActions,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@mui/material";
-import { Opacity, Waves, CheckCircle, AcUnit } from "@mui/icons-material";
-import axios from "../../../api/axios";
-import dayjs from "dayjs";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { SelectedNurseryContext } from "../../../contexts/SelectedNurseryContext";
+} from '@mui/material';
+import { Opacity, Waves, CheckCircle, AcUnit } from '@mui/icons-material';
+import axios from '../../../api/axios';
+import dayjs from 'dayjs';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { SelectedNurseryContext } from '../../../contexts/SelectedNurseryContext';
 
 const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
   const { selectedNurseryUuid } = useContext(SelectedNurseryContext);
-  const [childUuid, setChildUuid] = useState("");
-  const [comment, setComment] = useState("");
-  const [diaperQuality, setDiaperQuality] = useState("");
+  const [childUuid, setChildUuid] = useState('');
+  const [comment, setComment] = useState('');
+  const [diaperQuality, setDiaperQuality] = useState('');
   const [startDateTime, setStartDateTime] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [agents, setAgents] = useState([]);
   const [selectedAgentUuid, setSelectedAgentUuid] = useState(null);
   const agentLoginWithPhone =
-    JSON.parse(localStorage.getItem("AGENT_LOGIN_WITH_PHONE")) ?? false;
-  const currentAgentUuid = localStorage.getItem("uuid");
+    JSON.parse(localStorage.getItem('AGENT_LOGIN_WITH_PHONE')) ?? false;
+  const currentAgentUuid = localStorage.getItem('uuid');
 
   const diaperQualities = [
-    { key: "liquid", label: "Liquide", icon: <Opacity fontSize="large" /> },
-    { key: "soft", label: "Mou", icon: <Waves fontSize="large" /> },
+    { key: 'liquid', label: 'Liquide', icon: <Opacity fontSize='large' /> },
+    { key: 'soft', label: 'Mou', icon: <Waves fontSize='large' /> },
     {
-      key: "correct",
-      label: "Correct",
-      icon: <CheckCircle fontSize="large" />,
+      key: 'correct',
+      label: 'Correct',
+      icon: <CheckCircle fontSize='large' />,
     },
-    { key: "hard", label: "Dur", icon: <AcUnit fontSize="large" /> },
+    { key: 'hard', label: 'Dur', icon: <AcUnit fontSize='large' /> },
   ];
 
   useEffect(() => {
     if (action) {
       setChildUuid(action.childUuid);
-      setComment(action.comment || "");
-      setDiaperQuality(action.diaperQuality || "");
+      setComment(action.comment || '');
+      setDiaperQuality(action.diaperQuality || '');
       setStartDateTime(dayjs(action.startDateTime));
     } else {
-      setChildUuid("");
-      setComment("");
-      setDiaperQuality("");
+      setChildUuid('');
+      setComment('');
+      setDiaperQuality('');
       setStartDateTime(null);
     }
   }, [action]);
@@ -77,11 +73,11 @@ const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
         const response = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        if (response.data["hydra:member"]) {
-          setAgents(response.data["hydra:member"]);
+        if (response.data['hydra:member']) {
+          setAgents(response.data['hydra:member']);
         }
       } catch (error) {
-        console.error("Error fetching agents:", error);
+        console.error('Error fetching agents:', error);
       }
     };
 
@@ -90,7 +86,7 @@ const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
 
   const handleSave = async () => {
     if (!action) {
-      setErrorMessage("Action non définie.");
+      setErrorMessage('Action non définie.');
       return;
     }
     setLoading(true);
@@ -98,7 +94,7 @@ const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
       // Construisez l'objet mis à jour
       const diaperData = {
         childUuid,
-        actionType: "diaperData",
+        actionType: 'diaperData',
         comment,
         diaper: {
           diaperQuality: diaperQuality,
@@ -112,7 +108,7 @@ const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
 
       const response = await axios.put(`/actions/${action.uuid}`, diaperData);
       onActionUpdated(response.data);
-      setSuccessMessage("Action mise à jour avec succès !");
+      setSuccessMessage('Action mise à jour avec succès !');
       onClose(); // Fermer le dialog après la sauvegarde
     } catch (err) {
       console.error("Erreur lors de la mise à jour de l'action :", err);
@@ -123,26 +119,26 @@ const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Modifier l'action - Changement de couche</DialogTitle>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth='sm'>
+      <DialogTitle>Modifier l&apos;action - Changement de couche</DialogTitle>
       <DialogContent>
-        <Box className="diaper-container">
-          <FormControl fullWidth margin="normal">
-            <Box className="diaper-quality-selection">
-              <Typography variant="h6">État de la couche</Typography>
-              <Box className="diaper-quality-buttons">
+        <Box className='diaper-container'>
+          <FormControl fullWidth margin='normal'>
+            <Box className='diaper-quality-selection'>
+              <Typography variant='h6'>État de la couche</Typography>
+              <Box className='diaper-quality-buttons'>
                 {diaperQualities.map((quality) => (
                   <Button
                     key={quality.key}
                     variant={
-                      diaperQuality === quality.key ? "contained" : "outlined"
+                      diaperQuality === quality.key ? 'contained' : 'outlined'
                     }
                     onClick={() => handleDiaperQualityClick(quality.key)}
-                    className="diaper-quality-button"
+                    className='diaper-quality-button'
                   >
-                    <Box className="diaper-quality-content">
+                    <Box className='diaper-quality-content'>
                       {quality.icon}
-                      <Typography variant="body1">{quality.label}</Typography>
+                      <Typography variant='body1'>{quality.label}</Typography>
                     </Box>
                   </Button>
                 ))}
@@ -150,9 +146,9 @@ const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
             </Box>
           </FormControl>
 
-          <Box className="comment-field" sx={{ marginTop: 2 }}>
+          <Box className='comment-field' sx={{ marginTop: 2 }}>
             <TextField
-              label="Commentaire"
+              label='Commentaire'
               multiline
               rows={4}
               fullWidth
@@ -160,23 +156,23 @@ const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
               onChange={(e) => setComment(e.target.value)}
             />
           </Box>
-          <Box className="time-field" sx={{ marginTop: 2 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+          <Box className='time-field' sx={{ marginTop: 2 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='fr'>
               <DateTimePicker
-                label="Heure du change"
+                label='Heure du change'
                 value={startDateTime}
                 onChange={(newValue) => setStartDateTime(newValue)}
                 renderInput={(params) => (
-                  <TextField {...params} fullWidth margin="normal" />
+                  <TextField {...params} fullWidth margin='normal' />
                 )}
               />
             </LocalizationProvider>
           </Box>
         </Box>
         {!agentLoginWithPhone && (
-          <Box className="agent-selection" sx={{ marginTop: 2 }}>
-            <Typography variant="h6">Sélectionner un agent</Typography>
-            <Box className="agent-list">
+          <Box className='agent-selection' sx={{ marginTop: 2 }}>
+            <Typography variant='h6'>Sélectionner un agent</Typography>
+            <Box className='agent-list'>
               {agents
                 .filter((agent) => agent.uuid !== currentAgentUuid)
                 .map((agent) => {
@@ -185,16 +181,16 @@ const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
                     <Box
                       key={agent.uuid}
                       className={`agent-box ${
-                        isSelected ? "agent-selected" : ""
+                        isSelected ? 'agent-selected' : ''
                       }`}
                       onClick={() => setSelectedAgentUuid(agent.uuid)}
                     >
                       <Avatar
                         src={agent.avatar}
                         alt={`${agent.firstname} ${agent.lastname}`}
-                        className="child-avatar"
+                        className='child-avatar'
                       />
-                      <Typography variant="body1" className="child-name">
+                      <Typography variant='body1' className='child-name'>
                         {agent.firstname} {agent.lastname}
                       </Typography>
                     </Box>
@@ -208,8 +204,8 @@ const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
         <Button onClick={onClose} disabled={loading}>
           Annuler
         </Button>
-        <Button onClick={handleSave} variant="contained" disabled={loading}>
-          {loading ? <CircularProgress size={24} /> : "Sauvegarder"}
+        <Button onClick={handleSave} variant='contained' disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : 'Sauvegarder'}
         </Button>
       </DialogActions>
 
@@ -218,13 +214,13 @@ const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
         <Snackbar
           open={!!successMessage}
           autoHideDuration={3000}
-          onClose={() => setSuccessMessage("")}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => setSuccessMessage('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
-            severity="success"
-            variant="filled"
-            onClose={() => setSuccessMessage("")}
+            severity='success'
+            variant='filled'
+            onClose={() => setSuccessMessage('')}
           >
             {successMessage}
           </Alert>
@@ -234,13 +230,13 @@ const EditDiaper = ({ open, onClose, action, onActionUpdated }) => {
         <Snackbar
           open={!!errorMessage}
           autoHideDuration={3000}
-          onClose={() => setErrorMessage("")}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => setErrorMessage('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
-            severity="error"
-            variant="filled"
-            onClose={() => setErrorMessage("")}
+            severity='error'
+            variant='filled'
+            onClose={() => setErrorMessage('')}
           >
             {errorMessage}
           </Alert>

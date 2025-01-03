@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-import axios from "../../../api/axios";
+import React, { useState, useEffect } from 'react';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from '../../../api/axios';
 
 const EditTreatment = () => {
   const { uuid } = useParams();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [error, setError] = useState("");
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const EditTreatment = () => {
         setName(response.data.name);
         setDescription(response.data.description);
       } catch (err) {
-        setError("Failed to load treatment details.");
+        setError('Failed to load treatment details.');
       }
     };
     fetchTreatment();
@@ -27,43 +27,43 @@ const EditTreatment = () => {
     e.preventDefault();
     try {
       await axios.put(`/treatments/${uuid}`, { name, description });
-      navigate("/treatments");
+      navigate('/treatments');
     } catch (err) {
-      setError("Failed to update the treatment. Please try again.");
+      setError('Failed to update the treatment. Please try again.');
     }
   };
 
   return (
     <Box
-      sx={{ width: "400px", margin: "auto", padding: 4, textAlign: "center" }}
+      sx={{ width: '400px', margin: 'auto', padding: 4, textAlign: 'center' }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Typography variant='h4' gutterBottom>
         Modifier un Traitement
       </Typography>
 
-      {error && <Typography color="error">{error}</Typography>}
+      {error && <Typography color='error'>{error}</Typography>}
 
       <form onSubmit={handleSubmit}>
         <TextField
           fullWidth
-          label="Nom du Traitement"
+          label='Nom du Traitement'
           value={name}
           onChange={(e) => setName(e.target.value)}
-          margin="normal"
+          margin='normal'
           required
         />
         <TextField
           fullWidth
-          label="Description"
+          label='Description'
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          margin="normal"
+          margin='normal'
           required
         />
         <Button
-          type="submit"
-          variant="contained"
-          color="primary"
+          type='submit'
+          variant='contained'
+          color='primary'
           fullWidth
           sx={{ marginTop: 2 }}
         >

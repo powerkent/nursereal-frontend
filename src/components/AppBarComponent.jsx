@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from "react";
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -9,14 +9,14 @@ import {
   FormControlLabel,
   Select,
   MenuItem,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import LogoutIcon from "@mui/icons-material/Logout";
-import ChildFriendlyIcon from "@mui/icons-material/ChildFriendly";
-import SettingsIcon from "@mui/icons-material/Settings";
-import { useNavigate } from "react-router-dom";
-import axios from "../api/axios";
-import { SelectedNurseryContext } from "../contexts/SelectedNurseryContext";
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import LogoutIcon from '@mui/icons-material/Logout';
+import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { useNavigate } from 'react-router-dom';
+import axios from '../api/axios';
+import { SelectedNurseryContext } from '../contexts/SelectedNurseryContext';
 
 const AppBarComponent = ({
   isManager,
@@ -28,7 +28,7 @@ const AppBarComponent = ({
 }) => {
   const navigate = useNavigate();
   const [nurseries, setNurseries] = useState([]);
-  const [selectedNursery, setSelectedNursery] = useState("");
+  const [selectedNursery, setSelectedNursery] = useState('');
   const { setSelectedNurseryUuid } = useContext(SelectedNurseryContext);
 
   const fetchNurseries = useCallback(async () => {
@@ -42,8 +42,8 @@ const AppBarComponent = ({
       let nurseriesList = [];
 
       if (isManager && isAgentMode) {
-        response = await axios.get("/nursery_structures");
-        nurseriesList = response.data?.["hydra:member"] || [];
+        response = await axios.get('/nursery_structures');
+        nurseriesList = response.data?.['hydra:member'] || [];
       } else if (!isManager) {
         response = await axios.get(`/agents/${userUuid}`);
         nurseriesList = response.data?.nurseryStructures || [];
@@ -53,7 +53,7 @@ const AppBarComponent = ({
 
       if (nurseriesList.length > 0) {
         const savedNursery = JSON.parse(
-          localStorage.getItem("selectedNursery")
+          localStorage.getItem('selectedNursery')
         );
 
         if (
@@ -68,7 +68,7 @@ const AppBarComponent = ({
         }
       }
     } catch (error) {
-      console.error("Error fetching nurseries:", error);
+      console.error('Error fetching nurseries:', error);
       setNurseries([]);
     }
   }, [userUuid, isManager, isAgentMode, setSelectedNurseryUuid]);
@@ -88,7 +88,7 @@ const AppBarComponent = ({
     setSelectedNurseryUuid(selectedNursery.uuid);
 
     localStorage.setItem(
-      "selectedNursery",
+      'selectedNursery',
       JSON.stringify({
         name: selectedNursery.name,
         uuid: selectedNursery.uuid,
@@ -98,14 +98,14 @@ const AppBarComponent = ({
 
   return (
     <AppBar
-      position="static"
-      sx={{ backgroundColor: isAgentMode ? "pink" : "primary.main" }}
+      position='static'
+      sx={{ backgroundColor: isAgentMode ? 'pink' : 'primary.main' }}
     >
       <Toolbar>
         <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="menu"
+          edge='start'
+          color='inherit'
+          aria-label='menu'
           onClick={() => toggleDrawer(true)}
         >
           <MenuIcon />
@@ -117,10 +117,10 @@ const AppBarComponent = ({
               <Switch
                 checked={isAgentMode}
                 onChange={handleToggleRole}
-                color="default"
+                color='default'
               />
             }
-            label={`Passer en mode ${isAgentMode ? "Manager" : "Agent"}`}
+            label={`Passer en mode ${isAgentMode ? 'Manager' : 'Agent'}`}
             sx={{ marginLeft: 2 }}
           />
         )}
@@ -130,9 +130,9 @@ const AppBarComponent = ({
             value={selectedNursery}
             onChange={handleNurseryChange}
             displayEmpty
-            sx={{ color: "white", marginLeft: 2 }}
+            sx={{ color: 'white', marginLeft: 2 }}
           >
-            <MenuItem value="" disabled>
+            <MenuItem value='' disabled>
               Sélectionner une crèche
             </MenuItem>
             {nurseries.map((nursery) => (
@@ -146,26 +146,26 @@ const AppBarComponent = ({
         <Box
           sx={{
             flexGrow: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: "pointer",
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'pointer',
           }}
-          onClick={() => navigate("/")}
+          onClick={() => navigate('/')}
         >
           <ChildFriendlyIcon />
-          <Typography variant="h6" sx={{ marginLeft: 1 }}>
+          <Typography variant='h6' sx={{ marginLeft: 1 }}>
             NURSEREAL
           </Typography>
         </Box>
 
         {isManager && (
-          <IconButton color="inherit" onClick={() => navigate("/settings")}>
+          <IconButton color='inherit' onClick={() => navigate('/settings')}>
             <SettingsIcon />
           </IconButton>
         )}
 
-        <IconButton color="inherit" onClick={handleLogout}>
+        <IconButton color='inherit' onClick={handleLogout}>
           <LogoutIcon />
         </IconButton>
       </Toolbar>
