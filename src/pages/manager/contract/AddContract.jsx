@@ -73,7 +73,7 @@ const AddContract = () => {
   const fetchChildren = async () => {
     try {
       const response = await axios.get('/children');
-      setChildren(response.data['hydra:member']);
+      setChildren(response.data['member']);
     } catch (err) {
       setError('Erreur lors de la récupération des enfants.');
     }
@@ -84,7 +84,7 @@ const AddContract = () => {
       const response = await axios.get(
         `/contract_dates?page=1&childId=${childId}`
       );
-      const contracts = response.data['hydra:member'];
+      const contracts = response.data['member'];
       const childEvents = contracts.flatMap((contract) =>
         contract.childDates.map((date) => ({
           title: `${contract.firstname} ${contract.lastname.charAt(0)}`,

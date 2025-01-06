@@ -66,8 +66,8 @@ const Activity = () => {
         const response = await axios.get(
           `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=presence&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59`
         );
-        if (response.data['hydra:member']) {
-          const actions = response.data['hydra:member'];
+        if (response.data['member']) {
+          const actions = response.data['member'];
           const presentChildrenData = actions
             .filter((action) => !action.presence.isAbsent)
             .map((action) => ({
@@ -92,8 +92,8 @@ const Activity = () => {
     const fetchActivities = async () => {
       try {
         const response = await axios.get('/activities');
-        if (response.data['hydra:member']) {
-          setActivities(response.data['hydra:member']);
+        if (response.data['member']) {
+          setActivities(response.data['member']);
         }
       } catch (error) {
         console.error('Error fetching activities:', error);
@@ -112,8 +112,8 @@ const Activity = () => {
         const response = await axios.get(
           `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=activity&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
         );
-        if (response.data['hydra:member']) {
-          const actions = response.data['hydra:member'];
+        if (response.data['member']) {
+          const actions = response.data['member'];
           const inProgressData = actions.map((action) => ({
             actionUuid: action.uuid,
             childUuid: action.child.uuid,
@@ -143,8 +143,8 @@ const Activity = () => {
         const response = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        if (response.data['hydra:member']) {
-          setAgents(response.data['hydra:member']);
+        if (response.data['member']) {
+          setAgents(response.data['member']);
         }
       } catch (error) {
         console.error('Error fetching agents:', error);
@@ -215,8 +215,8 @@ const Activity = () => {
       const response = await axios.get(
         `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=activity&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
       );
-      if (response.data['hydra:member']) {
-        const actions = response.data['hydra:member'];
+      if (response.data['member']) {
+        const actions = response.data['member'];
         const inProgressData = actions.map((action) => ({
           actionUuid: action.uuid,
           childUuid: action.child.uuid,
@@ -308,8 +308,8 @@ const Activity = () => {
       const response = await axios.get(
         `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=activity&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
       );
-      if (response.data['hydra:member']) {
-        const actions = response.data['hydra:member'];
+      if (response.data['member']) {
+        const actions = response.data['member'];
         const inProgressData = actions.map((action) => ({
           actionUuid: action.uuid,
           childUuid: action.child.uuid,

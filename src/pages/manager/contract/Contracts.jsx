@@ -36,7 +36,7 @@ const Contracts = () => {
     const fetchNurseries = async () => {
       try {
         const response = await axios.get('/nursery_structures');
-        setNurseries(response.data['hydra:member']);
+        setNurseries(response.data['member']);
       } catch (error) {
         console.error('Failed to fetch nurseries', error);
       }
@@ -52,7 +52,7 @@ const Contracts = () => {
           const contractResponse = await axios.get(
             `/contract_dates?nurseryStructureId=${selectedNursery}`
           );
-          const contracts = contractResponse.data['hydra:member'];
+          const contracts = contractResponse.data['member'];
 
           // Convert contract dates into calendar events
           const newEvents = contracts.flatMap((contract) =>

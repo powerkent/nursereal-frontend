@@ -58,8 +58,8 @@ const Rest = () => {
         const response = await axios.get(
           `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=presence&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59`
         );
-        if (response.data['hydra:member']) {
-          const actions = response.data['hydra:member'];
+        if (response.data['member']) {
+          const actions = response.data['member'];
           const nonAbsentChildren = actions
             .filter((action) => !action.presence.isAbsent)
             .map((action) => ({
@@ -89,8 +89,8 @@ const Rest = () => {
         const response = await axios.get(
           `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=rest&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
         );
-        if (response.data['hydra:member']) {
-          const actions = response.data['hydra:member'];
+        if (response.data['member']) {
+          const actions = response.data['member'];
           const restingData = actions.map((action) => ({
             actionUuid: action.uuid,
             childUuid: action.child.uuid,
@@ -118,8 +118,8 @@ const Rest = () => {
         const response = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        if (response.data['hydra:member']) {
-          setAgents(response.data['hydra:member']);
+        if (response.data['member']) {
+          setAgents(response.data['member']);
         }
       } catch (error) {
         console.error('Error fetching agents:', error);
@@ -187,8 +187,8 @@ const Rest = () => {
       const response = await axios.get(
         `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=rest&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
       );
-      if (response.data['hydra:member']) {
-        const actions = response.data['hydra:member'];
+      if (response.data['member']) {
+        const actions = response.data['member'];
         const restingData = actions.map((action) => ({
           actionUuid: action.uuid,
           childUuid: action.child.uuid,
@@ -275,8 +275,8 @@ const Rest = () => {
       const response = await axios.get(
         `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=rest&start_date_time=${todayDate} 00:00:00&end_date_time=${todayDate} 23:59:59&state=action_in_progress`
       );
-      if (response.data['hydra:member']) {
-        const actions = response.data['hydra:member'];
+      if (response.data['member']) {
+        const actions = response.data['member'];
         const restingData = actions.map((action) => ({
           actionUuid: action.uuid,
           childUuid: action.child.uuid,

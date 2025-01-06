@@ -14,7 +14,7 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const { data } = await axios.get('/configs');
-      const configs = data['hydra:member'] || [];
+      const configs = data['member'] || [];
       const agentConfig = configs.find(
         (configItem) => configItem.name === 'AGENT_LOGIN_WITH_PHONE'
       );

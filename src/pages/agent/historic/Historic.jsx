@@ -1,4 +1,3 @@
-// src/components/historic/Historic.jsx
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import {
   Box,
@@ -152,11 +151,11 @@ const Historic = () => {
       );
       const actionTypesResp = await axios.get('/action_types');
 
-      setChildrenList(childrenResp.data['hydra:member'] || []);
-      setAgents(agentsResp.data['hydra:member'] || []);
+      setChildrenList(childrenResp.data['member'] || []);
+      setAgents(agentsResp.data['member'] || []);
 
       setActionTypes(
-        actionTypesResp.data['hydra:member'].flatMap((item) =>
+        actionTypesResp.data['member'].flatMap((item) =>
           Object.keys(item.actionTypes)
         )
       );
@@ -191,7 +190,7 @@ const Historic = () => {
       let url = `/actions?${query}`;
       const actionsResp = await axios.get(url);
 
-      const mappedActions = actionsResp.data['hydra:member'].map((action) => ({
+      const mappedActions = actionsResp.data['member'].map((action) => ({
         uuid: action.uuid,
         childAvatar: action.child?.avatar || '',
         childFirstname: action.child?.firstname || '',

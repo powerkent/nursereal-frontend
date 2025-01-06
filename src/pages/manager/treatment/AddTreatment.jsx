@@ -34,7 +34,7 @@ const AddTreatment = () => {
     const fetchChildren = async () => {
       try {
         const response = await axios.get('/children');
-        setChildren(response.data['hydra:member']);
+        setChildren(response.data['member']);
       } catch (error) {
         setError('Échec du chargement des enfants.');
       }

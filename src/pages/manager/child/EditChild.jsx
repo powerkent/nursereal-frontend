@@ -43,7 +43,7 @@ const EditChild = () => {
     const fetchNurseries = async () => {
       try {
         const response = await axios.get('/nursery_structures');
-        setNurseries(response.data['hydra:member']);
+        setNurseries(response.data['member']);
       } catch (err) {
         setError('Failed to fetch nurseries.');
       }

@@ -12,7 +12,7 @@ const Customers = () => {
     const fetchCustomers = async () => {
       try {
         const response = await axios.get('/customers');
-        setCustomers(response.data['hydra:member']);
+        setCustomers(response.data['member']);
       } catch (error) {
         console.error('Failed to fetch customers', error);
       }

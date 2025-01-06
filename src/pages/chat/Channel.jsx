@@ -26,7 +26,7 @@ const Channel = () => {
         const response = await axios.get(
           `/messages?channelId=${channelIdNumber}`
         );
-        setMessages(response.data['hydra:member']);
+        setMessages(response.data['member']);
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch messages', error);

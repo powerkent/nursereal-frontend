@@ -62,8 +62,8 @@ const EditTreatment = ({ open, onClose, action, onActionUpdated }) => {
         const response = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        if (response.data['hydra:member']) {
-          setAgents(response.data['hydra:member']);
+        if (response.data['member']) {
+          setAgents(response.data['member']);
         }
       } catch (error) {
         console.error('Error fetching agents:', error);

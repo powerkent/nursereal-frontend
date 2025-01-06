@@ -12,7 +12,7 @@ const Agents = () => {
     const fetchAgents = async () => {
       try {
         const response = await axios.get('/agents');
-        setAgents(response.data['hydra:member']);
+        setAgents(response.data['member']);
       } catch (error) {
         console.error('Failed to fetch agents', error);
       }

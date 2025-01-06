@@ -11,7 +11,7 @@ const Activities = () => {
     const fetchActivities = async () => {
       try {
         const response = await axios.get('/activities');
-        setActivities(response.data['hydra:member']);
+        setActivities(response.data['member']);
       } catch (error) {
         console.error('Failed to fetch activities', error);
       }

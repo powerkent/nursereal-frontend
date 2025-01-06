@@ -50,6 +50,7 @@ import ActivityAction from './pages/agent/activity/Activity';
 import Rest from './pages/agent/rest/Rest';
 import TreatmentAction from './pages/agent/treatment/Treatment';
 import Historic from './pages/agent/historic/Historic';
+import ClockingIn from './pages/agent/clockingIn/ClockingIn';
 
 import './App.css';
 
@@ -134,6 +135,9 @@ function App() {
 
           {/* Historic */}
           <Route path='actions/historics' element={<Historic />} />
+
+          {/* Clocking in */}
+          <Route path='actions/clockins' element={<ClockingIn />} />
         </Route>
       </Routes>
     </Router>

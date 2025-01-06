@@ -13,7 +13,7 @@ const Treatments = () => {
     const fetchTreatments = async () => {
       try {
         const response = await axios.get('/treatments');
-        setTreatments(response.data['hydra:member']);
+        setTreatments(response.data['member']);
       } catch (error) {
         console.error('Failed to fetch treatments', error);
       }

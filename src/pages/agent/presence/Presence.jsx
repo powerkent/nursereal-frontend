@@ -74,7 +74,7 @@ const Presence = () => {
         const res = await axios.get(
           `/contract_dates?nursery_structure_uuid=${selectedNurseryUuid}&is_today=1`
         );
-        setContractDates(res.data['hydra:member'] ?? []);
+        setContractDates(res.data['member'] ?? []);
       } catch (error) {
         console.error('Error fetching contract dates:', error);
       } finally {
@@ -97,7 +97,7 @@ const Presence = () => {
         const res = await axios.get(
           `/actions?nursery_structures[]=${selectedNurseryUuid}&actions[]=presence&start_date_time=${today} 00:00:00&end_date_time=${today} 23:59:59`
         );
-        const actions = res.data['hydra:member'] ?? [];
+        const actions = res.data['member'] ?? [];
         const present = [];
         const absent = [];
 
@@ -136,7 +136,7 @@ const Presence = () => {
         const res = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        setAgents(res.data['hydra:member'] ?? []);
+        setAgents(res.data['member'] ?? []);
       } catch (error) {
         console.error('Erreur lors de la récupération des agents:', error);
       }
