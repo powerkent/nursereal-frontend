@@ -31,7 +31,7 @@ const Channels = () => {
       try {
         const memberId = localStorage.getItem('id');
         const response = await axios.get(`/channels?memberId=${memberId}`);
-        setChannels(response.data['hydra:member']);
+        setChannels(response.data['member']);
       } catch (error) {
         console.error('Failed to fetch channels', error);
       }
@@ -44,7 +44,7 @@ const Channels = () => {
     const fetchAgents = async () => {
       try {
         const response = await axios.get(`/agents`);
-        setAgents(response.data['hydra:member']);
+        setAgents(response.data['member']);
       } catch (error) {
         console.error('Failed to fetch agents', error);
       }

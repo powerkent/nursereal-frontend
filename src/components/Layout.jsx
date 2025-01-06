@@ -23,6 +23,7 @@ import BabyChangingStationIcon from '@mui/icons-material/BabyChangingStation';
 import AirlineSeatIndividualSuiteIcon from '@mui/icons-material/AirlineSeatIndividualSuite';
 import SelectedNurseryProvider from '../contexts/SelectedNurseryContext';
 import HistoryIcon from '@mui/icons-material/History';
+import AddAlarmIcon from '@mui/icons-material/AddAlarm';
 
 const Layout = () => {
   const [isManager, setIsManager] = useState(false);
@@ -190,6 +191,12 @@ const Layout = () => {
       title: 'Historique',
       path: '/actions/historics',
       icon: <HistoryIcon />,
+      parent: '/',
+    },
+    {
+      title: 'Pointage',
+      path: '/actions/clockins',
+      icon: <AddAlarmIcon />,
       parent: '/',
     },
     { title: 'Chats', path: '/channels', icon: <ForumIcon />, parent: '/' },

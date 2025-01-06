@@ -44,8 +44,8 @@ const EditActivity = ({ open, onClose, action, onActionUpdated }) => {
     const fetchActivities = async () => {
       try {
         const response = await axios.get('/activities');
-        if (response.data['hydra:member']) {
-          setActivities(response.data['hydra:member']);
+        if (response.data['member']) {
+          setActivities(response.data['member']);
         }
       } catch (error) {
         console.error('Error fetching activities:', error);
@@ -78,8 +78,8 @@ const EditActivity = ({ open, onClose, action, onActionUpdated }) => {
         const response = await axios.get(
           `/agents?nursery_structure_uuid=${selectedNurseryUuid}`
         );
-        if (response.data['hydra:member']) {
-          setAgents(response.data['hydra:member']);
+        if (response.data['member']) {
+          setAgents(response.data['member']);
         }
       } catch (error) {
         console.error('Error fetching agents:', error);

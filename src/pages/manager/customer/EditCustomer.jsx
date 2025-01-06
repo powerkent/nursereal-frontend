@@ -19,8 +19,10 @@ const EditCustomer = () => {
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
+  const password = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedChildren, setSelectedChildren] = useState([]);
+  const children = useState([]);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 

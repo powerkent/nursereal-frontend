@@ -43,7 +43,7 @@ const AppBarComponent = ({
 
       if (isManager && isAgentMode) {
         response = await axios.get('/nursery_structures');
-        nurseriesList = response.data?.['hydra:member'] || [];
+        nurseriesList = response.data?.['member'] || [];
       } else if (!isManager) {
         response = await axios.get(`/agents/${userUuid}`);
         nurseriesList = response.data?.nurseryStructures || [];
