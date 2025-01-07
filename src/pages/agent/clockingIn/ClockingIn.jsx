@@ -354,7 +354,16 @@ export default function ClockingIn() {
                 clockingData.map((entry) => (
                   <TableRow key={entry.uuid}>
                     <TableCell>
-                      {entry.agent?.firstname} {entry.agent?.lastname}
+                      <Box display='flex' alignItems='center'>
+                        <Avatar
+                          src={entry.agent.avatar}
+                          alt={`${entry.agent.firstname} ${entry.agent.lastname}`}
+                          className='presence-avatar'
+                        />
+                        <Typography variant='h6' className='presence-name'>
+                          {entry.agent?.firstname} {entry.agent?.lastname}
+                        </Typography>
+                      </Box>
                     </TableCell>
                     <TableCell>{formatTime(entry.startDateTime)}</TableCell>
                     <TableCell>
@@ -391,7 +400,7 @@ export default function ClockingIn() {
               <Avatar
                 src={agent.avatar}
                 alt={`${agent.firstname} ${agent.lastname}`}
-                className='presence-avatar'
+                sx={{ width: 24, height: 24, marginRight: 1 }}
               />
               <Typography variant='h6' className='presence-name'>
                 {agent.firstname} {agent.lastname}

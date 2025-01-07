@@ -27,7 +27,9 @@ import AddAlarmIcon from '@mui/icons-material/AddAlarm';
 
 const Layout = () => {
   const [isManager, setIsManager] = useState(false);
-  const [isAgentMode, setIsAgentMode] = useState(false);
+  const [isAgentMode, setIsAgentMode] = useState(
+    () => JSON.parse(localStorage.getItem('isAgentMode')) || false // Charger depuis le localStorage
+  );
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [previousPage, setPreviousPage] = useState('/');
   const [userUuid, setUserUuid] = useState('');
@@ -41,7 +43,6 @@ const Layout = () => {
     } else {
       const roles = localStorage.getItem('roles') || [];
       setIsManager(roles.includes('ROLE_MANAGER'));
-      setIsAgentMode(!roles.includes('ROLE_MANAGER'));
       setUserUuid(localStorage.getItem('uuid'));
     }
   }, [navigate]);
@@ -56,7 +57,9 @@ const Layout = () => {
   };
 
   const handleToggleRole = () => {
-    setIsAgentMode(!isAgentMode);
+    const newAgentMode = !isAgentMode;
+    setIsAgentMode(newAgentMode);
+    localStorage.setItem('isAgentMode', JSON.stringify(newAgentMode)); // Sauvegarder dans le localStorage
   };
 
   const managerSections = [
@@ -77,12 +80,10 @@ const Layout = () => {
       path: '/nurseries/edit/:uuid',
       parent: '/nurseries',
     },
-
     { title: 'Agents', path: '/agents', icon: <PeopleIcon />, parent: '/' },
     { title: 'Visualiser Agents', path: '/agents/:uuid', parent: '/agents' },
     { title: 'Ajouter Agent', path: '/agents/add', parent: '/agents' },
     { title: 'Modifier Agent', path: '/agents/edit/:uuid', parent: '/agents' },
-
     {
       title: 'Enfants',
       path: '/children',
@@ -100,7 +101,6 @@ const Layout = () => {
       path: '/children/edit/:uuid',
       parent: '/children',
     },
-
     { title: 'Parents', path: '/customers', icon: <FaceIcon />, parent: '/' },
     { title: 'Ajouter Parent', path: '/customers/add', parent: '/customers' },
     {
@@ -221,7 +221,7 @@ const Layout = () => {
   useEffect(() => {
     const prevPage = getPreviousPage();
     setPreviousPage(prevPage);
-  }, [location.pathname]);
+  }, [location.pathname, sections]);
 
   return (
     <SelectedNurseryProvider>
