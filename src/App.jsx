@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Box } from '@mui/material';
 import PrivateRoute from './components/PrivateRoute';
 import LoginForm from './components/LoginForm';
 import Layout from './components/Layout';
@@ -56,91 +57,99 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path='/login' element={<LoginForm />} />
-        <Route
-          path='/'
-          element={
-            <PrivateRoute>
-              <Layout />
-            </PrivateRoute>
-          }
-        >
-          <Route index element={<Dashboard />} />
+    <Box
+      sx={{
+        width: '100vw',
+        height: '100vh',
+        overflow: 'auto',
+      }}
+    >
+      <Router>
+        <Routes>
+          <Route path='/login' element={<LoginForm />} />
+          <Route
+            path='/'
+            element={
+              <PrivateRoute>
+                <Layout />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
 
-          <Route path='settings' element={<Settings />} />
+            <Route path='settings' element={<Settings />} />
 
-          {/* Crèches */}
-          <Route path='nurseries' element={<Nurseries />} />
-          <Route path='nurseries/add' element={<AddNursery />} />
-          <Route path='nurseries/edit/:uuid' element={<EditNursery />} />
-          <Route path='nurseries/:uuid' element={<Nursery />} />
+            {/* Crèches */}
+            <Route path='nurseries' element={<Nurseries />} />
+            <Route path='nurseries/add' element={<AddNursery />} />
+            <Route path='nurseries/edit/:uuid' element={<EditNursery />} />
+            <Route path='nurseries/:uuid' element={<Nursery />} />
 
-          {/* Agents */}
-          <Route path='agents' element={<Agents />} />
-          <Route path='agents/add' element={<AddAgent />} />
-          <Route path='agents/edit/:uuid' element={<EditAgent />} />
-          <Route path='agents/:uuid' element={<Agent />} />
+            {/* Agents */}
+            <Route path='agents' element={<Agents />} />
+            <Route path='agents/add' element={<AddAgent />} />
+            <Route path='agents/edit/:uuid' element={<EditAgent />} />
+            <Route path='agents/:uuid' element={<Agent />} />
 
-          {/* Enfants */}
-          <Route path='children' element={<Children />} />
-          <Route path='children/add' element={<AddChild />} />
-          <Route path='children/edit/:uuid' element={<EditChild />} />
-          <Route path='children/:uuid' element={<Child />} />
+            {/* Enfants */}
+            <Route path='children' element={<Children />} />
+            <Route path='children/add' element={<AddChild />} />
+            <Route path='children/edit/:uuid' element={<EditChild />} />
+            <Route path='children/:uuid' element={<Child />} />
 
-          {/* Parents */}
-          <Route path='customers' element={<Customers />} />
-          <Route path='customers/add' element={<AddCustomer />} />
-          <Route path='customers/edit/:uuid' element={<EditCustomer />} />
-          <Route path='customers/:uuid' element={<Customer />} />
+            {/* Parents */}
+            <Route path='customers' element={<Customers />} />
+            <Route path='customers/add' element={<AddCustomer />} />
+            <Route path='customers/edit/:uuid' element={<EditCustomer />} />
+            <Route path='customers/:uuid' element={<Customer />} />
 
-          {/* Traitements */}
-          <Route path='treatments' element={<Treatments />} />
-          <Route path='treatments/add' element={<AddTreatment />} />
-          <Route path='treatments/edit/:uuid' element={<EditTreatment />} />
-          <Route path='treatments/:uuid' element={<Treatment />} />
+            {/* Traitements */}
+            <Route path='treatments' element={<Treatments />} />
+            <Route path='treatments/add' element={<AddTreatment />} />
+            <Route path='treatments/edit/:uuid' element={<EditTreatment />} />
+            <Route path='treatments/:uuid' element={<Treatment />} />
 
-          {/* Activités */}
-          <Route path='activities' element={<Activities />} />
-          <Route path='activities/add' element={<AddActivity />} />
-          <Route path='activities/edit/:uuid' element={<EditActivity />} />
-          <Route path='activities/:uuid' element={<Activity />} />
+            {/* Activités */}
+            <Route path='activities' element={<Activities />} />
+            <Route path='activities/add' element={<AddActivity />} />
+            <Route path='activities/edit/:uuid' element={<EditActivity />} />
+            <Route path='activities/:uuid' element={<Activity />} />
 
-          {/* Contrats */}
-          <Route path='contracts' element={<Contracts />} />
-          <Route path='contracts/add' element={<AddContract />} />
+            {/* Contrats */}
+            <Route path='contracts' element={<Contracts />} />
+            <Route path='contracts/add' element={<AddContract />} />
 
-          {/* Chats */}
-          <Route path='channels' element={<Channels />} />
-          <Route path='channels/:channelId' element={<Channel />} />
+            {/* Chats */}
+            <Route path='channels' element={<Channels />} />
+            <Route path='channels/:channelId' element={<Channel />} />
 
-          {/* Présence */}
-          <Route path='actions/presences' element={<Presence />} />
+            {/* Présence */}
+            <Route path='actions/presences' element={<Presence />} />
 
-          {/* Diaper */}
-          <Route path='actions/diapers' element={<Diaper />} />
+            {/* Diaper */}
+            <Route path='actions/diapers' element={<Diaper />} />
 
-          {/* Care */}
-          <Route path='actions/cares' element={<Care />} />
+            {/* Care */}
+            <Route path='actions/cares' element={<Care />} />
 
-          {/* Activity */}
-          <Route path='actions/activities' element={<ActivityAction />} />
+            {/* Activity */}
+            <Route path='actions/activities' element={<ActivityAction />} />
 
-          {/* Sleeping */}
-          <Route path='actions/rests' element={<Rest />} />
+            {/* Sleeping */}
+            <Route path='actions/rests' element={<Rest />} />
 
-          {/* Treatment */}
-          <Route path='actions/treatments' element={<TreatmentAction />} />
+            {/* Treatment */}
+            <Route path='actions/treatments' element={<TreatmentAction />} />
 
-          {/* Historic */}
-          <Route path='actions/historics' element={<Historic />} />
+            {/* Historic */}
+            <Route path='actions/historics' element={<Historic />} />
 
-          {/* Clocking in */}
-          <Route path='actions/clockins' element={<ClockingIn />} />
-        </Route>
-      </Routes>
-    </Router>
+            {/* Clocking in */}
+            <Route path='actions/clockins' element={<ClockingIn />} />
+          </Route>
+        </Routes>
+      </Router>
+    </Box>
   );
 }
 

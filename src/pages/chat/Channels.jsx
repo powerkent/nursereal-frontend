@@ -14,7 +14,6 @@ import {
 import axios from '../../api/axios';
 import Channel from './Channel';
 import './Channels.css';
-import Layout from '../../components/Layout';
 
 const Channels = () => {
   const [channels, setChannels] = useState([]);
@@ -130,11 +129,13 @@ const Channels = () => {
   };
 
   return (
-    <Layout>
-      <Box className='container'>
-        {/* Liste des channels avec la gestion des notifications */}
-        <Box className='channel-list'>
-          {channels.map((channel) => (
+    <Box className='container' sx={{ padding: 2 }}>
+      {/* Liste des channels */}
+      <Box className='channel-list'>
+        {channels.length === 0 ? (
+          <Typography>Aucun channel disponible.</Typography>
+        ) : (
+          channels.map((channel) => (
             <Paper
               key={channel.id}
               className='channel-item'
@@ -142,11 +143,10 @@ const Channels = () => {
             >
               <Box>
                 <Typography className='channel-name'>
-                  {/* Badge rouge pour les notifications */}
                   <Badge
                     color='error'
                     badgeContent={notifications[channel.id] || 0}
-                    invisible={notifications[channel.id] === 0} // Masquer si aucune notification
+                    invisible={notifications[channel.id] === 0}
                   >
                     {channel.name}
                   </Badge>
@@ -158,67 +158,68 @@ const Channels = () => {
                 </Typography>
               </Box>
             </Paper>
-          ))}
-        </Box>
-
-        {/* Formulaire pour créer un nouveau channel */}
-        <Box className='create-channel-form'>
-          <input
-            type='text'
-            value={newChannelName}
-            onChange={(e) => setNewChannelName(e.target.value)}
-            placeholder='Nom du Channel'
-          />
-
-          <FormControl fullWidth>
-            <InputLabel id='agent-select-label'>
-              Sélectionner des agents
-            </InputLabel>
-            <Select
-              labelId='agent-select-label'
-              multiple
-              value={selectedAgents}
-              onChange={handleAgentSelect}
-              renderValue={(selected) =>
-                selected
-                  .map((id) => {
-                    const agent = agents.find((agent) => agent.id === id);
-                    return agent ? `${agent.firstname} ${agent.lastname}` : '';
-                  })
-                  .join(', ')
-              }
-            >
-              {agents.map((agent) => (
-                <MenuItem key={agent.id} value={agent.id}>
-                  {agent.firstname} {agent.lastname}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <Button
-            variant='contained'
-            color='success'
-            onClick={handleCreateChannel}
-          >
-            Créer une discussion
-          </Button>
-        </Box>
-
-        {/* Popup avec le contenu du channel */}
-        <Dialog
-          open={openDialog}
-          onClose={handleCloseDialog}
-          maxWidth='md'
-          fullWidth
-          classes={{ paper: 'custom-dialog' }}
-        >
-          {currentChannelId ? (
-            <Channel channelId={currentChannelId} onClose={handleCloseDialog} />
-          ) : null}
-        </Dialog>
+          ))
+        )}
       </Box>
-    </Layout>
+
+      {/* Formulaire pour créer un nouveau channel */}
+      <Box className='create-channel-form'>
+        <input
+          type='text'
+          value={newChannelName}
+          onChange={(e) => setNewChannelName(e.target.value)}
+          placeholder='Nom du Channel'
+        />
+
+        <FormControl fullWidth>
+          <InputLabel id='agent-select-label'>
+            Sélectionner des agents
+          </InputLabel>
+          <Select
+            labelId='agent-select-label'
+            multiple
+            value={selectedAgents}
+            onChange={handleAgentSelect}
+            renderValue={(selected) =>
+              selected
+                .map((id) => {
+                  const agent = agents.find((agent) => agent.id === id);
+                  return agent ? `${agent.firstname} ${agent.lastname}` : '';
+                })
+                .join(', ')
+            }
+          >
+            {agents.map((agent) => (
+              <MenuItem key={agent.id} value={agent.id}>
+                {agent.firstname} {agent.lastname}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Button
+          variant='contained'
+          color='success'
+          onClick={handleCreateChannel}
+        >
+          Créer une discussion
+        </Button>
+      </Box>
+
+      {/* Popup avec le contenu du channel */}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth='md'
+        fullWidth
+      >
+        {currentChannelId ? (
+          <Channel channelId={currentChannelId} onClose={handleCloseDialog} />
+        ) : (
+          <Typography>Chargement du channel...</Typography>
+        )}
+      </Dialog>
+    </Box>
   );
 };
 
