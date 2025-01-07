@@ -3,17 +3,14 @@ import { Box, Typography, TextField, IconButton } from '@mui/material';
 import { Send } from '@mui/icons-material';
 import axios from '../../api/axios';
 import './Channel.css';
-import { useParams } from 'react-router-dom';
 
-const Channel = () => {
-  const { channelId } = useParams();
-  const channelIdNumber = Number(channelId);
-
+const Channel = ({ channelId, onClose }) => {
+  // Si vos channelId en base sont de type int, convertissez-le :
+  const channelIdNumber = parseInt(channelId, 10); // ou direct channelId si c'est un UUID
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const userId = localStorage.getItem('id');
-
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -23,39 +20,42 @@ const Channel = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
+        // Faites attention si channelId est un UUID (ne pas parseInt)
         const response = await axios.get(
           `/messages?channelId=${channelIdNumber}`
         );
-        setMessages(response.data['member']);
-        setLoading(false);
+        setMessages(response.data['member'] ?? []);
       } catch (error) {
         console.error('Failed to fetch messages', error);
+      } finally {
         setLoading(false);
       }
     };
-    fetchMessages();
+
+    // Éviter l'appel si channelIdNumber est NaN
+    if (!Number.isNaN(channelIdNumber)) {
+      fetchMessages();
+    } else {
+      setLoading(false);
+    }
   }, [channelIdNumber]);
 
   useEffect(() => {
-    if (!channelIdNumber) return;
+    if (!Number.isNaN(channelIdNumber)) {
+      const url = new URL('http://localhost:8001/.well-known/mercure');
+      url.searchParams.append('topic', `/channels/${channelIdNumber}`);
 
-    const url = new URL('http://localhost:8001/.well-known/mercure');
-    url.searchParams.append('topic', `/channels/${channelIdNumber}`);
+      const eventSource = new EventSource(url, { withCredentials: true });
 
-    const eventSource = new EventSource(url, { withCredentials: true });
+      eventSource.onmessage = (event) => {
+        const newMessage = JSON.parse(event.data);
+        setMessages((prev) => [...prev, newMessage]);
+      };
 
-    eventSource.onmessage = (event) => {
-      const newMessage = JSON.parse(event.data);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    };
-
-    eventSource.onerror = (error) => {
-      console.error('Erreur EventSource:', error);
-    };
-
-    return () => {
-      eventSource.close();
-    };
+      return () => {
+        eventSource.close();
+      };
+    }
   }, [channelIdNumber]);
 
   useEffect(() => {
@@ -64,7 +64,6 @@ const Channel = () => {
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
-
     try {
       const messagePayload = {
         channelId: channelIdNumber,
@@ -74,9 +73,8 @@ const Channel = () => {
           memberId: parseInt(userId, 10),
         },
       };
-
       const response = await axios.post('/messages', messagePayload);
-      setMessages([...messages, response.data]);
+      setMessages((prev) => [...prev, response.data]);
       setNewMessage('');
     } catch (error) {
       console.error('Failed to send message', error);
@@ -90,22 +88,24 @@ const Channel = () => {
     }
   };
 
-  const handleMessageInput = (e) => {
-    setNewMessage(e.target.value);
-  };
-
   if (loading) {
     return <Typography>Loading messages...</Typography>;
   }
 
   return (
     <Box className='chat-container'>
+      {/* Entête (facultative) */}
+      <Box display='flex' justifyContent='space-between' alignItems='center'>
+        <Typography variant='h6'>Channel #{channelIdNumber}</Typography>
+        <IconButton onClick={onClose}>X</IconButton>
+      </Box>
+
       <Box className='messages-container'>
         {messages.map((message) => (
           <Box
             key={message.id}
             className={`message-bubble ${
-              message.author && message.author.memberId === parseInt(userId, 10)
+              message.author?.memberId === parseInt(userId, 10)
                 ? 'my-message'
                 : 'other-message'
             }`}
@@ -125,7 +125,6 @@ const Channel = () => {
             </Typography>
           </Box>
         ))}
-
         <div ref={messagesEndRef} />
       </Box>
 
@@ -135,7 +134,7 @@ const Channel = () => {
           multiline
           rows={2}
           value={newMessage}
-          onChange={handleMessageInput}
+          onChange={(e) => setNewMessage(e.target.value)}
           placeholder='Écrire un message...'
           onKeyDown={handleKeyDown}
         />
@@ -146,7 +145,5 @@ const Channel = () => {
     </Box>
   );
 };
-
-Channel.propTypes = {};
 
 export default Channel;
