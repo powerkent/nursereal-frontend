@@ -19,18 +19,17 @@ import axios from '../api/axios';
 import { SelectedNurseryContext } from '../contexts/SelectedNurseryContext';
 
 const AppBarComponent = ({
-  isManager,
-  toggleDrawer,
-  handleLogout,
-  userUuid,
+  isManager = { isManager },
+  toggleDrawer = { toggleDrawer },
+  handleLogout = { handleLogout },
+  isAgentMode = { isAgentMode },
+  handleToggleRole = { handleToggleRole },
+  userUuid = { userUuid },
 }) => {
   const navigate = useNavigate();
   const [nurseries, setNurseries] = useState([]);
   const [selectedNursery, setSelectedNursery] = useState('');
   const { setSelectedNurseryUuid } = useContext(SelectedNurseryContext);
-  const [isAgentMode, setIsAgentMode] = useState(
-    () => JSON.parse(localStorage.getItem('isAgentMode')) || false
-  );
 
   const fetchNurseries = useCallback(async () => {
     if (!userUuid && !isManager) {
@@ -95,13 +94,6 @@ const AppBarComponent = ({
         uuid: selectedNursery.uuid,
       })
     );
-  };
-
-  const handleToggleRole = (event) => {
-    const newAgentMode = event.target.checked;
-    setIsAgentMode(newAgentMode);
-
-    localStorage.setItem('isAgentMode', JSON.stringify(newAgentMode));
   };
 
   return (

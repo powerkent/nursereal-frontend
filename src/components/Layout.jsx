@@ -28,7 +28,7 @@ import AddAlarmIcon from '@mui/icons-material/AddAlarm';
 const Layout = () => {
   const [isManager, setIsManager] = useState(false);
   const [isAgentMode, setIsAgentMode] = useState(
-    () => JSON.parse(localStorage.getItem('isAgentMode')) || false // Charger depuis le localStorage
+    () => JSON.parse(localStorage.getItem('isAgentMode')) || false
   );
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [previousPage, setPreviousPage] = useState('/');
@@ -59,7 +59,9 @@ const Layout = () => {
   const handleToggleRole = () => {
     const newAgentMode = !isAgentMode;
     setIsAgentMode(newAgentMode);
-    localStorage.setItem('isAgentMode', JSON.stringify(newAgentMode)); // Sauvegarder dans le localStorage
+    localStorage.setItem('isAgentMode', JSON.stringify(newAgentMode));
+
+    navigate('/');
   };
 
   const managerSections = [
