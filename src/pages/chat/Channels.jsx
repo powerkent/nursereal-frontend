@@ -54,7 +54,7 @@ const Channels = () => {
   // Gestion des notifications via Mercure à chaque nouveau message reçu
   useEffect(() => {
     channels.forEach((channel) => {
-      const url = new URL('http://localhost:8001/.well-known/mercure');
+      const url = new URL('http://localhost:8083/.well-known/mercure');
       url.searchParams.append('topic', `/channels/${channel.id}`);
 
       const eventSource = new EventSource(url, { withCredentials: true });

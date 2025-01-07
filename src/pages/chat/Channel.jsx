@@ -42,14 +42,22 @@ const Channel = ({ channelId, onClose }) => {
 
   useEffect(() => {
     if (!Number.isNaN(channelIdNumber)) {
-      const url = new URL('http://localhost:8001/.well-known/mercure');
+      const url = new URL('http://localhost:8083/.well-known/mercure');
       url.searchParams.append('topic', `/channels/${channelIdNumber}`);
 
       const eventSource = new EventSource(url, { withCredentials: true });
 
       eventSource.onmessage = (event) => {
         const newMessage = JSON.parse(event.data);
-        setMessages((prev) => [...prev, newMessage]);
+
+        setMessages((prev) => {
+          // Vérifie si le message est déjà dans la liste
+          const messageExists = prev.some((msg) => msg.id === newMessage.id);
+          if (!messageExists) {
+            return [...prev, newMessage];
+          }
+          return prev;
+        });
       };
 
       return () => {
