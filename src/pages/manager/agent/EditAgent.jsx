@@ -104,16 +104,18 @@ const EditAgent = () => {
           margin='normal'
           required
         />
-        <TextField
-          fullWidth
-          label='Mot de passe'
-          name='password'
-          type='password'
-          value={agent.password}
-          onChange={handleChange}
-          margin='normal'
-          required
-        />
+        {agentLoginWithPhone && (
+          <TextField
+            fullWidth
+            label='Mot de passe'
+            name='password'
+            type='password'
+            value={agent.password}
+            onChange={handleChange}
+            margin='normal'
+            required
+          />
+        )}
         <FormControl fullWidth margin='normal'>
           <InputLabel>Rôles</InputLabel>
           <Select
