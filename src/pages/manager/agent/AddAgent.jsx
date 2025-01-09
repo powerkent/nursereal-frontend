@@ -13,6 +13,8 @@ import axios from '../../../api/axios';
 import { useNavigate } from 'react-router-dom';
 
 const AddAgent = () => {
+  const agentLoginWithPhone =
+    JSON.parse(localStorage.getItem('AGENT_LOGIN_WITH_PHONE')) ?? false;
   const [agent, setAgent] = useState({
     firstname: '',
     lastname: '',
@@ -92,16 +94,18 @@ const AddAgent = () => {
           margin='normal'
           required
         />
-        <TextField
-          fullWidth
-          label='Mot de passe'
-          name='password'
-          type='password'
-          value={agent.password}
-          onChange={handleChange}
-          margin='normal'
-          required
-        />
+        {agentLoginWithPhone && (
+          <TextField
+            fullWidth
+            label='Mot de passe'
+            name='password'
+            type='password'
+            value={agent.password}
+            onChange={handleChange}
+            margin='normal'
+            required
+          />
+        )}
         <FormControl fullWidth margin='normal'>
           <InputLabel>Rôles</InputLabel>
           <Select
