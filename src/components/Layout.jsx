@@ -24,6 +24,8 @@ import AirlineSeatIndividualSuiteIcon from '@mui/icons-material/AirlineSeatIndiv
 import SelectedNurseryProvider from '../contexts/SelectedNurseryContext';
 import HistoryIcon from '@mui/icons-material/History';
 import AddAlarmIcon from '@mui/icons-material/AddAlarm';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 
 const Layout = () => {
   const [isManager, setIsManager] = useState(false);
@@ -149,6 +151,18 @@ const Layout = () => {
       parent: '/',
     },
     { title: 'Ajouter Contrat', path: '/contracts/add', parent: '/contracts' },
+    {
+      title: 'Horaires des agents',
+      path: '/schedules',
+      icon: <CalendarMonthIcon />,
+      parent: '/',
+    },
+    {
+      title: 'Type de poste',
+      path: '/shifts',
+      icon: <PermContactCalendarIcon />,
+      parent: '/',
+    },
     { title: 'Chats', path: '/channels', icon: <ForumIcon />, parent: '/' },
   ];
 

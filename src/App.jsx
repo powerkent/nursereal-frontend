@@ -40,6 +40,9 @@ import AddActivity from './pages/manager/activity/AddActivity';
 import Contracts from './pages/manager/contract/Contracts';
 import AddContract from './pages/manager/contract/AddContract';
 
+import AgentSchedule from './pages/manager/agentSchedule/AgentSchedule';
+import ShiftType from './pages/manager/agentSchedule/ShiftType';
+
 import Channels from './pages/chat/Channels';
 import Channel from './pages/chat/Channel';
 
@@ -118,6 +121,10 @@ function App() {
             {/* Contrats */}
             <Route path='contracts' element={<Contracts />} />
             <Route path='contracts/add' element={<AddContract />} />
+
+            {/* Agent Schedule */}
+            <Route path='schedules' element={<AgentSchedule />} />
+            <Route path='shifts' element={<ShiftType />} />
 
             {/* Chats */}
             <Route path='channels' element={<Channels />} />
