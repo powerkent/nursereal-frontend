@@ -13,6 +13,8 @@ import axios from '../../../api/axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const EditAgent = () => {
+  const agentLoginWithPhone =
+    JSON.parse(localStorage.getItem('AGENT_LOGIN_WITH_PHONE')) ?? false;
   const [agent, setAgent] = useState({
     firstname: '',
     lastname: '',
